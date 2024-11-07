@@ -1,20 +1,18 @@
-import express, {Express} from 'express'
-import { config } from './config';
+import express, { Express } from 'express';
 import { ServerSetup } from './setup-server';
-
+import { config } from './config';
 
 class Application {
     public initialize(): void {
         this.loadConfig();
         const app: Express = express();
-        const server: ServerSetup = new ServerSetup(app)
-        server.Start()
-
+        const server: ServerSetup = new ServerSetup(app);
+        server.Start();
     }
 
     private loadConfig(): void {
-        config.validateConfig();        
-      }
+        config.validateConfig();
+    }
 }
 
 const application: Application = new Application();
