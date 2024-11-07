@@ -10,6 +10,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/compression": "^1.7.5",
+    "@types/cors": "^2.8.17",
+    "@types/hpp": "^0.2.6",
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
     "ts-patch": "^3.2.1",
@@ -18,6 +21,9 @@
     "typescript-transform-paths": "^3.5.2"
   },
   "dependencies": {
+    "@types/bunyan": "^1.8.11",
+    "bunyan": "^1.8.15",
+    "cloudinary": "^2.5.1",
     "compression": "^1.7.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
