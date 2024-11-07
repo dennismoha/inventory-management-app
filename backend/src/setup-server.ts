@@ -6,15 +6,18 @@ import hpp from 'hpp';
 import HTTP_STATUS from 'http-status-codes';
 import 'express-async-errors';
 import compression from 'compression';
+import Logger from 'bunyan';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import YAML from 'yamljs';
 
 import { config } from '@src/config';
-import applicationRoutes from '@src/routes';
+import ApplicationRoutes from '@src/routes';
 import { CustomError } from '@src/shared/globals/helpers/error-handler';
-
-import Logger from 'bunyan';
-import { SERVER_PORT } from '@src/constants';
+import { BASE_PATH, SERVER_PORT } from '@src/constants';
 
 const log: Logger = config.createLogger('server');
+const swaggerDocument = YAML.load('./openapi.yaml');
 
 export interface IErrorResponse {
   message: string;
@@ -39,9 +42,10 @@ export class ServerSetup {
   public Start(): void {
     this.securityMiddleware(this.app);
     this.standardMiddleware(this.app);
+    this.swaggerUISetup(this.app);
     this.routeMiddleware(this.app);
     this.globalErrorHandler(this.app);
-    this.startServer(this.app);
+    this.startServer(this.app);    
   }
 
   private securityMiddleware(app: Application): void {
@@ -63,7 +67,7 @@ export class ServerSetup {
     app.use(urlencoded({ extended: true, limit: '50mb' }));
   }
   private routeMiddleware(app: Application): void {
-    applicationRoutes(app);
+    ApplicationRoutes(app);
   }
 
 
@@ -81,6 +85,12 @@ export class ServerSetup {
       }
       next();
     });
+  }
+  private swaggerUISetup(app: Application) {
+    const baseURL = `${config.LOCAL_DEVELOPMENT_BASE_URL}${BASE_PATH}`;
+    swaggerDocument.servers =[{url: baseURL}];
+    // Serve Swagger UI
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   }
 
   // creating http server
