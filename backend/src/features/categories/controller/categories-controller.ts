@@ -1,24 +1,25 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { PrismaClient } from '@prisma/client'; // Prisma client to interact with the database
+import prisma from '@src/shared/prisma/prisma-client'; // Prisma client to interact with the database
 import { joiValidation } from '@src/shared/globals/decorators/joi-validation-decorators';
 import { categorySchema } from '@src/features/categories/schema/categories-schema';
-import { ConflictError, NotFoundError } from '@src/shared/globals/helpers/error-handler';
+import { BadRequestError, ConflictError } from '@src/shared/globals/helpers/error-handler';
 import GetSuccessMessage from '@src/shared/globals/helpers/success-messages';
 import { Category } from '@src/features/categories/interfaces/categories.interface';
 
-const prisma = new PrismaClient();
+
 
 export class Categories {
   public async fetchCategories(req: Request, res: Response) {
-    const categories = await prisma.categories.findMany({
-      include: {
-        SubCategories: true, // Include related SubCategories
+    const categories:Category[] = await prisma.categories.findMany({
+      include: {      
         Products: true // Include related Products
       }
     });
 
-    res.status(StatusCodes.OK).json({ data: categories });
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.CREATED, categories, 'categories fetched succesfully'));
+    // json({ data: categories });
+   
   }
 
   @joiValidation(categorySchema)
@@ -27,12 +28,11 @@ export class Categories {
 
     // Check if category_slug already exists
     const existingCategory = await prisma.categories.findUnique({
-      where: { category_slug }
+      where: { category_name }
     });
 
     if (existingCategory) {
-      throw new ConflictError('category slug arleady exists');
-      // return res.status(StatusCodes.CONFLICT).json({ message: 'Category slug already exists' });
+      throw new ConflictError('category name arleady exists');
     }
 
     // Create new category
@@ -44,35 +44,41 @@ export class Categories {
       }
     });
 
+
     res.status(StatusCodes.CREATED).send(GetSuccessMessage(StatusCodes.CREATED, category, 'category created succesfully'));
   }
 
   // Update an existing category
   @joiValidation(categorySchema)
   public async updateCategory(req: Request, res: Response): Promise<void> {
-    const { categoryId } = req.params; // Assuming categoryId is in the URL path
+
+    const { categoryId } = req.params; // Assuming categoryId is in the URL path  
     const { category_slug, category_name, description } = req.body;
 
-    // Check if category exists
+
+    // Check if category name exists
     const category = await prisma.categories.findUnique({
-      where: { categoryId }
+      where: { category_name }
     });
 
+    let updatedCategory: Category;
     if (!category) {
-      throw new NotFoundError('Category not found');
+      // Update category
+      updatedCategory = await prisma.categories.update({
+        where: { categoryId },
+        data: {
+          category_slug,
+          category_name,
+          description
+        }
+      });
+    } else {
+      console.log('category is ', category);
+      throw new ConflictError('Category Name Exists');
     }
 
-    // Update category
-    const updatedCategory = await prisma.categories.update({
-      where: { categoryId },
-      data: {
-        category_slug,
-        category_name,
-        description
-      }
-    });
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.CREATED, updatedCategory, 'category updated succesfully'));
 
-    res.status(StatusCodes.OK).json({ message: 'Category updated successfully', data: updatedCategory });
   }
 
   // Delete a category
@@ -85,7 +91,7 @@ export class Categories {
     });
 
     if (!category) {
-      throw new NotFoundError('category not found');
+      throw new BadRequestError('BadRequest');
     }
 
     // Delete category

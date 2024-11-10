@@ -18,3 +18,10 @@ export const categorySchema: ObjectSchema = Joi.object().keys({
     category_name: Joi.string().min(3).max(100),
     description: Joi.string().min(5).max(500),
   });
+
+  // SubCategories Validation Schema
+export const subCategorySchema: ObjectSchema = Joi.object().keys({
+    subcategory_name: Joi.string().required(),   
+    description: Joi.string().required(),
+  });
+  

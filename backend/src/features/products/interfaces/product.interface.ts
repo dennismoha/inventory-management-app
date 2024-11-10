@@ -10,13 +10,13 @@
     subcategory_id: string;     // UUID of the subcategory
     image_url: string;          // URL to the product image
     sku: string;               // Optional SKU (Stock Keeping Unit)
-    created_at: string;         // ISO 8601 DateTime string
-    updated_at: string;         // ISO 8601 DateTime string
-    category: Category;         // Parent category of the product
-    subcategory: SubCategory;   // Parent subcategory of the product
-    ProductUnits: ProductUnit[]; // Array of product units (not detailed in your schema)
-    SupplierPricing: SupplierPricing[]; // Array of supplier pricing (not detailed in your schema)
-    SupplierProducts: SupplierProduct[]; // Array of supplier products (not detailed in your schema)
+    created_at: Date;         // ISO 8601 DateTime string
+    updated_at: Date;         // ISO 8601 DateTime string
+    category?: Category;         // Parent category of the product
+    subcategory?: SubCategory;   // Parent subcategory of the product
+    ProductUnits?: ProductUnit[]; // Array of product units (not detailed in your schema)
+    SupplierPricing?: SupplierPricing[]; // Array of supplier pricing (not detailed in your schema)
+    SupplierProducts?: SupplierProduct[]; // Array of supplier products (not detailed in your schema)
   }
   
 
@@ -26,7 +26,7 @@
     product_unit_id: string;  // UUID for product unit
     product_id: string;       // UUID of the related product
     unit_id: string;          // UUID of the related unit
-    product: Product;         // Reference to the related product
-    unit: Unit;               // Reference to the related unit
+    product?: Product;         // Reference to the related product
+    unit?: Unit;               // Reference to the related unit
   }
   

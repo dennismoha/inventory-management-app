@@ -1,5 +1,5 @@
 import express, {Router} from 'express';
-import { Categories } from '../controller';
+import { Categories } from '@src/features/categories/controller/categories-controller';
 
 class CategoryRoutes {
     private router: Router;
