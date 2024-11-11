@@ -43,8 +43,6 @@ export class ProductsController {
       where: { sku }
     });
 
-    console.log('reached here ', req.body);
-
     if (existingProductSku) {
       throw new ConflictError('sku arleady exists');
     }
