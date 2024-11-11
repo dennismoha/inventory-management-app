@@ -39,6 +39,14 @@ export class BadRequestError extends CustomError {
     super(message);
   }
 }
+export class ConflictError extends CustomError {
+  statusCode = HTTP_STATUS.CONFLICT;
+  status = 'error';
+
+  constructor(message: string) {
+    super(message);
+  }
+}
 export class NotFoundError extends CustomError {
   statusCode = HTTP_STATUS.NOT_FOUND;
   status = 'error';
@@ -47,6 +55,16 @@ export class NotFoundError extends CustomError {
     super(message);
   }
 }
+
+export class PrismaClientKnownRequestError extends CustomError {
+  statusCode = HTTP_STATUS.BAD_REQUEST;
+  status = 'error';
+
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 export class NotAuthorizedError extends CustomError {
   statusCode = HTTP_STATUS.UNAUTHORIZED;
   status = 'error';
