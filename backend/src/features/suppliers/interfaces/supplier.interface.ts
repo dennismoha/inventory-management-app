@@ -17,8 +17,8 @@ export interface Supplier {
 // Interface for SupplierPricing
 export interface SupplierPricing {
     supplier_pricing: string;  // UUID for supplier pricing
-    supplier_id: string;       // UUID of the supplier
-    product_id: string;        // UUID of the product
+    supplier_products_id: string; 
+    Quantity: Decimal;
     unit_id: string;           // UUID of the unit
     price: Decimal;             // Decimal price (usually represented as number in JS)
     effective_date: Date;    // Date when the price is effective (ISO 8601 date)
