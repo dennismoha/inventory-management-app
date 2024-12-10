@@ -15,6 +15,7 @@ import { ordersRoutes } from '@src/features/orders/routes/orders-routes';
 import { miscellaneousRoutes } from '@src/features/miscellaneous/routes/miscellaneous-routes';
 import { inventoryRoutes } from '@src/features/inventory/routes/inventory-routes';
 import { productPricingRoutes } from '@src/features/inventory/routes/product-pricing';
+import { signupRoutes } from '@src/features/auth/routes/auth-routes';
 
 
 
@@ -34,6 +35,7 @@ export default(app:Application) => {
         app.use(BASE_PATH, miscellaneousRoutes.routes());
         app.use(BASE_PATH, inventoryRoutes.routes());
         app.use(BASE_PATH, productPricingRoutes.routes());
+        app.use(BASE_PATH, signupRoutes.routes());
     };
 
     routes();

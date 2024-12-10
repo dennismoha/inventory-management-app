@@ -295,6 +295,20 @@ model InventoryTracking {
 
 }
 
+model User {
+  user_id       String      @id @default(uuid())
+  username  String
+  email     String @unique
+  password  String
+  role      UserRoles
+}
+
+// user roles
+ enum UserRoles {
+  admin
+  user
+ }
+
 // Enums for payment status, payment method, and order status
 enum PaymentStatus {
   paid

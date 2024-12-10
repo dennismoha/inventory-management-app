@@ -15,8 +15,8 @@ import { config } from '@src/config';
 import ApplicationRoutes from '@src/routes';
 import { CustomError } from '@src/shared/globals/helpers/error-handler';
 import { BASE_PATH, SERVER_PORT } from '@src/constants';
-import { PrismaClient, Prisma } from '@prisma/client';
-const prisma = new PrismaClient();
+// import { PrismaClient, Prisma } from '@prisma/client';
+// const prisma = new PrismaClient();
 
 const log: Logger = config.createLogger('server');
 const swaggerDocument = YAML.load('./openapi.yaml');
