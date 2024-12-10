@@ -35,5 +35,5 @@
       { "transform": "typescript-transform-paths", "afterDeclarations": true },
     ]  
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "prisma/seed.ts"]
 }
