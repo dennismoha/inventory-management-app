@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" version="24.7.17">
+  <diagram name="Page-1" id="nYYCAxJIszpiVHyWuk6D">
+    <mxGraphModel dx="1434" dy="892" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Gafb8lfS10ztnljjTc4q-7" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="290" y="120" width="270" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-3" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="Gafb8lfS10ztnljjTc4q-7">
+          <mxGeometry width="270" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-4" value="login" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="Gafb8lfS10ztnljjTc4q-7">
+          <mxGeometry x="50" y="26.38" width="140" height="33.62" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-5" value="register" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="Gafb8lfS10ztnljjTc4q-7">
+          <mxGeometry x="50" y="70" width="140" height="38.09" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-6" value="logout" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="Gafb8lfS10ztnljjTc4q-7">
+          <mxGeometry x="50" y="119.99999999999999" width="140" height="52.55" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-14" value="Process Sale Transaction" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="Gafb8lfS10ztnljjTc4q-7">
+          <mxGeometry x="50" y="190" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="Gafb8lfS10ztnljjTc4q-7" source="Gafb8lfS10ztnljjTc4q-15" target="Gafb8lfS10ztnljjTc4q-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-15" value="Check Product Inventory" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="Gafb8lfS10ztnljjTc4q-7">
+          <mxGeometry x="50" y="270" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-16" value="Print records" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="Gafb8lfS10ztnljjTc4q-7">
+          <mxGeometry x="50" y="350" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-19" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.014;exitY=0.614;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="Gafb8lfS10ztnljjTc4q-7" source="Gafb8lfS10ztnljjTc4q-15" target="Gafb8lfS10ztnljjTc4q-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="120" y="370" as="sourcePoint" />
+            <mxPoint x="60" y="53" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-130" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-32" value="" style="endArrow=none;html=1;rounded=0;entryX=-0.007;entryY=0.666;entryDx=0;entryDy=0;exitX=0.057;exitY=0.714;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="Gafb8lfS10ztnljjTc4q-7" source="Gafb8lfS10ztnljjTc4q-14" target="Gafb8lfS10ztnljjTc4q-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="62" y="323" as="sourcePoint" />
+            <mxPoint x="60" y="99" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-130" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-33" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="110" y="370" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-1" value="user" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="Gafb8lfS10ztnljjTc4q-33">
+          <mxGeometry width="50" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="Gafb8lfS10ztnljjTc4q-18" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Gafb8lfS10ztnljjTc4q-33" target="Gafb8lfS10ztnljjTc4q-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="260" y="110" as="sourcePoint" />
+            <mxPoint x="340" y="60" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="50" y="60" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
