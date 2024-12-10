@@ -1,0 +1,163 @@
+# tables
+
+1) WhatIsell
+This table will contain the list of everything that i sell
+
+2) ProductsUnits
+This table will contain the units of everything that i sell.
+eg.: unitId: pk
+     unitName: string
+
+2) WhatIsellPrice
+Now this table will contain the details of everything that i sell plus the sell per unit plus the price
+
+whatISelllPriceId: pk
+WhatISell: unga fk whatisell
+unit: kg fk productsunit
+Quantity: 1
+price: 1000
+
+record2:
+
+whatISelllPriceId: pk
+WhatISell: unga
+unit: g
+Quantity: 1
+price: 500
+
+record3:
+
+whatISelllPriceId: pk
+WhatISell: cashews
+unit: kg
+Quantity: 1
+price: 100
+
+so, this detail will be captured and sent to the frontend immediately the recordSales page is loaded.
+Now the seller will have to enter the quantity of items:
+    eg 10
+Then the seller will have to select:
+    typeofItem===whatISell,
+    units
+
+The system will automatically calculate the price.
+
+What if the quantity the user enters is greater than what is in the inventory?
+The system also needs to know how to fetch the quantit of each item from the inventory db.
+
+Also after the sale, the quantity of each item should be subtracted from the db.
+
+Also when the user makes an order, that order should updated the inventory db with the new quantity of items.
+
+So that datastore should be updated twice:
+    When a new successful order is made:
+    when a new sale is made.
+
+The data should be fetched twice.
+    When the admin wants to view the list of products in the inventory
+    when the sales person is making sales and data should be fetched for a particular item to determine the quantity
+
+====
+
+## order
+
+The order should follow this sort,
+I have made an order of 10(quantity) kg(units) of unga(product) from company(company Name) to be shipped on(orderShipDat) and expected on(orderDateExpected) . so My order is in (pending state). I have also uploaded the following receipts as a verification of the payment process and order confirmation
+
+## OrderArrival
+
+When my order arrives i want to note the registrations of the vehicle  that brought it, the date and time.
+
+## Admin
+
+ In my store I do deal with the following products:(products)
+
+## prices for each product
+
+ For each product in my store the following I have decided each 1 (Quantity per unit) kg(unit) of unga(productId) costs 100(productPrice)
+
+
+##  product alter
+
+In the **Software Development Life Cycle (SDLC)**, the decision on how to handle the deletion of a product (e.g., cascading delete, soft delete, etc.) should be documented during the **design phase**, and the relevant information is typically recorded in the following documents:
+
+### 1. **Requirements Document**
+
+- **When**: During the **Requirements Gathering** phase.
+- **What to include**: High-level functional requirements.
+- **Purpose**: You should capture the behavior of the product deletion feature in the requirements document. This is where you define the business rules around deleting products and how orphaned records or dependent entities should be handled.
+- **Details to record**:
+  - Should product deletions remove dependent records?
+  - What should happen to historical data and references to deleted products?
+  - Any exceptions or specific cases (e.g., “A product cannot be deleted if it’s part of an active order”).
+
+   **Example**:
+- *“When a product is deleted, all related order items should be deleted (cascade delete). Orders containing deleted products should be retained for historical purposes.”*
+- *“If a product is marked for deletion, it should be archived (soft delete) and remain in the database with a ‘deleted’ status for record-keeping.”*
+
+### 2. **System Design Document (SDD)**
+
+- **When**: During the **System Design** phase.
+- **What to include**: Detailed technical design, including database schema, relationships, and constraints.
+- **Purpose**: This is where the technical implementation details of how the deletion mechanism (cascade delete, soft delete, nullification of references) will work are documented. The system design should define how these behaviors are implemented in the database and software logic.
+- **Details to record**:
+  - Define the foreign key constraints (e.g., `ON DELETE CASCADE`, `ON DELETE SET NULL`, or `ON DELETE RESTRICT`).
+  - Specify any stored procedures or application logic needed to enforce deletion policies.
+  - Describe the data flow, including how related records will be handled in case of deletion (e.g., are they deleted, marked as deleted, or simply updated?).
+
+   **Example**:
+- *“The `Product` table has a foreign key relationship with the `OrderItem` table with `ON DELETE CASCADE` to ensure all order items are deleted when a product is removed.”*
+- *“The `Product` status will be set to `inactive` when a soft delete is performed, and the `active` field will be updated to `false`.”*
+
+### 3. **Data Dictionary**
+
+- **When**: During the **Database Design** phase (often part of the System Design).
+- **What to include**: This document describes the database schema in detail, including table structures, data types, constraints, and relationships between tables.
+- **Purpose**: You should record any specific constraints, like foreign key constraints and actions taken on deletion, in this document to ensure clarity and consistency.
+- **Details to record**:
+  - Specify which tables are related to the product and how deletions should propagate (e.g., cascade, nullify).
+
+   **Example**:
+- *“In the `OrderItem` table, the `product_id` column has a foreign key constraint that references the `Product` table. If a product is deleted, the `ON DELETE CASCADE` rule will apply.”*
+- *“In the `Product` table, a `status` field will be added to support soft delete functionality.”*
+
+### 4. **Test Plan / Test Cases**
+
+- **When**: During the **Testing** phase (after implementation, before deployment).
+- **What to include**: This document outlines how the deletion functionality will be tested to ensure the behavior is working as expected.
+- **Purpose**: Ensure that the deletion functionality behaves as expected, whether that involves checking cascading deletes, nullifying references, or ensuring soft delete works correctly.
+- **Details to record**:
+  - Test scenarios that verify the integrity of data after deletion (e.g., “Ensure all dependent records are deleted when a product is removed” or “Ensure no orphaned records are left when a product is soft deleted”).
+
+   **Example**:
+- *Test Case: Delete a product that has dependent order items.*
+  - Expected result: All order items related to the deleted product should be deleted (for cascade delete).
+- *Test Case: Soft delete a product marked as inactive.*
+  - Expected result: The product should still appear in historical reports, but it should not be available for new orders or transactions.
+
+### 5. **Change Request Document (if applicable)**
+
+- **When**: During the **Change Management** phase (if the deletion behavior is changed after the initial design or during maintenance).
+- **What to include**: If you’re changing an existing deletion strategy (e.g., changing from cascading deletes to soft deletes), document the reasons, the new design, and any impact on the system.
+- **Purpose**: To track changes and ensure that the decision to modify the deletion behavior is properly communicated and implemented.
+- **Details to record**:
+  - Reason for change.
+  - Updated process or design.
+  - Impact on data integrity, reporting, and user experience.
+
+   **Example**:
+- *“After review, the product deletion process will be changed from cascade delete to soft delete to preserve historical data and improve reporting accuracy.”*
+
+---
+
+### Key Points:
+
+- **Requirements Document**: Defines **what** needs to be done (e.g., how deletions should behave).
+- **System Design Document**: Defines **how** to technically implement the deletion behavior (database relationships, constraints).
+- **Data Dictionary**: Documents any constraints related to deletions.
+- **Test Plan**: Ensures that the deletion logic works as expected in the final product.
+- **Change Request Document**: If this deletion strategy changes after the initial design, this document helps track and communicate the change.
+
+### Best Practice:
+
+Always document the deletion behavior early in the **Requirements** and **Design** phases, then include detailed implementation and testing plans to ensure the system behaves as intended.
