@@ -1,0 +1,147 @@
+### **Use Case Description: Editing Order Details**
+
+---
+
+#### **Use Case Name**: Editing Order Details
+
+**Actor**: Admin (or an authorized user with privileges to modify orders)
+
+**Goal**: To edit the details of an existing order, including modifying product items, quantities, or prices, while ensuring the **TotalAmount** in the **Orders Table** is consistent with the total of all associated product items.
+
+---
+
+#### **Preconditions**:
+- The admin is logged into the system with appropriate permissions.
+- The **Order** to be edited exists and is accessible by the admin.
+- The order has a status that allows editing (e.g., **Pending** or **In Progress**).
+- The order has at least one product item, if applicable.
+- The system fetches the current details of the order, including product items, quantities, prices, and total order amount.
+
+---
+
+#### **Postconditions**:
+- The **Order Details** are updated based on admin input (including the **TotalAmount** field in the **Orders Table**).
+- If there are product items in the order, the **TotalAmount** is recalculated based on the updated details of those product items.
+- If there are discrepancies between the **TotalAmount** and the sum of product items' costs, an error message is triggered.
+- The order status remains unchanged (e.g., still **Pending** or **In Progress**) unless otherwise specified by the admin.
+- The updated details are stored in the system, reflecting the correct amounts, product items, and statuses.
+
+---
+
+### **Use Case Scenario:**
+
+#### **1. Admin Views and Edits the Order**
+
+- **Step 1**: The admin navigates to the **Order Management** interface.
+- **Step 2**: The admin selects an **Order** that is either **Pending** or **In Progress**.
+- **Step 3**: The system fetches and displays the details of the order, including:
+  - **OrderID**
+  - **OrderDate**
+  - **TotalAmount**
+  - **OrderStatus**
+  - **PaymentStatus**
+  - **ShippingDate**
+  - **DeliveryStatus**
+  - A list of product items in the order (if any), including:
+    - Product name
+    - Quantity ordered
+    - Price per unit
+    - Subtotal for each item
+
+#### **2. Editing the Order**
+
+- **Step 4**: The admin can edit:
+  - **Order Date** (if applicable)
+  - **TotalAmount** (but this will be recalculated automatically when product items are edited)
+  - **Shipping Date**
+  - **Delivery Status**
+  - **Product Items** (add/remove/edit products, change quantities, or prices for the product items)
+  
+#### **3. Recalculating TotalAmount Based on Product Items**
+
+- **Step 5**: If the admin adds, removes, or changes the quantity or price of any product item, the **TotalAmount** field should be recalculated automatically.
+  - The system calculates the **TotalAmount** based on the sum of each product item’s (quantity × price), as stored in the **OrderDetails** table.
+  - For example, if there are two product items:
+    - **Product A**: 2 units × $10 = $20
+    - **Product B**: 1 unit × $5 = $5
+    - The new **TotalAmount** for the order should be $25.
+
+#### **4. Validation of TotalAmount Consistency**
+
+- **Step 6**: After the admin makes changes to the order and updates the product items, the system performs the following checks:
+  - **If there are product items in the order**, the **TotalAmount** in the **Orders Table** should automatically be recalculated based on the updated product details.
+  - **If there is no consistency** between the recalculated **TotalAmount** and the updated **Order Details** (i.e., the sum of all product item subtotals), the system should throw an error.
+
+  - **Error Message**: 
+    - **"The total amount of the order does not match the sum of the product items. Please update the total amount or check the product details."**
+    - The admin must correct the error before submitting the changes.
+
+#### **5. Saving the Changes**
+
+- **Step 7**: Once the admin has reviewed the changes, including the product items and recalculated **TotalAmount**, they click on the **Save Changes** or **Update Order** button.
+  - If no errors are detected (i.e., the total amount is consistent), the system updates the order in the **Orders Table**.
+  - The **TotalAmount** field in the **Orders Table** is updated to reflect the new total.
+
+#### **6. Error Handling for Missing Product Items**
+
+- **Step 8**: If the admin attempts to save the order but the **OrderDetails Table** is missing required product items, the system should show the following error:
+  - **"This order cannot be saved because it has no product items or the product items are incomplete. Please add product items to the order before saving."**
+
+#### **7. Final Confirmation**
+
+- **Step 9**: If the update is successful, the system displays a confirmation message:  
+  - **"The order has been successfully updated."**
+  - The admin can now return to the order management interface or proceed with other actions.
+
+---
+
+### **Edge Cases:**
+
+1. **Edge Case 1: The Order Contains No Product Items**
+   - **Scenario**: The admin attempts to edit an order that has no product items (i.e., the **OrderDetails Table** is empty).
+   - **Outcome**: An error message is displayed, instructing the admin to add product items before making changes to the order.
+     - **Error**: **"This order cannot be updated because it has no product items. Please add product items to the order."**
+
+2. **Edge Case 2: Changing Product Quantities Without Updating TotalAmount**
+   - **Scenario**: The admin manually changes the quantity of a product without recalculating or updating the **TotalAmount**.
+   - **Outcome**: When the **Save Changes** button is clicked, the system will automatically calculate the total amount based on product item changes.
+     - If the recalculated **TotalAmount** does not match the **TotalAmount** field in the **Orders Table**, an error message is shown:
+       - **"The total amount of the order does not match the sum of the product items. Please update the total amount or check the product details."**
+
+3. **Edge Case 3: Attempting to Delete All Product Items from the Order**
+   - **Scenario**: The admin deletes all product items from the order.
+   - **Outcome**: The **TotalAmount** will be $0 (or null), and the system may either throw an error or disallow the action.
+     - **Error**: **"This order cannot be saved because it has no product items. Please add product items to the order before saving."**
+
+4. **Edge Case 4: Editing an Order After Payment Status is Completed**
+   - **Scenario**: The admin attempts to edit an order whose **PaymentStatus** is already **Completed**.
+   - **Outcome**: The system should not allow edits to the order or its product items because the payment has already been processed. 
+     - **Error**: **"This order cannot be edited because the payment status is 'Completed'. Please create a new order if necessary."**
+
+5. **Edge Case 5: Editing the TotalAmount Directly Without Updating Product Items**
+   - **Scenario**: The admin attempts to manually edit the **TotalAmount** in the **Orders Table** without adjusting the individual product items.
+   - **Outcome**: The system will validate that the **TotalAmount** matches the sum of the product items before allowing the save. 
+     - **Error**: **"The total amount does not match the sum of the product items. Please ensure that the product details are correct."**
+
+---
+
+### **UI Flow and Error Handling**
+
+1. **Order Edit Screen**:
+   - Admin can edit basic order details like **Shipping Date**, **Delivery Status**, and **TotalAmount**.
+   - Admin can modify the **OrderDetails Table** (product items, quantities, prices).
+
+2. **Product Items Update**:
+   - When the admin updates product items (add, remove, or edit quantities), the system recalculates the **TotalAmount**.
+
+3. **Error Modal for Mismatched TotalAmount**:
+   - When the **TotalAmount** does not match the sum of product item costs, a modal appears with an error message prompting the admin to correct it.
+
+4. **Confirmation on Successful Edit**:
+   - If no errors occur, the system confirms the successful update of the order.
+
+---
+
+### **Conclusion**
+
+This use case outlines the process for editing **Order Details** and ensuring that the **TotalAmount** field in the **Orders Table** accurately reflects the total of the product items in the **OrderDetails Table**. It includes validation steps to handle common edge cases and errors, such as inconsistent totals, missing product items, or editing orders with completed payments. This ensures that the system maintains data integrity and prevents discrepancies in order calculations.
