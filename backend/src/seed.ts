@@ -200,7 +200,7 @@ async function main() {
     },
   });
   
-  const unitLitre = await prisma.units.upsert({
+   await prisma.units.upsert({
     where: { unit: 'Litre' },
     update: {},
     create: {
@@ -210,7 +210,7 @@ async function main() {
     },
   });
   
-  const unitPound = await prisma.units.upsert({
+  await prisma.units.upsert({
     where: { unit: 'Pound' },
     update: {},
     create: {
@@ -220,7 +220,7 @@ async function main() {
     },
   });
   
-  const unitGram = await prisma.units.upsert({
+  await prisma.units.upsert({
     where: { unit: 'Gram' },
     update: {},
     create: {
@@ -230,7 +230,7 @@ async function main() {
     },
   });
   
-  const unitOunce = await prisma.units.upsert({
+  await prisma.units.upsert({
     where: { unit: 'Ounce' },
     update: {},
     create: {
@@ -240,7 +240,7 @@ async function main() {
     },
   });
   
-  const unitTon = await prisma.units.upsert({
+  await prisma.units.upsert({
     where: { unit: 'Ton' },
     update: {},
     create: {
@@ -263,7 +263,7 @@ async function main() {
     },
   });
 
-  const product2 = await prisma.products.create({
+  await prisma.products.create({
     data: {
       name: 'Goat & Sheep Feed',
       description: 'Special feed mix designed for sheep and goats to optimize weight gain.',
@@ -274,7 +274,7 @@ async function main() {
     },
   });
 
-  const product3 = await prisma.products.create({
+   await prisma.products.create({
     data: {
       name: 'Layer Chicken Feed',
       description: 'Feed formulated for layer hens to increase egg production and quality.',
@@ -285,7 +285,7 @@ async function main() {
     },
   });
 
-  const product4 = await prisma.products.create({
+ await prisma.products.create({
     data: {
       name: 'Broiler Chicken Feed',
       description: 'Fast-growing feed for broiler chickens to maximize meat production.',
@@ -307,7 +307,7 @@ async function main() {
     },
   });
 
-  const product6 = await prisma.products.create({
+  await prisma.products.create({
     data: {
       name: 'Cat Food - Premium Mix',
       description: 'High-quality dry food for cats with a mix of nutrients and flavors.',
@@ -350,7 +350,7 @@ async function main() {
     },
   });
 
- const supplierpricing1= await prisma.supplierPricing.create({
+ await prisma.supplierPricing.create({
     data: {
       supplier_products_id: supplierProduct1.supplier_products_id,
       Quantity:100,
@@ -360,7 +360,7 @@ async function main() {
     },
   });
 
-  const supplierpricing2 =  await prisma.supplierPricing.create({
+    await prisma.supplierPricing.create({
     data: {
       supplier_products_id: supplierProduct2.supplier_products_id,
       Quantity:100,
