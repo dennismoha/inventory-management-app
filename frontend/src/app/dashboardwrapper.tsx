@@ -1,12 +1,16 @@
 "use client";
 import Navbar from "@/app/(components)/Navbar";
 import Sidebar from "@/app/(components)/Sidebar/Index";
-import StoreProvider, { useAppDispatch, useAppSelector } from "@/app/redux/redux";
+import StoreProvider, { useAppSelector } from "@/app/redux/redux";
 import { Suspense } from "react";
 import Loading from "./loading";
 import { useEffect } from "react";
-import { useGetCategoriesQuery } from "@/app/redux/api/inventory-api";
-import { addCategory } from "@/app/redux/state/categories";
+//Date Picker Imports - these should just be in your Context Provider
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
+// import { useGetCategoriesQuery } from "@/app/redux/api/inventory-api";
+// import { addCategory } from "@/app/redux/state/categories";
 // import { Category } from "./products/interface/products-Interface";
 
 
@@ -14,7 +18,7 @@ import { addCategory } from "@/app/redux/state/categories";
 type Props = { children: React.ReactNode };
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed
   );
@@ -40,6 +44,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   });
 
   return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div
       className={`${
         isDarkMode ? "dark" : "light"
@@ -54,9 +59,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         >
           <Navbar />
           {children}
-        </main>
+        </main> 
       </Suspense>
     </div>
+    </LocalizationProvider>
   );
 };
 

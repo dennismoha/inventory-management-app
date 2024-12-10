@@ -4,8 +4,8 @@ import { Box, Button, IconButton, Tooltip, MenuItem } from "@mui/material";
 import { MaterialReactTable, type MRT_ColumnDef, MRT_TableOptions, useMaterialReactTable } from "material-react-table";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useGetSupplierPricingQuery,  useCreateSupplierPricingMutation, useUpdateSupplierPricingMutation, useUpdateSupplierProductMutation, useDeleteSupplierProductMutation, useDeleteSupplierPricingMutation, useGetSupplierProductsQuery, useGetUnitsQuery } from "@/app/redux/api/inventory-api";
-import { Unit } from "@/app/units/interface/units-interface";
+import { useGetSupplierPricingQuery,  useCreateSupplierPricingMutation, useUpdateSupplierPricingMutation,  useDeleteSupplierPricingMutation, useGetSupplierProductsQuery, useGetUnitsQuery } from "@/app/redux/api/inventory-api";
+// import { Unit } from "@/app/units/interface/units-interface";
 import { SupplierPricing } from "@/app/suppliers/interface/supplier-interface";
 
 const SupplierProductPricing = () => {

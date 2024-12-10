@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 // import {  PackageCheck, Archive, User2Icon, Package2Icon } from "lucide-react";
 import { useAppSelector } from "@/app/redux/redux";
 
-import {LucideIcon, Package2Icon, PackageCheck,  Archive,  UsersIcon, TagIcon, DollarSignIcon, BoxIcon } from 'lucide-react';
+import {LucideIcon,  Archive,  Package2Icon,  PackageCheck, ShoppingBagIcon, ShoppingCartIcon, CreditCard,UsersIcon, TagIcon, DollarSignIcon, BoxIcon } from 'lucide-react';
 
 const sidebarMenuLinks: SidebarMenuLink[] = [
   {
@@ -24,6 +24,29 @@ const sidebarMenuLinks: SidebarMenuLink[] = [
         icon: BoxIcon,
         label: "product units list",
       },
+    ],
+  },
+  {
+    label: "inventory",
+    href: "/inventory",
+    icon:  Archive,  // Main icon for the 'products' menu
+    submenu: [
+      {
+        href: "/inventory",
+        icon:  Archive,  // Icon for 'product list'
+        label: "inventory",
+      },
+      {
+        href: "/inventory/product-pricing",
+        icon:  CreditCard,  // Icon for 'product list'
+        label: "product-pricing",
+      },
+      {
+        href: "/inventory/inventory-pricing-overview",
+        icon:  CreditCard,  // Icon for 'product list'
+        label: "inventory-pricing-overview",
+      },
+    
     ],
   },
   {
@@ -78,6 +101,24 @@ const sidebarMenuLinks: SidebarMenuLink[] = [
      
     ],
   },  
+  {
+    label: "orders",
+    href: "/orders",
+    icon: ShoppingBagIcon,  // Icon for the 'suppliers' menu
+    submenu: [
+      {
+        href: "/orders",
+        icon: UsersIcon,
+        label: "orders",
+      },
+      {
+        href: "/orders/order-products",
+        icon: ShoppingCartIcon,
+        label: "order products",
+      },     
+     
+    ],
+  }, 
 ];
 
 
@@ -171,6 +212,7 @@ const SidebarCollpase: React.FC = () => {
           Icon={data.icon}
         >
           {data.submenu.map((subMenu, key) => (
+            <div style={{padding: '0px 10px 0px 10px', margin:'0px 100px 10px 10px', width:'100%', borderRadius:'6%'}}  key={key}>
             <SidebarLink
               href={subMenu.href}
               icon={subMenu.icon}
@@ -178,6 +220,7 @@ const SidebarCollpase: React.FC = () => {
               isCollapsed={isSidebarCollapsed}
               key={key}
             />
+            </div>
           ))}        
         </CollapseDefault>
       ))}

@@ -91,6 +91,7 @@ model SupplierPricing {
   updated_at     DateTime @updatedAt @db.Timestamp(6)
   supplierProduct SupplierProducts @relation(fields: [supplier_products_id], references: [supplier_products_id])
   unit Units @relation(fields: [unit_id], references: [unit_id])
+  OrderProducts OrderProducts[]
 
   @@map("SupplierPricing")
 }
@@ -114,6 +115,10 @@ model Units {
   updated_at      DateTime          @updatedAt @db.Timestamp(6)
   ProductUnits    ProductUnits[]
   SupplierPricing SupplierPricing[]
+  OrderProducts OrderProducts[]
+  Inventory Inventory[]
+  ProductPricing ProductPricing[]
+
 
   @@map("Units")
 }
@@ -127,6 +132,8 @@ model SupplierProducts {
   supplier             Suppliers @relation(fields: [supplier_id], references: [supplier_id])
   product              Products  @relation(fields: [product_id], references: [product_id])
   SupplierPricing  SupplierPricing[]
+  Inventory Inventory?
+  ProductPricing ProductPricing?
 
   @@unique([supplier_id, product_id]) // Enforcing uniqueness on supplier_id and product_id combination
   @@map("SupplierProducts")
@@ -146,6 +153,7 @@ model Products {
   subcategory      SubCategories      @relation(fields: [subcategory_id], references: [subcategory_id])
   ProductUnits     ProductUnits[]
   SupplierProducts SupplierProducts[]
+  OrderProducts    OrderProducts[]
 
   @@map("Products")
 }
@@ -158,6 +166,160 @@ model Suppliers {
   created_at       DateTime           @default(now()) @db.Timestamp(6)
   updated_at       DateTime           @updatedAt @db.Timestamp(6)
   SupplierProducts SupplierProducts[]
+  Order Order[]
 
   @@map("Suppliers")
+}
+
+model Order {
+  supplier_id        String       @db.Uuid     
+  orderId            String      @id @default(uuid()) @db.Uuid 
+  orderName          String     @unique
+  totalAmount        Decimal      @db.Decimal(10, 2)
+  paymentStatus      PaymentStatus
+  paymentMethod      PaymentMethod
+  orderDate          DateTime
+  shippingDate       DateTime
+  orderDeliveryDate  DateTime
+  orderStatus        OrderStatus @default(empty)
+  comments           String?
+  supplierDetails    String?
+  receiptPictorials  String?
+  receiptText        String?
+  created_at         DateTime     @default(now())
+  last_updated_at    DateTime     @updatedAt
+
+  // Relations
+  supplier           Suppliers      @relation(fields: [supplier_id], references: [supplier_id])
+  miscellaneous      Miscellaneous?
+  orderProducts      OrderProducts[]
+}
+
+model Miscellaneous {
+  miscellaneous_id      String        @id @default(uuid()) @db.Uuid
+  order_id              String      @db.Uuid @unique
+  base_fare             Decimal    @db.Decimal(10, 2)
+  discount_amount       Decimal    @db.Decimal(10, 2) @default(0)
+  additional_charges    Decimal    @db.Decimal(10, 2) @default(0)
+  tax_amount            Decimal    @db.Decimal(10, 2)
+  shipping_charge       Decimal    @db.Decimal(10, 2)
+  payment_processing_fee Decimal   @db.Decimal(10, 2) @default(0)
+  total_order_value     Decimal    @db.Decimal(10, 2)
+  currency_code         String     @db.VarChar(3)
+  fare_breakdown        Json?
+  tip_amount            Decimal    @db.Decimal(10, 2) @default(0)
+  refund_amount         Decimal    @db.Decimal(10, 2) @default(0)
+  other_fees            Decimal    @db.Decimal(10, 2) @default(0)
+  payment_status        String     @db.VarChar(20)
+  created_at            DateTime   @default(now())
+  updated_at            DateTime   @updatedAt
+  notes      String
+
+  // Relations
+  order                 Order      @relation(fields: [order_id], references: [orderId])
+}
+
+model OrderProducts {
+  orderProductsId       String      @id @default(uuid())
+  orderId               String      @db.Uuid   
+  productId             String        @db.Uuid
+  productName           String
+  quantity             Int
+  order_quantity       Int
+  price_per_unit        Decimal    @db.Decimal(10, 2)
+  unit_id                 String     @db.Uuid
+  totalAmount           Decimal    @db.Decimal(10, 2)
+  supplierProductsPricingId String @db.Uuid 
+
+  // Relations
+  order                 Order      @relation(fields: [orderId], references: [orderId])
+  supplierPricing SupplierPricing @relation(fields: [supplierProductsPricingId], references: [supplier_pricing ])
+  products  Products @relation(fields: [productId], references: [product_id])
+  units Units @relation(fields: [unit_id], references: [unit_id])
+  inventoryTracking     InventoryTracking[]
+}
+
+model Inventory {
+  inventoryId           String      @id @default(uuid())
+  supplier_products_id String @db.Uuid @unique
+  // productName           String
+  // sku                   String
+  product_weight Decimal @db.Decimal(8,2)
+  stock_quantity   Decimal @db.Decimal(8, 2)
+  reorder_level Int
+  last_restocked DateTime
+  unit_id        String   @db.Uuid
+  created_at     DateTime @default(now()) @db.Timestamp(6)
+  updated_at     DateTime @updatedAt @db.Timestamp(6)    
+  // Soft delete flag to mark an inventory item as deleted without actually removing it from the database.
+  softDelete            Boolean     @default(false)
+  // Status to indicate whether the inventory item is active, inactive, or discontinued.
+  status                InventoryStatus      @default(ACTIVE)
+    // Relations
+  supplierProduct SupplierProducts @relation(fields: [supplier_products_id], references: [supplier_products_id])
+  unit Units @relation(fields: [unit_id], references: [unit_id])
+
+  // `last_restocked` is the timestamp when new stock was last added to the inventory. 
+  // It is updated whenever stock_quantity is restocked, e.g., when new products are received from the supplier.
+  
+  // `updated_at` is the timestamp when any update occurs to the inventory record. 
+  // This field will be updated on any modification of the inventory item, 
+  // including when stock levels are adjusted (due to sales, stock adjustments, etc.), 
+  // price updates, or status changes.
+}
+
+
+model ProductPricing {
+  product_pricing_id  String      @id @default(uuid())
+  supplier_products_id String @db.Uuid @unique 
+  Quantity             Decimal @db.Decimal(8, 2)
+  unit_id        String   @db.Uuid
+  price          Decimal  @db.Decimal(8, 2)
+  effective_date DateTime @db.Date
+  created_at     DateTime @default(now()) @db.Timestamp(6)
+  updated_at     DateTime @updatedAt @db.Timestamp(6)
+  supplierProduct SupplierProducts @relation(fields: [supplier_products_id], references: [supplier_products_id])
+  unit Units @relation(fields: [unit_id], references: [unit_id])
+}
+
+model InventoryTracking {
+  inventoryTrackingId   String      @id @default(uuid())
+  productID             String
+  orderProductId        String
+  quantityDeducted      Int
+  dateDeducted          DateTime    @default(now())
+  notes                 String?
+
+  // Relations
+  orderProduct          OrderProducts @relation(fields: [orderProductId], references: [orderProductsId])
+
+}
+
+// Enums for payment status, payment method, and order status
+enum PaymentStatus {
+  paid
+  unpaid
+  partially_paid
+}
+
+enum PaymentMethod {
+  cash
+  bank
+  credit
+}
+
+enum OrderStatus {
+  pending
+  empty
+  failed
+  fulfilled
+  extended
+  order_default
+}
+
+// Enum to represent the possible statuses of the inventory item
+enum InventoryStatus {
+  ACTIVE     // Item is available for sale and can be interacted with.
+  INACTIVE   // Item is temporarily unavailable for sale, could be out of stock or on hold.
+  DISCONTINUED // Item is no longer available for sale and will not be restocked.
 }

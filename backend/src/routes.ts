@@ -9,6 +9,12 @@ import { unitsRoutes } from '@src/features/units/routes/units-routes';
 import { suppliersRoutes } from '@src/features/suppliers/routes/suppliers-routes';
 import { supplierProductsRoutes } from '@src/features/suppliers/routes/supplier-products-routes';
 import { supplierPricingRoutes } from '@src/features/suppliers/routes/supplier-pricing-routes';
+import { orderProductsRoutes } from '@src/features/orders/routes/order-product-routes';
+import { ordersRoutes } from '@src/features/orders/routes/orders-routes';
+
+import { miscellaneousRoutes } from '@src/features/miscellaneous/routes/miscellaneous-routes';
+import { inventoryRoutes } from '@src/features/inventory/routes/inventory-routes';
+import { productPricingRoutes } from '@src/features/inventory/routes/product-pricing';
 
 
 
@@ -23,6 +29,11 @@ export default(app:Application) => {
         app.use(BASE_PATH, suppliersRoutes.routes());
         app.use(BASE_PATH, supplierProductsRoutes.routes());
         app.use(BASE_PATH, supplierPricingRoutes.routes());
+        app.use(BASE_PATH, ordersRoutes.routes());
+        app.use(BASE_PATH, orderProductsRoutes.routes());
+        app.use(BASE_PATH, miscellaneousRoutes.routes());
+        app.use(BASE_PATH, inventoryRoutes.routes());
+        app.use(BASE_PATH, productPricingRoutes.routes());
     };
 
     routes();

@@ -187,14 +187,16 @@ export default function SupplierList() {
     return <div className="py-4">Loading...</div>;
   }
 
-  if (!suppliers || suppliers.length === 0) {
-    return <div>No suppliers available</div>;
-  }
+  
 
-  if (isError || !suppliers) {
+  if (isError ) {
     return <div className="text-center text-red-500 py-4">Failed to fetch suppliers</div>;
   }
 
   // Rendering the MaterialReactTable component
-  return <MaterialReactTable table={table} />;
+  return<>
+  {!suppliers || suppliers.length === 0 ?  <div>No suppliers available</div>: null}
+     <MaterialReactTable table={table} />;
+  </>
+  
 }

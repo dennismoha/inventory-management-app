@@ -25,6 +25,9 @@ import {
   SupplierProductsApiResponse,
   SupplierPricingPayload,
 } from "@/app/suppliers/interface/supplier-interface";
+import { Order, OrderProductResponse, OrderProducts, OrderResponse } from "@/app/orders/interfaces/orders-interface";
+import { InventoryItem, InventoryItemsApiResponse, NewInventoryItemPayload, NewProductPricingPayload, ProductPricing } from "@/app/inventory/interfaces/inventory-interface";
+import { ApiResponse } from "@/app/utils/interfaces/util-interface";
 export interface Product {
   product_id: string; // UUID
   name: string; // Name of the product
@@ -98,6 +101,25 @@ export interface User {
   email: string;
 }
 
+export interface Miscellaneous {
+  order_id: string;
+  base_fare: number;
+  discount_amount: number;
+  additional_charges: number;
+  tax_amount: number;
+  shipping_charge: number;
+  payment_processing_fee: number;
+  total_order_value: number;
+  currency_code: string;
+  fare_breakdown: string;
+  tip_amount: number;
+  refund_amount: number;
+  other_fees: number;
+  payment_status: string;
+  notes?: string;
+  order?: Order
+}
+
 export const InventoryApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL }),
   reducerPath: "inventoryApi",
@@ -112,6 +134,11 @@ export const InventoryApi = createApi({
     "Suppliers",
     "SupplierPricing",   
     "SupplierProducts",
+    "orders",
+    "orderProducts",
+    "Miscellaneous",
+    "InventoryItems",
+    "ProductPricing"
   ],
   endpoints: (build) => ({
     getDashboardMetrics: build.query<DashboardMetrics, void>({
@@ -541,6 +568,297 @@ const SupplierProductApi = InventoryApi.injectEndpoints({
   overrideExisting: true,
 });
 
+// orders
+
+const OrderApi = InventoryApi.injectEndpoints({
+  endpoints: (build) => ({
+    // Get a list of orders
+    getOrders: build.query<OrderResponse, void>({
+      query: () => "/orders", // Fetch orders from the 'orders' endpoint
+      providesTags: ["orders"], // Cache tags for invalidation
+      keepUnusedDataFor: 300000, // Keep unused data for 5 minutes
+    }),
+
+    // Create a new order
+    createOrder: build.mutation<OrderResponse, Order>({
+      query: (order) => ({
+        url: "/orders",
+        method: "POST",
+        body: order, // Send the order object in the body of the request
+      }),
+      // Invalidate queries related to orders to trigger a refetch
+      invalidatesTags: [{ type: "orders" }],
+    }),
+
+    // Delete an order by its ID
+    deleteOrder: build.mutation<void, string>({
+      query: (orderId) => ({
+        url: `/orders/${orderId}`,
+        method: "DELETE",
+      }),
+      // Invalidate all queries related to orders
+      invalidatesTags: [{ type: "orders" }],
+    }),
+
+    // Get details of a specific order by its ID
+    getOrderById: build.query<Order, string>({
+      query: (orderId) => `/orders/${orderId}`, // Fetch the order by ID
+      providesTags: ["orders"], // Cache invalidation for this query
+    }),
+
+    // Update an existing order by its ID
+    updateOrder: build.mutation<Order, Pick<Order, 'orderId'>>({
+      query: ({orderId, ...patch}) => ({
+        url: `/orders/${orderId}`,
+        method: "PUT",
+        body: patch, // Send the updates in the request body
+      }),
+      invalidatesTags: ["orders"], // Invalidate cache for orders after update
+    }),
+  }),
+});
+
+// order-products
+
+const OrderProductApi = InventoryApi.injectEndpoints({
+  endpoints: (build) => ({
+    // Get all order-products  - there is no backend endpoint for this
+    getOrderProducts: build.query<OrderProductResponse, void>({
+      query: () => "/order-products", // Fetch all order-products from the 'order-products' endpoint
+      providesTags: ["orderProducts"], // Cache tags for invalidation
+      keepUnusedDataFor: 300000, // Keep unused data for 5 minutes
+    }),
+
+    // Get an order-product by ID  - no backend endpoint for this at the moment
+    getOrderProductById: build.query< OrderProductResponse, Pick<Order,'orderId'>>({
+      query: (orderProductId) => `/order-products/${orderProductId}`, // Fetch order-product by ID
+      providesTags: ["orderProducts"], // Cache invalidation for this query
+    }),
+
+     // Get an order-product by orderID 
+     getOrderProductByOrderId: build.query<OrderProductResponse, Pick<Order,'orderId'>>({
+      query: (orderId) => `/order-products/${orderId}`, // Fetch order-product by ID
+      providesTags: ["orderProducts"], // Cache invalidation for this query
+    }),
+
+    // Create a new order-product
+    createOrderProduct: build.mutation<OrderProductResponse, OrderProducts>({
+      query: (orderProduct) => ({
+        url: "/order-products",
+        method: "POST",
+        body: orderProduct, // Send the order-product data in the body
+      }),
+      invalidatesTags: [{ type: "orderProducts" }], // Invalidate queries related to order-products to trigger a refetch
+    }),
+
+    // Update an existing order-product
+    updateOrderProduct: build.mutation<OrderProducts, { orderProductId: string, patch: Partial<OrderProducts> }>({
+      query: ({ orderProductId, patch }) => ({
+        url: `/order-products/${orderProductId}`,
+        method: "PUT",
+        body: patch, // Send the updated order-product data
+      }),
+      invalidatesTags: ["orderProducts"], // Invalidate the cache after updating
+    }),
+
+    // Delete an order-product by its ID
+    deleteOrderProduct: build.mutation<void, string>({
+      query: (orderProductId) => ({
+        url: `/order-products/${orderProductId}`,
+        method: "DELETE", // Delete the order-product by ID
+      }),
+      invalidatesTags: [ "orderProducts","orders" ], // Invalidate queries related to order-products to trigger a refetch
+    }),
+  }),
+});
+
+const MiscellaneousApi = InventoryApi.injectEndpoints({
+  endpoints: (build) => ({
+    // Fetch all miscellaneous data
+    getMiscellaneous: build.query<Miscellaneous[], string | void>({
+      query: (search) => ({
+        url: '/miscellaneous',
+        params: search ? { search } : {}, // Optional search filter
+      }),
+      providesTags: ['Miscellaneous'],
+    }),
+
+    // Fetch miscellaneous data by order ID
+    getMiscellaneousByOrderId: build.query<Miscellaneous, string>({
+      query: (order_id) => `/miscellaneous/${order_id}`,
+      providesTags: ['Miscellaneous'],
+    }),
+
+    // Create a new miscellaneous record
+    createMiscellaneous: build.mutation<Miscellaneous, Omit<Miscellaneous, 'order_id'>>({
+      query: (newMiscellaneous) => ({
+        url: '/miscellaneous',
+        method: 'POST',
+        body: newMiscellaneous,
+      }),
+      invalidatesTags: ['Miscellaneous'],
+    }),
+
+    // Update an existing miscellaneous record
+    updateMiscellaneous: build.mutation<Miscellaneous, Pick<Miscellaneous, 'order_id'> & Partial<Miscellaneous>>({
+      query: ({ order_id, ...patch }) => ({
+        url: `/miscellaneous/${order_id}`,
+        method: 'PUT',
+        body: patch,
+      }),
+      invalidatesTags: ['Miscellaneous'],
+    }),
+
+    // Delete a miscellaneous record
+    deleteMiscellaneous: build.mutation<void, { order_id: string }>({
+      query: ({ order_id }) => ({
+        url: `/miscellaneous/${order_id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Miscellaneous'],
+    }),
+  }),
+  overrideExisting: true,
+});
+
+// inventory
+const ProductsInventoryApi = InventoryApi.injectEndpoints({
+  endpoints: (build) => ({
+    // Fetch inventory items
+    getInventoryItems: build.query<
+      InventoryItemsApiResponse,
+      void
+    >({
+      query: () => ({
+        url: "/inventory",
+       
+      }),
+      providesTags: ["InventoryItems"],
+    }),
+
+    // Create a new inventory item
+    createInventoryItem: build.mutation<
+      InventoryItem,
+      NewInventoryItemPayload
+    >({
+      query: (newInventoryItem) => ({
+        url: "/inventory",
+        method: "POST",
+        body: newInventoryItem,
+      }),
+      invalidatesTags: ["InventoryItems"],
+    }),
+
+    // Update an existing inventory item
+    updateInventoryItem: build.mutation<
+      InventoryItem,
+      { inventory_item_id: string; patch: Partial<InventoryItem> }
+    >({
+      query: ({ inventory_item_id, patch }) => ({
+        url: `/inventory-items/${inventory_item_id}`,
+        method: "PUT",
+        body: patch,
+      }),
+      invalidatesTags: ["InventoryItems"],
+    }),
+
+    // Delete an inventory item
+    deleteInventoryItem: build.mutation<
+      void,
+      { inventory_item_id: string }
+    >({
+      query: ({ inventory_item_id }) => ({
+        url: `/inventory-items/${inventory_item_id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["InventoryItems"],
+    }),
+  }),
+  overrideExisting: true,
+});
+
+
+const ProductPricingApi = InventoryApi.injectEndpoints({
+  endpoints: (build) => ({
+    // Fetch product pricing
+    getProductPricing: build.query<ApiResponse<ProductPricing>, void>({
+      query: () => ({
+        url: '/product-pricing',
+      }),
+      providesTags: ['ProductPricing'],
+    }),
+
+    // Create a new product pricing
+    createProductPricing: build.mutation<ProductPricing, NewProductPricingPayload>({
+      query: (newProductPricing) => ({
+        url: '/product-pricing',
+        method: 'POST',
+        body: newProductPricing,
+      }),
+      invalidatesTags: ['ProductPricing'],
+    }),
+
+    // Update an existing product pricing
+    updateProductPricing: build.mutation<
+      ProductPricing,
+      { product_pricing_id: string; patch: Partial<ProductPricing> }
+    >({
+      query: ({ product_pricing_id, patch }) => ({
+        url: `/product-pricing/${product_pricing_id}`,
+        method: 'PUT',
+        body: patch,
+      }),
+      invalidatesTags: ['ProductPricing'],
+    }),
+
+    // Delete product pricing
+    deleteProductPricing: build.mutation<void, { product_pricing_id: string }>({
+      query: ({ product_pricing_id }) => ({
+        url: `/product-pricing/${product_pricing_id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['ProductPricing'],
+    }),
+  }),
+  overrideExisting: true,
+});
+
+// Export hooks to be used in components
+export const {
+  useGetProductPricingQuery,
+  useCreateProductPricingMutation,
+  useUpdateProductPricingMutation,
+  useDeleteProductPricingMutation,
+} = ProductPricingApi;
+
+export const {
+  useGetInventoryItemsQuery,
+  useCreateInventoryItemMutation,
+  useUpdateInventoryItemMutation,
+  useDeleteInventoryItemMutation,
+} = ProductsInventoryApi;
+
+
+
+export const {
+  useGetMiscellaneousQuery,
+  useGetMiscellaneousByOrderIdQuery,
+  useCreateMiscellaneousMutation,
+  useUpdateMiscellaneousMutation,
+  useDeleteMiscellaneousMutation,
+} = MiscellaneousApi;
+
+export const {
+  useGetOrderProductsQuery,
+  useGetOrderProductByIdQuery,
+  useCreateOrderProductMutation,
+  useUpdateOrderProductMutation,
+  useDeleteOrderProductMutation,
+  useGetOrderProductByOrderIdQuery
+} = OrderProductApi;
+
+
+
 export const {
   // Generated hooks for supplier products
   useGetSupplierProductsQuery,
@@ -548,6 +866,14 @@ export const {
   useUpdateSupplierProductMutation,
   useDeleteSupplierProductMutation,
 } = SupplierProductApi;
+
+export const {
+  useGetOrdersQuery,
+  useCreateOrderMutation,
+  useDeleteOrderMutation,
+  useGetOrderByIdQuery,
+  useUpdateOrderMutation,
+} = OrderApi;
 
 export const {
   // Generated hooks for supplier pricing

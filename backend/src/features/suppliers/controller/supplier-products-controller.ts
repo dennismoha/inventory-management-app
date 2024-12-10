@@ -22,7 +22,9 @@ export class SupplierProductsController {
         const supplierProducts: SupplierProduct[] = await prisma.supplierProducts.findMany({
             include: {
                 supplier: true, // Include related Products
-                product: true
+                product: true,
+                Inventory: true,
+                ProductPricing: true
             }
         });
         const message = utilMessage.fetchedMessage('supplier product');

@@ -1,3 +1,4 @@
+import { InventoryItem, ProductPricing } from "@/app/inventory/interfaces/inventory-interface";
 import { Product } from "@/app/products/interface/products-Interface";
 import { Unit } from "@/app/units/interface/units-interface";
 
@@ -35,6 +36,8 @@ export interface Supplier {
     updated_at: Date;              // ISO 8601 DateTime string
     supplier?: Supplier;           // Reference to the supplier
     product?: Product;             // Reference to the product
+    Inventory?: InventoryItem,
+    ProductPricing?: ProductPricing
   }
 
   export interface SupplierProductsApiResponse {

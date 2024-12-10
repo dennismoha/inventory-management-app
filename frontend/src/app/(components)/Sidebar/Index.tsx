@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
 import { setIsSidebarCollapsed } from "@/app/redux/state";
 import {
-  Archive, 
+ 
   Layout,
   LucideIcon,
   Menu, 
@@ -109,12 +109,12 @@ const Sidebar = () => {
           isCollapsed={isSidebarCollapsed}
         />
           
-        <SidebarLink
+        {/* <SidebarLink
           href="/inventory"
           icon={Archive}
           label="Inventory"
           isCollapsed={isSidebarCollapsed}
-        /> 
+        />  */}
         {/* <SidebarLink
           href="/products"
           icon={Clipboard}
