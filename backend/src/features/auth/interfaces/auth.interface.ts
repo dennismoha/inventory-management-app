@@ -1,5 +1,15 @@
 // src/types/user.ts
 
+
+
+declare global {
+    namespace Express {
+        interface Request {
+            currentUser?: AuthPayload
+        }
+    }
+}
+
 export interface UserInterface {
     username: string;
     email: string;
@@ -9,4 +19,11 @@ export interface UserInterface {
   
   export interface CreateUserRequest {
     users: UserInterface[];
+  }
+
+  export interface AuthPayload {
+    // userId: string;   
+    email: string;
+    username: string;
+    role: 'admin' | 'user';
   }
