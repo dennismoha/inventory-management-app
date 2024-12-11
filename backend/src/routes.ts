@@ -24,12 +24,11 @@ import { authMiddleware } from './shared/globals/helpers/auth-middleware';
 export default(app:Application) => {
     const routes = () =>{
         app.use(BASE_PATH, authRoutes.routes());
-        app.use(BASE_PATH, authRoutes.signoutRoute())
+        app.use(BASE_PATH, authRoutes.signoutRoute());
         app.use(BASE_PATH, categoryRoutes.routes());
         app.use(BASE_PATH, subCategoryRoutes.routes());
         app.use(BASE_PATH, productUnitsRoutes.routes());
         app.use(BASE_PATH, productsRoutes.routes());
-        app.use(BASE_PATH, authMiddleware.verifyUser, unitsRoutes.routes());
         app.use(BASE_PATH, suppliersRoutes.routes());
         app.use(BASE_PATH, supplierProductsRoutes.routes());
         app.use(BASE_PATH, supplierPricingRoutes.routes());
@@ -38,6 +37,7 @@ export default(app:Application) => {
         app.use(BASE_PATH, miscellaneousRoutes.routes());
         app.use(BASE_PATH, inventoryRoutes.routes());
         app.use(BASE_PATH, productPricingRoutes.routes());
+        app.use(BASE_PATH, authMiddleware.verifyUser, unitsRoutes.routes());
      
     };
 
