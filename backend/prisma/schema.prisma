@@ -119,7 +119,7 @@ model Units {
   Inventory Inventory[]
   ProductPricing ProductPricing[]
 
-
+  @@unique([unit, short_name], name:"unit_short_name")
   @@map("Units")
 }
 
@@ -294,6 +294,20 @@ model InventoryTracking {
   orderProduct          OrderProducts @relation(fields: [orderProductId], references: [orderProductsId])
 
 }
+
+model User {
+  user_id       String      @id @default(uuid())
+  username  String
+  email     String @unique
+  password  String
+  role      UserRoles
+}
+
+// user roles
+ enum UserRoles {
+  admin
+  user
+ }
 
 // Enums for payment status, payment method, and order status
 enum PaymentStatus {

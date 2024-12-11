@@ -9,7 +9,7 @@ export default [
     // Note: there should be no other properties in this object
     ignores: ["eslint.config.mjs"]
 },
-  { languageOptions: { globals: globals.browser } },
+  { languageOptions: { globals: {...globals.node} } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {

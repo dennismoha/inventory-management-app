@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import HTTP_STATUS from 'http-status-codes';
 import 'express-async-errors';
+import cookieSession from 'cookie-session';
 import compression from 'compression';
 import Logger from 'bunyan';
 import swaggerUi from 'swagger-ui-express';
@@ -15,8 +16,8 @@ import { config } from '@src/config';
 import ApplicationRoutes from '@src/routes';
 import { CustomError } from '@src/shared/globals/helpers/error-handler';
 import { BASE_PATH, SERVER_PORT } from '@src/constants';
-import { PrismaClient, Prisma } from '@prisma/client';
-const prisma = new PrismaClient();
+// import { PrismaClient, Prisma } from '@prisma/client';
+// const prisma = new PrismaClient();
 
 const log: Logger = config.createLogger('server');
 const swaggerDocument = YAML.load('./openapi.yaml');
@@ -51,6 +52,14 @@ export class ServerSetup {
   }
 
   private securityMiddleware(app: Application): void {
+    app.use(
+      cookieSession({
+        name: 'session',
+        keys: [config.SECRET_COOKIE_KEY_ONE!, config.SECRET_COOKIE_KEY_TWO!],
+        maxAge: 24 * 7 * 3600000,
+        secure: config.NODE_ENV !== 'development'
+      })
+    );
     app.use(hpp());
     app.use(helmet());
     app.use(
