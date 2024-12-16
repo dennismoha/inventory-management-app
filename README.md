@@ -22,3 +22,5 @@ This project is a custom inventory management system designed for a small shop. 
 - The `docs` folder is not relevant for the project and can be ignored.
 - Both the backend and frontend contain detailed `README.md` files explaining the project structure and how to run the application.
 - The entire project is written in TypeScript.
+
+

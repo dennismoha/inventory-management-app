@@ -11,16 +11,16 @@ import {LucideIcon,  Archive,  Package2Icon,  PackageCheck, ShoppingBagIcon, Sho
 const sidebarMenuLinks: SidebarMenuLink[] = [
   {
     label: "products",
-    href: "/products",
+    href: "/admin/products",
     icon: Package2Icon,  // Main icon for the 'products' menu
     submenu: [
       {
-        href: "/products",
+        href: "/admin/products",
         icon: PackageCheck,  // Icon for 'product list'
         label: "products",
       },
       {
-        href: "/product-units",
+        href: "/admin/product-units",
         icon: BoxIcon,
         label: "product units list",
       },
@@ -28,21 +28,21 @@ const sidebarMenuLinks: SidebarMenuLink[] = [
   },
   {
     label: "inventory",
-    href: "/inventory",
+    href: "/admin/inventory",
     icon:  Archive,  // Main icon for the 'products' menu
     submenu: [
       {
-        href: "/inventory",
+        href: "/admin/inventory",
         icon:  Archive,  // Icon for 'product list'
         label: "inventory",
       },
       {
-        href: "/inventory/product-pricing",
+        href: "/admin/inventory/product-pricing",
         icon:  CreditCard,  // Icon for 'product list'
         label: "product-pricing",
       },
       {
-        href: "/inventory/inventory-pricing-overview",
+        href: "/admin/inventory/inventory-pricing-overview",
         icon:  CreditCard,  // Icon for 'product list'
         label: "inventory-pricing-overview",
       },
@@ -51,11 +51,11 @@ const sidebarMenuLinks: SidebarMenuLink[] = [
   },
   {
     label: "units",
-    href: "/units",
+    href: "/admin/units",
     icon: BoxIcon,  // Icon for the 'units' menu
     submenu: [
       {
-        href: "/units",
+        href: "/admin/units",
         icon: BoxIcon,
         label: "units",
       },      
@@ -63,16 +63,16 @@ const sidebarMenuLinks: SidebarMenuLink[] = [
   },
   {
     label: "categories",
-    href: "/categories",
+    href: "/admin/categories",
     icon: TagIcon,  // Icon for the 'categories' menu
     submenu: [
       {
-        href: "/categories",
+        href: "/admin/categories",
         icon: TagIcon,
         label: "category list",
       },
       {
-        href: "/categories/subcategories",
+        href: "/admin/categories/subcategories",
         icon: TagIcon,
         label: "sub category",
       },
@@ -80,21 +80,21 @@ const sidebarMenuLinks: SidebarMenuLink[] = [
   },
   {
     label: "suppliers",
-    href: "/suppliers",
+    href: "/admin/suppliers",
     icon: UsersIcon,  // Icon for the 'suppliers' menu
     submenu: [
       {
-        href: "/suppliers",
+        href: "/admin/suppliers",
         icon: UsersIcon,
         label: "suppliers",
       },
       {
-        href: "/suppliers/supplier-products",
+        href: "/admin/suppliers/supplier-products",
         icon: DollarSignIcon,
         label: "supplier products",
       },
       {
-        href: "/suppliers/supplier-products-pricing",
+        href: "/admin/suppliers/supplier-products-pricing",
         icon: DollarSignIcon,
         label: "supplier pricing list",
       },     
@@ -112,7 +112,7 @@ const sidebarMenuLinks: SidebarMenuLink[] = [
         label: "orders",
       },
       {
-        href: "/orders/order-products",
+        href: "/admin/orders/order-products",
         icon: ShoppingCartIcon,
         label: "order products",
       },     

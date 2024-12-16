@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Menu, Bell, Sun, Settings, Moon } from "lucide-react";
+import { Menu, Bell, Sun, Settings, Moon,LogOut } from "lucide-react";
 // import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
@@ -78,6 +78,9 @@ const Navbar = () => {
         </div>
         <Link href="/settings">
           <Settings className="cursor-pointer text-gray-500" size={24} />
+        </Link>
+        <Link href="/api/auth/signout">
+          <LogOut className="cursor-pointer text-gray-500" size={24} />
         </Link>
       </div>
     </div>
