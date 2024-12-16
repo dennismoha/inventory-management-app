@@ -9,6 +9,7 @@ import cookieSession from 'cookie-session';
 import compression from 'compression';
 import Logger from 'bunyan';
 import swaggerUi from 'swagger-ui-express';
+import cookieParser from 'cookie-parser';
 // import swaggerJsdoc from 'swagger-jsdoc';
 import YAML from 'yamljs';
 
@@ -57,17 +58,22 @@ export class ServerSetup {
         name: 'session',
         keys: [config.SECRET_COOKIE_KEY_ONE!, config.SECRET_COOKIE_KEY_TWO!],
         maxAge: 24 * 7 * 3600000,
-        secure: config.NODE_ENV !== 'development'
+        // secure: config.NODE_ENV !== 'development'
+          secure: false,
+          signed:false,
+          httpOnly:false,
+          sameSite:'none',
       })
     );
+    app.use(cookieParser()); // Use cookie-parser to access cookies in req.cookie
     app.use(hpp());
     app.use(helmet());
     app.use(
       cors({
         origin: '*',
-        credentials: true,
+        // credentials: true,
         optionsSuccessStatus: 200,
-        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
+        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']      
       })
     );
   }

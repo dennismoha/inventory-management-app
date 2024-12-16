@@ -1,7 +1,7 @@
 // categorySlice.ts
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Category, CategoryState } from '@/app/categories/interface/categories-interface';
+import { Category, CategoryState } from '@/app/(admin)/admin/categories/interface/categories-interface';
 
 
 // Initial state based on the CategoryState interface

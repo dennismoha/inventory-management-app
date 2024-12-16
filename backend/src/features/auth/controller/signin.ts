@@ -28,6 +28,7 @@ export class Login {
    * @returns {Promise<Response>} A promise that resolves to the response object.
    */
   public async login(req: Request, res: Response): Promise<Response> {
+   
     const { email, password }: Pick<UserInterface, 'email' | 'password' > = req.body;
 
     // Check if user exists with the given email
@@ -48,15 +49,15 @@ export class Login {
     // Generate a JWT token
     const token = jwt.sign(
       { email: user.email, username: user.username, role: user.role }, // Payload
-      config.JWT_SECRET || 'anotherkeybuthisisnotsecure',             // Secret key for signing the token
+      config.JWT_SECRET,             // Secret key for signing the token
       { expiresIn: '1h' }                                     // Token expiration time
     );
 
     req.session = {jwt: token};
-  
+ 
     // Return a success message (without sending the token directly in the response body)
     return res.status(200).json({
-      message: 'Login successful', token
+      message: 'Login successful', token, role: user.role
     });
   }
 }
