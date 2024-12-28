@@ -1,24 +1,31 @@
 'use client'
 import { useGetCustomersQuery } from "@/app/redux/api/inventory-api";
-import { useAppDispatch } from "@/app/redux/redux";
+import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
 import { changeCustomerId } from "@/app/redux/state/cart";
-import React, { useState, ChangeEvent } from "react";
+import React, {  ChangeEvent, useCallback } from "react";
 
 
 const CustomersList: React.FC = () => {
   
   //  the type of the selected option state
-  const [selectedOption, setSelectedOption] = useState<string>("");
-  console.log('selected option is ', selectedOption);
+
+  const selectedCustomer = useAppSelector((state) => state.cart.customerId);
+  console.log('selected option is ', selectedCustomer);
   const dispatch = useAppDispatch()
  
   const { isLoading, isError, data } = useGetCustomersQuery();
   console.log('data for customers is ', data)
   // Handle changes in the dropdown selection
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    setSelectedOption(event.target.value);
-    dispatch(changeCustomerId({customerId: event.target.value }))
-  };
+  // const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    
+  //   dispatch(changeCustomerId({customerId: event.target.value }))
+  // };
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      dispatch(changeCustomerId({ customerId: event.target.value }));
+    },
+    [dispatch]  // Dependencies: only re-create if 'dispatch' changes
+  );
 
   return (
     <div className="relative inline-block w-64">
@@ -32,7 +39,7 @@ const CustomersList: React.FC = () => {
       <select
         id="customerId"
         name="customerId"
-        value={selectedOption}
+        value={selectedCustomer}
         onChange={handleChange}
         className="mt-1 block  rounded-md border border-gray-300 bg-white py-2 px-3 text-sm text-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
       >
@@ -55,4 +62,4 @@ const CustomersList: React.FC = () => {
   );
 };
 
-export default CustomersList;
+export default React.memo(CustomersList);

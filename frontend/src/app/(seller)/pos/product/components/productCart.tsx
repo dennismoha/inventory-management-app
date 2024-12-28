@@ -21,7 +21,7 @@ const ProductCart: React.FC<inputData> = (props) => {
   // const {productId, name, price, image, slug} = props.data;
   const {
     inventoryId,
-    // supplier_products_id,
+    supplier_products_id,
     // product_weight,
     stock_quantity,
     // reorder_level,
@@ -41,13 +41,15 @@ const ProductCart: React.FC<inputData> = (props) => {
   const handleAddToCart = () => {
     dispatch(
       addToCheckout({
+        supplier_products_id,
+        // product_weight,
         inventoryId,
         status,
-        unit,
+      
         stock_quantity,
         quantity: 1,
-        name: `${supplierProduct?.supplier?.name}-${ supplierProduct?.product?.name}`,
-        pricing: supplierProduct?.ProductPricing?.price  ?  supplierProduct?.ProductPricing?.price : 0,
+        productName: `${supplierProduct?.supplier?.name}-${ supplierProduct?.product?.name}`,
+        price: supplierProduct?.ProductPricing?.price  ?  supplierProduct?.ProductPricing?.price : 0,
         VAT: supplierProduct?.ProductPricing?.VAT  ?  supplierProduct?.ProductPricing?.VAT : 0,
         discount: supplierProduct?.ProductPricing?.discount  ?  supplierProduct?.ProductPricing?.discount : 0
       })

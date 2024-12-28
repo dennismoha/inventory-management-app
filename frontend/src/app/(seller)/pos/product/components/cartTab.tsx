@@ -6,19 +6,30 @@ import { toggleStatusTab } from "@/app/redux/state/cart";
 import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
 // import { SearchIcon } from "lucide-react";
 import CustomersList from "./customers";
+import { useCallback } from "react";
+import { useCreateTransactionMutation } from "@/app/redux/api/inventory-api";
 
 
 
 const CartTab = () => {
- 
+  
+  const [createTransaction] =useCreateTransactionMutation()
+  const cartProducts = useAppSelector((state) => state.cart);
+
+  const handleCheckoutHandler = () =>{
+    console.log('here we are')
+    createTransaction(cartProducts)
+  }
   const carts = useAppSelector((state) => state.cart.cartProducts);
   const statusTab = useAppSelector((state) => state.cart.statusTab);
   const totalcost = useAppSelector((state) => state.cart.totalCost);
 //   const items = useAppSelector((state) => state.cart)
   const dispatch = useAppDispatch();
-  const handleCloseTabCart = () => {
+
+  
+  const handleCloseTabCart = useCallback(()=> {
     dispatch(toggleStatusTab());
-  };
+  },[dispatch]) 
 
 
   return (
@@ -46,7 +57,7 @@ const CartTab = () => {
         <button className="bg-black text-white" onClick={handleCloseTabCart}>
           CLOSE
         </button>
-        <button className="bg-amber-600 text-white">CHECKOUT</button>
+        <button onClick={ handleCheckoutHandler} className="bg-amber-600 text-white">CHECKOUT</button>
       </div>
     </div>
   );

@@ -1,19 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { InventoryItem } from '@/app/(admin)/admin/inventory/interfaces/inventory-interface';
-export type cartProducts =Pick<InventoryItem,'inventoryId' | 'status' | 'unit' | 'stock_quantity'>  & {   
+export type cartProducts =Pick<InventoryItem,'inventoryId' | 'status'  | 'stock_quantity' | 'supplier_products_id' >  & {   
     quantity: number,
-    name: string,
-    pricing: number,
+    productName: string,
+    price: number,
     VAT: number,
     discount: number
 }
-interface ProductItems {
+export interface ProductItems {
     cartProducts: cartProducts[]
     statusTab: boolean,
     totalCost: {
         total: number
         subtotal: number      
     }
+    paymentMethod?: string
     customerId?: string
 }
 const initialState: ProductItems = { 
@@ -24,6 +25,7 @@ const initialState: ProductItems = {
         subtotal:0
 
     },
+    paymentMethod:'cash',
     customerId: ''
 };
 
@@ -32,8 +34,9 @@ const checkoutSlice = createSlice({
     initialState,
     reducers: {
         addToCheckout(state, action: PayloadAction<cartProducts>) {
-            const { inventoryId, quantity, status, unit, stock_quantity, name, pricing, VAT, discount } = action.payload;
-            
+            // eslint-disable-next-line prefer-const
+            let { inventoryId, quantity, status,  stock_quantity, productName, price, VAT, discount, supplier_products_id } = action.payload;
+            price = Number(price)
             // Find if the product already exists in the cartProducts
             const indexProductId = state.cartProducts.findIndex(item => item.inventoryId === inventoryId);
             
@@ -42,27 +45,27 @@ const checkoutSlice = createSlice({
                 state.cartProducts[indexProductId].quantity += quantity
             } else {
                 // If the product does not exist, add a new product to the cart
-                state.cartProducts.push({ inventoryId, quantity, status, unit, stock_quantity , name, pricing , VAT, discount});
+                state.cartProducts.push({ inventoryId, quantity, status,  stock_quantity , productName, price , VAT, discount, supplier_products_id});
             }
 
             
                // Calculate the total cost of all items in the cart after the update
             //    state.totalCost.subtotal = state.cartProducts.reduce((total, item) => {
-            //     return total + (item.quantity * item.pricing); // Multiply quantity by pricing for each item
+            //     return total + (item.quantity * item.price); // Multiply quantity by price for each item
             // }, 0);
               // Calculate the subtotal (sum of all item prices before VAT and discount)
               const subtotal = state.cartProducts.reduce((total, item) => {
-                return total + (item.quantity *  pricing); // Multiply quantit by pricing for each item
+                return total + (item.quantity *  price); // Multiply quantit by price for each item
             }, 0);
 
             // Calculate the total VAT (based on the subtotal and each item's VAT percentage)
             const totalVAT = state.cartProducts.reduce((total, item) => {
-                return total + (item.quantity *  pricing * VAT / 100); // VAT is a percentage
+                return total + (item.quantity *  price * VAT / 100); // VAT is a percentage
             }, 0);
 
             // Calculate the total discount (based on each item's discount percentage)
             const totalDiscount = state.cartProducts.reduce((total, item) => {
-                return total + (item.quantity *  pricing * item.discount / 100); // Discount is a percentage
+                return total + (item.quantity *  price * item.discount / 100); // Discount is a percentage
             }, 0);
 
             // Calculate the total cost (subtotal + VAT - discount)
@@ -92,22 +95,22 @@ const checkoutSlice = createSlice({
 
              // Calculate the total cost of all items in the cart after the update
             //  state.totalCost = state.cartProducts.reduce((total, item) => {
-            //     return total + (item.quantity * item.pricing); // Multiply quantity by pricing for each item
+            //     return total + (item.quantity * item.price); // Multiply quantity by pricing for each item
             // }, 0);
 
               // Calculate the subtotal (sum of all item prices before VAT and discount)
               const subtotal = state.cartProducts.reduce((total, item) => {
-                return total + (item.quantity * item.pricing); // Multiply quantity by pricing for each item
+                return total + (item.quantity * item.price); // Multiply quantity by price for each item
             }, 0);
 
             // Calculate the total VAT (based on the subtotal and each item's VAT percentage)
             const totalVAT = state.cartProducts.reduce((total, item) => {
-                return total + (item.quantity * item.pricing * item.VAT / 100); // VAT is a percentage
+                return total + (item.quantity * item.price * item.VAT / 100); // VAT is a percentage
             }, 0);
 
             // Calculate the total discount (based on each item's discount percentage)
             const totalDiscount = state.cartProducts.reduce((total, item) => {
-                return total + (item.quantity * item.pricing * item.discount / 100); // Discount is a percentage
+                return total + (item.quantity * item.price * item.discount / 100); // Discount is a percentage
             }, 0);
 
             // Calculate the total cost (subtotal + VAT - discount)

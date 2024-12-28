@@ -42,6 +42,7 @@ import {
 import { ApiResponse } from "@/app/utils/interfaces/util-interface";
 import { Customer, NewCustomerPayload } from "@/app/(seller)/pos/customers/interface/customer-interface";
 import { NewTransactionPayload, Transaction } from "@/app/(seller)/pos/transactions/interfaces/transactions-interface";
+import { ProductItems } from "../state/cart";
 export interface Product {
   product_id: string; // UUID
   name: string; // Name of the product
@@ -927,7 +928,7 @@ const TransactionApi = InventoryApi.injectEndpoints({
     // }),
 
     // Create a new transaction
-    createTransaction: build.mutation<Transaction, NewTransactionPayload>({
+    createTransaction: build.mutation<ProductItems, NewTransactionPayload>({
       query: (newTransaction) => ({
         url: '/transactions',
         method: 'POST',
