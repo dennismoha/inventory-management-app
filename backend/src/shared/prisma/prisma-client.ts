@@ -36,23 +36,70 @@ prismaClient.$on('query', (e: Prisma.QueryEvent) => {
 });
 
 // Log Prisma errors
-prismaClient.$on('error', (e) => {
+prismaClient.$on('error', (e: Prisma.LogEvent) => {
     logger.info('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer===============', e);
     // Handle Prisma known errors
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        logger.info('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer', e);
-        if (e.code === 'P2002') {
-          logger.error(
-            `message: ${e.message}`
-          );
-        } else {
-          logger.error(`Prisma Error: ${e.message}`);
-        }
-      } else {
-        // Handle unexpected errors
-        logger.error(`Unexpected error: ${e}`);
-      }
-    throw new BadRequestError('error');
+
+    const message = e.message || '';
+    const target = e.target || 'Unknown field';
+    const timestamp = e.timestamp || new Date().toISOString();
+  
+    // Use switch to handle different error scenarios based on the error message
+    switch (true) {
+      case message.includes('Unique constraint failed'):
+        logger.error(`[${timestamp}] Unique constraint violation: ${target}`);
+        throw new BadRequestError('Duplicate entry detected');
+  
+      case message.includes('Foreign key constraint violated'):
+        logger.error(`[${timestamp}] Foreign key constraint violation: ${target}`);
+        throw new BadRequestError('Invalid reference field');
+  
+      case message.includes('Invalid `prisma.'):
+        logger.error(`[${timestamp}] Record not found: ${target}`);
+        throw new BadRequestError('invalid fields');
+  
+      default:
+        // Handle other types of errors that don't match known patterns
+        logger.error(`[${timestamp}] Prisma error: ${message}`);
+        throw new BadRequestError(`Prisma error occurred: ${message}`);
+    }
+
+    // if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    //     logger.info('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer', e);
+    //     throw new BadRequestError(JSON.stringify(e.code));
+    //     // if (e.code === 'P2002') {
+    //     //   logger.error(
+    //     //     `message: ${e.message}`
+    //     //   );
+    //     // } else {
+    //     //   logger.error(`Prisma Error: ${e.message}`);
+    //     // }
+    //   } else {
+    //     // Handle unexpected errors
+    //     logger.error(`Unexpected error: ${e}`);
+    //   }
+
+    //   if (e instanceof Prisma.PrismaClientUnknownRequestError) {
+    //     throw new BadRequestError('unknown error');
+    //   }
+
+    //   if(e instanceof Prisma.PrismaClientValidationError){
+    //     throw new BadRequestError('prisma validation error');
+    //   }
+
+    //   if(e instanceof Prisma.PrismaClientRustPanicError){
+    //     throw new BadRequestError('prisma client rust');
+    //   }
+
+    // if(e.message) {
+    //     if (e.message.includes('Foreign key constraint violated')) {
+    //         // const target = e.target || 'Unknown field';
+    //         // logger.error(`Unique constraint violation: ${target}`);
+    //         // throw new Error(`Duplicate entry detected for ${target}.`);
+    //         throw new BadRequestError(JSON.stringify('unknown field'));
+    //       } 
+    // }
+    // throw new BadRequestError(JSON.stringify(e.message));
     
 });
 

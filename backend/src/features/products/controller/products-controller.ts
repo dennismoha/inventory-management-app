@@ -17,7 +17,12 @@ export class ProductsController {
    * @param res The Express response object.
    */
   public async fetchProducts(req: Request, res: Response): Promise<void> {
-    const products: Product[] = await prisma.products.findMany();
+    const products: Product[] = await prisma.products.findMany({
+      include: {      
+        category: true, // Include related Products
+        subcategory: true
+      }
+    });
     res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, products, 'succesfully fetched'));  
   }
 
@@ -64,7 +69,8 @@ export class ProductsController {
         where: { product_id },
         data: { name, description, category_id, subcategory_id, image_url, sku }
       });
-      res.status(StatusCodes.OK).json(updatedProduct);
+      res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, updatedProduct, 'succesfully fetched'));  
+      // json(updatedProduct);
     
   }
 
