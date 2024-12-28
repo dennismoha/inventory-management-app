@@ -135,6 +135,7 @@ model SupplierProducts {
   Inventory Inventory?
   ProductPricing ProductPricing?
 
+  transactions Transaction[]
   @@unique([supplier_id, product_id]) // Enforcing uniqueness on supplier_id and product_id combination
   @@map("SupplierProducts")
 }
@@ -275,11 +276,14 @@ model ProductPricing {
   Quantity             Decimal @db.Decimal(8, 2)
   unit_id        String   @db.Uuid
   price          Decimal  @db.Decimal(8, 2)
+  VAT            Decimal?  @db.Decimal(8, 2)
+  discount       Decimal?  @db.Decimal(8, 2)
   effective_date DateTime @db.Date
   created_at     DateTime @default(now()) @db.Timestamp(6)
   updated_at     DateTime @updatedAt @db.Timestamp(6)
   supplierProduct SupplierProducts @relation(fields: [supplier_products_id], references: [supplier_products_id])
   unit Units @relation(fields: [unit_id], references: [unit_id])
+  
 }
 
 model InventoryTracking {
@@ -294,6 +298,56 @@ model InventoryTracking {
   orderProduct          OrderProducts @relation(fields: [orderProductId], references: [orderProductsId])
 
 }
+
+model Customer {
+  customerId                    String       @id @default(uuid())  // Unique ID for each customer
+  firstName             String    // Customer's first name
+  lastName              String    // Customer's last name
+  email                 String  @unique  // Optional: Customer's email address
+  phoneNumber           String  @unique // Optional: Customer's phone number
+  address               String?   // Optional: Customer's address
+  
+  country               String?   // Optional: Customer's country
+  createdAt             DateTime  @default(now())  // Date when the customer was added
+  updatedAt             DateTime  @updatedAt  // Automatically updates when customer details change
+  status                String    // Customer status: "active", "inactive", etc.
+  loyaltyPoints         Int       @default(0) // Optional: Loyalty points, if applicable
+  totalSpent            Float     @default(0) // Total amount the customer has spent (optional)
+  deleted               Boolean @default(false)
+  notes                 String?   // Optional: Any special notes or preferences about the customer
+  preferredPaymentMethod String?  // Optional: Preferred payment method (e.g., Credit card, PayPal)
+  
+  // Relationship with transactions
+  transactions          Transaction[]  // A customer can have many transactions
+
+  @@index([email], name: "customer_email_idx")  // Index for email for quick searches
+}
+
+
+model Transaction {
+  Id           Int       @id @default(autoincrement())   // Unique identifier for the transaction in autoincrement form
+  transactionId           String       @unique             // Unique identifier for the transaction
+  supplierProductId       String @db.Uuid                                          // Foreign key linking to the supplier product
+  quantity               Int                                          // Quantity of the product sold
+  productName            String                                       // Name of the product sold
+  price                  Float                                        // Price per unit of the product
+  discount               Float                                        // Discount applied to the transaction
+  vat                    Float                                        // VAT applied to the product
+  customerId             String?                                         // Optional: Customer ID if applicable
+  transactionDateCreated DateTime   @default(now())                    // Timestamp for when the transaction was created
+  totalCost              Float                                        // Total cost after applying discounts and VAT
+  paymentMethod          PaymentMethod                                       // Payment method (e.g., card, PayPal, cash)
+  subtotal               Float                                        // Subtotal (price * quantity)
+  
+  // Relationships
+  supplierProduct        SupplierProducts @relation(fields: [supplierProductId], references: [supplier_products_id]) // Link to supplier product
+  customer               Customer?       @relation(fields: [customerId], references: [customerId])  // Link to the customer (nullable)
+
+  // Optional: Indexes for faster querying
+ 
+  @@index([customerId])
+}
+
 
 model User {
   user_id       String      @id @default(uuid())

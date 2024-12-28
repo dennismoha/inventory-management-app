@@ -12,6 +12,7 @@ import CategoryReduce from "@/app/redux/state/categories"
 import { api } from "@/app/redux/state/api";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { InventoryApi } from "@/app/redux/api/inventory-api";
+import checkoutSlice from "@/app/redux/state/cart"
 
 import {
   persistStore,
@@ -54,6 +55,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   global: globalReducer,
   categories: CategoryReduce,
+  cart: checkoutSlice,
   [api.reducerPath]: api.reducer,
   [InventoryApi.reducerPath]: InventoryApi.reducer
 });
@@ -79,6 +81,7 @@ export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
 
 /* PROVIDER */
 export default function StoreProvider({

@@ -28,6 +28,8 @@ export interface ProductPricing {
   Quantity: Decimal;
   unit_id: string;
   price: Decimal;
+  VAT: Decimal | null ;
+  discount: Decimal | null;
   effective_date: Date;
   created_at: Date;
   updated_at: Date;

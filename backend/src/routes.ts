@@ -16,7 +16,9 @@ import { miscellaneousRoutes } from '@src/features/miscellaneous/routes/miscella
 import { inventoryRoutes } from '@src/features/inventory/routes/inventory-routes';
 import { productPricingRoutes } from '@src/features/inventory/routes/product-pricing';
 import { authRoutes } from '@src/features/auth/routes/auth-routes';
-import { authMiddleware } from './shared/globals/helpers/auth-middleware';
+import { transactionRoutes } from '@src/features/transactions/routes/transaction-routes';
+import { customerRoutes } from '@src/features/customers/routes/customers-routes';
+// import { authMiddleware } from './shared/globals/helpers/auth-middleware';
 
 
 
@@ -37,7 +39,9 @@ export default(app:Application) => {
         app.use(BASE_PATH, miscellaneousRoutes.routes());
         app.use(BASE_PATH, inventoryRoutes.routes());
         app.use(BASE_PATH, productPricingRoutes.routes());
-        app.use(BASE_PATH, authMiddleware.verifyUser, unitsRoutes.routes());
+        app.use(BASE_PATH, transactionRoutes.routes());
+        app.use(BASE_PATH, customerRoutes.routes());
+        app.use(BASE_PATH, unitsRoutes.routes());
      
     };
 

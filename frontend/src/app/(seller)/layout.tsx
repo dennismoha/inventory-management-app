@@ -1,5 +1,6 @@
 // import  SellersHomePage from './pos/home/page'
 import type { Metadata } from "next";
+import "./globals.css";
 // import localFont from "next/font/local";
 
 import PosWrapper from "./pos/pos-wrapper";

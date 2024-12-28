@@ -6,6 +6,8 @@ import { Supplier, SupplierPricing, SupplierProduct } from '@src/features/suppli
 import { Order, OrderProducts } from '@src/features/orders/interfaces/order.interface';
 import { Inventory, ProductPricing  } from '@src/features/inventory/interfaces/inventory.interface';
 import { Miscellaneous } from '@src/features/miscellaneous/interfaces/miscellaneous.interface';
+import { Customer } from '@src/features/customers/interfaces/customer.interface';
+import { Transaction } from '@src/features/transactions/interfaces/transaction.interface';
 
 // Utility type to handle both singular and array types
 type WithArray<T> = T | T[];
@@ -25,6 +27,8 @@ type success_data =
     | WithArray<Product>
     | WithArray<ProductUnit>
     | WithArray<ProductPricing>
+    | WithArray<Customer>
+    | WithArray<Transaction>
     | null;
 
 // GetSuccessMessage function

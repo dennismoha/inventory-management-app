@@ -13,6 +13,12 @@ const nextConfig = {
         hostname: "s3-ed-inventory.s3.eu-north-1.amazonaws.com",
         port: "",
         pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname:"https://source.unsplash.com",
+        port: "",
+        pathname: "/**"
       }
     ],
   },

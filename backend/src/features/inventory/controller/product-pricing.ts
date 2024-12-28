@@ -55,7 +55,8 @@ export class ProductPricingController {
    */
   @joiValidation(productPricingSchema)
   public async createProductPricing(req: Request, res: Response): Promise<void> {
-    const { supplier_products_id, Quantity, unit_id, price, effective_date } = req.body;
+   
+    const { supplier_products_id, Quantity, unit_id, price, effective_date, VAT, discount } = req.body;
 
     // 1) Validate Unique Product Pricing
     const existingProductPricing = await prisma.productPricing.findFirst({
@@ -73,6 +74,7 @@ export class ProductPricingController {
         throw new BadRequestError('item price or quantity cannot be equal to 0');
     }
 
+  
     // 2) Create New Product Pricing Record
     const newProductPricing: ProductPricing = await prisma.productPricing.create({
       data: {
@@ -81,6 +83,8 @@ export class ProductPricingController {
         unit_id,
         price,
         effective_date,
+        VAT,
+        discount,
         created_at: new Date(),
         updated_at: new Date(),
       },

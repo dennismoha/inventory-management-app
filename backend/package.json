@@ -12,7 +12,9 @@
     "build": "tspc -p .",
     "generate-docs": "jsdoc -c jsdoc.json",
     "seed": "ts-node src/seed.ts",
-    "seed-user": "ts-node src/seed-user.ts"
+    "seed-user": "ts-node src/seed-user.ts",
+    "migrate:dev":  "cross-env ENV=dev && npx prisma migrate dev --name",
+    "migrate:prod": "cross-env ENV=prod && npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
@@ -56,6 +58,7 @@
     "cookie-parser": "^1.4.7",
     "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-async-errors": "^3.1.1",

@@ -14,7 +14,7 @@ import {
   Unit,
   UnitApiResponse,
   UnitBodyPayload,
-} from "@/app/units/interface/units-interface"; // Import the Unit types
+} from "@/app/(admin)/admin/units/interface/units-interface"; // Import the Unit types
 // import { Supplier } from '; // Import the Supplier type
 import {
   Supplier,
@@ -40,6 +40,8 @@ import {
   ProductPricing,
 } from "@/app/(admin)/admin/inventory/interfaces/inventory-interface";
 import { ApiResponse } from "@/app/utils/interfaces/util-interface";
+import { Customer, NewCustomerPayload } from "@/app/(seller)/pos/customers/interface/customer-interface";
+import { NewTransactionPayload, Transaction } from "@/app/(seller)/pos/transactions/interfaces/transactions-interface";
 export interface Product {
   product_id: string; // UUID
   name: string; // Name of the product
@@ -155,6 +157,8 @@ export const InventoryApi = createApi({
     "Miscellaneous",
     "InventoryItems",
     "ProductPricing",
+    "Transactions",
+    "Customers"
   ],
   endpoints: (build) => ({
     getDashboardMetrics: build.query<DashboardMetrics, void>({
@@ -846,6 +850,132 @@ const ProductPricingApi = InventoryApi.injectEndpoints({
   }),
   overrideExisting: true,
 });
+
+// import { InventoryApi } from './inventoryApi'; // assuming this is where you define your main API slice
+// import { Customer, NewCustomerPayload } from './types'; // assuming Customer type and payload types are defined
+
+const CustomerApi = InventoryApi.injectEndpoints({
+  endpoints: (build) => ({
+    // Fetch all customers
+    getCustomers: build.query<NewCustomerPayload, void>({
+      query: () => '/customers',
+      providesTags: ['Customers'],
+    }),
+
+    // Fetch a specific customer by ID
+    // getCustomer: build.query<Customer, string | void>({
+    //   query: (search) => ({
+    //     url: `/customers/${search}`,
+    //     params: search ? {search}: {},
+    //   }),
+    //   providesTags: ['Customers']
+    // }),
+
+    // Create a new customer
+    createCustomer: build.mutation<Customer, NewCustomerPayload>({
+      query: (newCustomer) => ({
+        url: '/customers',
+        method: 'POST',
+        body: newCustomer,
+      }),
+      invalidatesTags: ['Customers'],
+    }),
+
+    // Update an existing customer
+    updateCustomer: build.mutation<Customer, Pick<Customer, 'customerId'>>({
+      query: ({ customerId, ...patch }) => ({
+        url: `/customers/${customerId}`,
+        method: 'PUT',
+        body: patch,
+      }),
+      invalidatesTags: ['Customers'],
+    }),
+
+    // Delete a customer
+    deleteCustomer: build.mutation<void,  Pick<Customer, 'customerId'>>({
+      query: ({ customerId }) => ({
+        url: `/customers/${customerId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Customers'],
+    }),
+  }),
+  overrideExisting: false,
+});
+
+// import { InventoryApi } from './inventoryApi'; // assuming this is where you define your main API slice
+// import { Transaction, NewTransactionPayload } from './types'; // assuming Transaction type and payload types are defined
+
+const TransactionApi = InventoryApi.injectEndpoints({
+  endpoints: (build) => ({
+    // Fetch all transactions
+    getTransactions: build.query<Transaction[], void>({
+      query: () => '/transactions',
+      providesTags: ['Transactions'],
+    }),
+
+    // // Fetch transactions by customer ID
+    // getTransactionsByCustomer: build.query<Transaction[], string>({
+    //   query: (customerId) => `/transactions/customer/${customerId}`,
+    //   providesTags: (result, error, customerId) => [{ type: 'Transactions', id: customerId }],
+    // }),
+
+    // // Fetch a specific transaction by ID
+    // getTransaction: build.query<Transaction, string>({
+    //   query: (transactionId) => `/transactions/${transactionId}`,
+    //   providesTags: (result, error, transactionId) => [{ type: 'Transactions', id: transactionId }],
+    // }),
+
+    // Create a new transaction
+    createTransaction: build.mutation<Transaction, NewTransactionPayload>({
+      query: (newTransaction) => ({
+        url: '/transactions',
+        method: 'POST',
+        body: newTransaction,
+      }),
+      invalidatesTags: ['Transactions'],
+    }),
+
+    // Update an existing transaction
+    // updateTransaction: build.mutation<Transaction, { transactionId: string; patch: Partial<Transaction> }>({
+    //   query: ({ transactionId, patch }) => ({
+    //     url: `/transactions/${transactionId}`,
+    //     method: 'PUT',
+    //     body: patch,
+    //   }),
+    //   invalidatesTags: ['Transactions'],
+    // }),
+
+    // Delete a transaction
+    // deleteTransaction: build.mutation<void, { transactionId: string }>({
+    //   query: ({ transactionId }) => ({
+    //     url: `/transactions/${transactionId}`,
+    //     method: 'DELETE',
+    //   }),
+    //   invalidatesTags: ['Transactions'],
+    // }),
+  }),
+  overrideExisting: false,
+});
+
+export const {
+  useGetTransactionsQuery,
+  // useGetTransactionsByCustomerQuery,
+  // useGetTransactionQuery,
+  useCreateTransactionMutation,
+  // useUpdateTransactionMutation,
+  // useDeleteTransactionMutation,
+} = TransactionApi;
+
+
+export const {
+  useGetCustomersQuery,
+  // useGetCustomerQuery,
+  useCreateCustomerMutation,
+  useUpdateCustomerMutation,
+  useDeleteCustomerMutation,
+} = CustomerApi;
+
 
 // Export hooks to be used in components
 export const {

@@ -1,5 +1,5 @@
 import { SupplierProduct } from "@/app/(admin)/admin/suppliers/interface/supplier-interface";
-import { Unit } from "@/app/units/interface/units-interface";
+import { Unit } from "@/app/(admin)/admin/units/interface/units-interface";
 
 export interface InventoryItem {
     inventoryId: string;                  // Unique identifier for the inventory
@@ -31,6 +31,8 @@ export interface InventoryItem {
     supplier_products_id: string;
     Quantity: number;
     unit_id: string;
+    discount:number;
+    VAT: number;
     price: number;
     effective_date: Date;
     created_at: Date;

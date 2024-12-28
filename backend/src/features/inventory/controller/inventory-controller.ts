@@ -31,9 +31,12 @@ export class InventoryController {
       include: {
         supplierProduct: {
           include: {
-            product: true
+            product: true,
+            supplier: true,     
+            ProductPricing:true,          
           }
-        }
+        },
+        unit: true
       }
     });
 

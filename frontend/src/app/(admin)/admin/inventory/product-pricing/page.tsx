@@ -127,6 +127,28 @@ export default function ProductPricingList() {
         },
       },
       {
+        accessorKey: "VAT",
+        header: "vat",
+        muiEditTextFieldProps: {
+          required: true,
+          error: !!validationErrors?.VAT,
+          helperText: validationErrors?.VAT,
+          onFocus: () =>
+            setValidationErrors({ ...validationErrors, VAT: undefined }),
+        },
+      },
+      {
+        accessorKey: "discount",
+        header: "discount",
+        muiEditTextFieldProps: {
+          required: true,
+          error: !!validationErrors?.discount,
+          helperText: validationErrors?.discount,
+          onFocus: () =>
+            setValidationErrors({ ...validationErrors, discount: undefined }),
+        },
+      },
+      {
         accessorKey: "effective_date",
         header: "Effective Date",
         muiEditTextFieldProps: {

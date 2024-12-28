@@ -4,8 +4,8 @@ import axios from 'axios';
 
 dotenv.config({});
 
-import { UserInterface } from '@src/features/auth/interfaces/auth.interface';
-import { BadRequestError } from '@src/shared/globals/helpers/error-handler';
+import { UserInterface } from './features/auth/interfaces/auth.interface';
+import { BadRequestError } from './shared/globals/helpers/error-handler';
 
 enum UserRole {
   admin = 'admin',
@@ -35,6 +35,7 @@ async function seed() {
   ];
 
   try {
+    // eslint-disable-next-line no-unused-vars
     const response = await axios.post('http://localhost:8081/api/v1/signup', users);
     // console.log('Users created:', response.data);
   } catch (e: unknown) {
@@ -44,7 +45,7 @@ async function seed() {
     } else if (e instanceof Error) {
       console.log(e.message);
     }
-    throw new BadRequestError('something went wrong')
+    throw new BadRequestError(`something went wrong ${e}`);
   }
 }
 

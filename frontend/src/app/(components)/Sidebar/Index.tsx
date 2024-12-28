@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
 import { setIsSidebarCollapsed } from "@/app/redux/state";
+import { useSession } from "next-auth/react";
 import {
  
   Layout,
@@ -68,6 +69,8 @@ const Sidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
   };
 
+  const { data: session, } = useSession()
+
   const sidebarClassNames = `fixed flex flex-col ${
     isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
   } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40`;
@@ -78,7 +81,7 @@ const Sidebar = () => {
       <div className="flex gap-3 justify-between md:justify-normal items-center pt-8">
         <Image
           src="https://s3-ed-inventory.s3.eu-north-1.amazonaws.com/logo.png"
-          alt="edstock"
+          alt="IMS"
           width={27}
           height={27}
           className="rounded w-8"
@@ -89,7 +92,7 @@ const Sidebar = () => {
             isSidebarCollapsed ? "hidden" : "block"
           } font-extrabold text-2xl`}
         >
-          EDSTOCK
+          IMS 
         </h1>
         <button
           className="md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100"
@@ -102,7 +105,34 @@ const Sidebar = () => {
       {/* links */}
       {/* LINKS */}
       <div className="flex-grow mt-8">
-     <SidebarLink
+        {session && session.user.role === 'user' ?    (<>
+          <SidebarLink
+          href="/pos/products"
+          icon={Layout}
+          label="Products test"
+          isCollapsed={isSidebarCollapsed}
+        /> 
+        <SidebarLink
+          href="/pos/product"
+          icon={Layout}
+          label="Products"
+          isCollapsed={isSidebarCollapsed}
+        /> 
+        
+        <SidebarLink
+          href="/pos/transactions"
+          icon={Layout}
+          label="transactions"
+          isCollapsed={isSidebarCollapsed}
+        /> 
+          <SidebarLink
+          href="/pos/customers"
+          icon={Layout}
+          label="customers"
+          isCollapsed={isSidebarCollapsed}
+        /> 
+        </>):(<>
+          <SidebarLink
           href="/dashboard"
           icon={Layout}
           label="Dashboard"
@@ -140,6 +170,8 @@ const Sidebar = () => {
           isCollapsed={isSidebarCollapsed}
         /> */}
           <SidebarCollpase /> 
+        </>)}
+     
       </div>
    
 
