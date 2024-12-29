@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import { Box, Button, IconButton, Tooltip, MenuItem } from "@mui/material";
+import { Box, Button, IconButton, Tooltip, MenuItem, Alert } from "@mui/material";
 import {
+  LiteralUnion,
   MaterialReactTable,
   type MRT_ColumnDef,
   MRT_TableOptions,
@@ -21,7 +22,7 @@ const CustomersManagement = () => {
   const {
     data: CustomersData,
     isLoading,
-    isError,
+    isError: getCustomersError,
   } = useGetCustomersQuery();
 
   const [validationErrors, setValidationErrors] = useState<
@@ -31,7 +32,8 @@ const CustomersManagement = () => {
   const customersData = CustomersData?.data || [];
 
   // Redux Mutation Hooks for Create, Update, Delete
-  const [createCustomer,{isError: cusomerError}] = useCreateCustomerMutation();
+  const [createCustomer,{isError: cusomerError, error: customerErrorCreating}] = useCreateCustomerMutation();
+  
   const [updateCustomer] = useUpdateCustomerMutation();
   const [deleteCustomer] = useDeleteCustomerMutation();
 
@@ -250,6 +252,12 @@ const CustomersManagement = () => {
     onCreatingRowCancel: () => setValidationErrors({}),
     onCreatingRowSave: handleCreateCustomer,
     onEditingRowCancel: () => setValidationErrors({}),
+    muiToolbarAlertBannerProps: cusomerError || getCustomersError
+      ? {
+          color: 'error',
+          children: cusomerError ? customerErrorCreating?.data.message: 'error fetching customers',
+        }
+      : undefined,
     onEditingRowSave: handleSaveCustomer,
     getRowId: (row) => row.customerId,
     renderRowActions: ({ row, table }) => (
@@ -277,12 +285,13 @@ const CustomersManagement = () => {
       </Button>
     ),
     state: {
-      isLoading,
+      isLoading, 
+      showAlertBanner: cusomerError || getCustomersError,     
     },
   });
 
-  // Validation function
-  const validateCustomer = (values) => {
+     // Validation function
+  const validateCustomer = (values: Record<LiteralUnion<"status" | "email" | "customerId" | "address" | "notes" | "firstName" | "lastName" | "phoneNumber" | "country" | "createdAt" | "updatedAt" | "loyaltyPoints" | "totalSpent" | "preferredPaymentMethod", string>, any>) => {
     const errors: Record<string, string | undefined> = {};
 
     if (!values.firstName) errors.firstName = "First name is required";
@@ -290,13 +299,15 @@ const CustomersManagement = () => {
     if (!values.email) errors.email = "Email is required";
     if (!values.phoneNumber) errors.phoneNumber = "Phone number is required";
     if (!values.status) errors.status = "Status is required";
+
     return errors;
   };
 
   return (
     <Box sx={{ padding: 2 }}>
       {isLoading && <div>Loading customers...</div>}
-      {cusomerError? JSON.stringify(cusomerError): null}
+      {/* {cusomerError? JSON.stringify(customerErrorCreating?.data.message): null} */}
+      
       <MaterialReactTable table={table} />
     </Box>
   );
