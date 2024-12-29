@@ -910,7 +910,7 @@ const CustomerApi = InventoryApi.injectEndpoints({
 const TransactionApi = InventoryApi.injectEndpoints({
   endpoints: (build) => ({
     // Fetch all transactions
-    getTransactions: build.query<Transaction[], void>({
+    getTransactions: build.query<ApiResponse<Transaction>, void>({
       query: () => '/transactions',
       providesTags: ['Transactions'],
     }),

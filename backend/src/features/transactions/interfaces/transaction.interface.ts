@@ -30,7 +30,7 @@ export interface Transaction {
   totalCost: number; // Total cost after applying discounts and VAT
   paymentMethod: string; // Payment method (e.g., card, PayPal, cash)
   subtotal: number; // Subtotal (price * quantity). total before taxes and others are added
-
+ 
   // Relationships
   customer?: Customer | null;
 
@@ -46,6 +46,8 @@ export type TransactionProduct = Pick<Inventory, 'inventoryId' | 'stock_quantity
   VAT: number,
   discount: number
   transactionId: string
+  productSubTotalCost?: number,
+  productTotalCost?: number,
   SupplierProduct?: SupplierProduct
 
 }

@@ -58,16 +58,16 @@ const ProductCart: React.FC<inputData> = (props) => {
   return (
     <div className="bg-white p-5 rounded-xl shadow-sm">
       <Link href=''>
-        <Image
+        {/* <Image
           src={imageProduct8}
           width={500} // Image width
           height={300} // Image height
           priority // Optional: For better performance
           alt="kk"
           className="w-full h-80 object-cover object-top drop-shadow-[0_80px_30px_#0007]"
-        />
+        /> */}
       </Link>
-      <h3 className="text-2xl py-3 text-center font-medium"> {supplierProduct?.supplier?.name}-{ supplierProduct?.product?.name}</h3>
+      <h3 className="text-2xl py-3 text-center font-light"> {supplierProduct?.supplier?.name}-{ supplierProduct?.product?.name}</h3>
       <div className="flex justify-between items-center">
         <p>
           kes <span className="text-2xl font-medium">{!supplierProduct?.ProductPricing? 'not priced':supplierProduct?.ProductPricing?.price}</span>
