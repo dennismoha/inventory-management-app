@@ -1,6 +1,6 @@
 'use client'
 import React, {useState, useEffect} from 'react' 
-import { products } from '../products';
+// import { products } from '../products';
 import { CheckoutProducts } from '../interface';
 
 
@@ -27,8 +27,8 @@ const CartItem: React.FC<data> = (props) => {
         // updated_at,
         // softDelete,
         status,
-        supplierProduct,
-        unit,
+        // supplierProduct,
+        // unit,
         quantity,
         productName,
         price,

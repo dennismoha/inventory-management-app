@@ -121,6 +121,10 @@ const checkoutSlice = createSlice({
             state.totalCost.total = totalCost;    // Total includes VAT and subtracts discount
            
         },
+        clearCart(state) {
+            // Reset to initial state
+            return initialState;
+        },
         changeCustomerId(state, action: PayloadAction<Pick<ProductItems ,'customerId' >>) {
             const {customerId} = action.payload
             state.customerId = customerId;
@@ -134,5 +138,5 @@ const checkoutSlice = createSlice({
         }
     }
 })
-export const { addToCheckout, changeQuantity, toggleStatusTab, changeCustomerId } = checkoutSlice.actions;
+export const { addToCheckout, changeQuantity, toggleStatusTab, changeCustomerId, clearCart } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

@@ -8,6 +8,9 @@ import {
   Layout,
   LucideIcon,
   Menu, 
+  ScanBarcode,  
+  HardDrive,
+  Users
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,13 +46,13 @@ const SidebarLink = ({
             isActive ? "bg-blue-200 text-white" : ""
           }
         }`}
-      >
-        <Icon className="w-6 h-6 !text-gray-700" />
+      >        
+        <Icon className="w-6 h-6 !text-gray-700" size={14} />
 
         <span
           className={`${
             isCollapsed ? "hidden" : "block"
-          } font-medium text-gray-700`}
+          } font-medium text-gray-700 text-sm`}
         >
           {label}
         </span>
@@ -114,20 +117,20 @@ const Sidebar = () => {
         /> 
         <SidebarLink
           href="/pos/product"
-          icon={Layout}
-          label="Products"
+          icon={  HardDrive}
+          label="Pos"
           isCollapsed={isSidebarCollapsed}
         /> 
         
         <SidebarLink
           href="/pos/transactions"
-          icon={Layout}
+          icon={ ScanBarcode}
           label="transactions"
           isCollapsed={isSidebarCollapsed}
         /> 
           <SidebarLink
           href="/pos/customers"
-          icon={Layout}
+          icon={Users}
           label="customers"
           isCollapsed={isSidebarCollapsed}
         /> 

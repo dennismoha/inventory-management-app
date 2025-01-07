@@ -928,13 +928,13 @@ const TransactionApi = InventoryApi.injectEndpoints({
     // }),
 
     // Create a new transaction
-    createTransaction: build.mutation<ProductItems, NewTransactionPayload>({
+    createTransaction: build.mutation<NewTransactionPayload,ProductItems>({
       query: (newTransaction) => ({
         url: '/transactions',
         method: 'POST',
         body: newTransaction,
       }),
-      invalidatesTags: ['Transactions'],
+      invalidatesTags: ['Transactions','InventoryItems'],
     }),
 
     // Update an existing transaction
