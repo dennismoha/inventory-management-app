@@ -9,7 +9,7 @@ export default withAuth(
     // withAuth Augments your request with the users token
 
     function middleware(req: NextRequestWithAuth) {
-        console.log('req is ', req.nextauth)  
+        // console.log('req is ', req.nextauth)  
 
   
 
