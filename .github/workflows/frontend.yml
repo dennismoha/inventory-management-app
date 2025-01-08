@@ -1,9 +1,9 @@
 name: Frontend CI/CD Pipeline
 
 on:
-  pull_request:
+  push:
     branches:
-      - develop  # Trigger deployment on changes to the main branch
+      - main  # Trigger deployment on changes to the main branch
     paths:
       - 'frontend/**'  # Only trigger if files in the frontend folder are changed
 
@@ -14,24 +14,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: runnig build
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Set the Node.js version required for the project
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build Next.js app
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: runni build
         run : echo 'running'
-
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: '16'  # Set the Node.js version required for the project
-
-      # - name: Install dependencies
-      #   working-directory: ./frontend
-      #   run: npm install
-
-      # - name: Build Next.js app
-      #   working-directory: ./frontend
-      #   run: npm run build
-
-      # - name: runni build
-      #   run : echo 'running'
 
       # - name: Deploy to Vercel
       #   working-directory: ./frontend
