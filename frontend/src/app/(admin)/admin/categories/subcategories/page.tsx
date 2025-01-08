@@ -99,6 +99,7 @@ export default function SubCategoryList() {
   // DELETE action
   const openDeleteConfirmModal = (row: MRT_Row<SubCategory>) => {
     if (window.confirm("Are you sure you want to delete this subcategory?")) {
+    
       // Call delete API mutation here if needed
       // deleteSubCategory(row.original.subcategory_id);
     }

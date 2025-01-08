@@ -19,6 +19,6 @@ export const productPricingSchema = Joi.object({
   VAT: Joi.number().precision(2).min(0).required(),  // Validates Decimal
   discount: Joi.number().precision(2).min(0).required(),  // Validates Decimal
   price: Joi.number().precision(2).min(0).required(),  // Validates Decimal
-  effective_date: Joi.date().required(),
+  // effective_date: Joi.date().required(),
  
 });

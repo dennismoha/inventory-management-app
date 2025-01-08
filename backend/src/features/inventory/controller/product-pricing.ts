@@ -56,13 +56,13 @@ export class ProductPricingController {
   @joiValidation(productPricingSchema)
   public async createProductPricing(req: Request, res: Response): Promise<void> {
    
-    const { supplier_products_id, Quantity, unit_id, price, effective_date, VAT, discount } = req.body;
+    const { supplier_products_id, Quantity, unit_id, price,  VAT, discount } = req.body;
 
     // 1) Validate Unique Product Pricing
     const existingProductPricing = await prisma.productPricing.findFirst({
       where: {
         supplier_products_id,
-        effective_date,
+        // effective_date,
       },
     });
 
@@ -82,7 +82,7 @@ export class ProductPricingController {
         Quantity,
         unit_id,
         price,
-        effective_date,
+        // effective_date,
         VAT,
         discount,
         created_at: new Date(),
@@ -116,8 +116,9 @@ export class ProductPricingController {
   @joiValidation(productPricingSchema)
   public async updateProductPricing(req: Request, res: Response): Promise<void> {
     const { productPricingId } = req.params;
-    const { supplier_products_id, Quantity, unit_id, price, effective_date } = req.body;
+    const { supplier_products_id, Quantity, unit_id, price,VAT, discount } = req.body;
 
+    console.log('=========== update product pricing ');
     // Attempt to update the product pricing record
     const updatedProductPricing: ProductPricing = await prisma.productPricing.update({
       where: { product_pricing_id: productPricingId },
@@ -126,7 +127,9 @@ export class ProductPricingController {
         Quantity,
         unit_id,
         price,
-        effective_date,
+        VAT,
+        discount,
+        // effective_date,
         updated_at: new Date(),
       },
     });

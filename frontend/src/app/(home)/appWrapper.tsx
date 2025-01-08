@@ -1,14 +1,14 @@
 "use client";
-import Navbar from "@/app/(components)/Navbar";
+// import Navbar from "@/app/(components)/Navbar";
 // import Sidebar from "@/app/(components)/Sidebar/Index";
 import StoreProvider, { useAppSelector } from "@/app/redux/redux";
-import { Suspense } from "react";
-import Loading from "./loading";
+// import { Suspense } from "react";
+// import Loading from "./loading";
 import { useEffect } from "react";
 //Date Picker Imports - these should just be in your Context Provider
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 
 // import { useGetCategoriesQuery } from "@/app/redux/api/inventory-api";
 // import { addCategory } from "@/app/redux/state/categories";
@@ -20,11 +20,11 @@ type Props = { children: React.ReactNode };
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   // const dispatch = useAppDispatch()
-  const isSidebarCollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed
-  );
+  // const isSidebarCollapsed = useAppSelector(
+  //   (state) => state.global.isSidebarCollapsed
+  // );
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   // const { data: categories, isLoading, isError } = useGetCategoriesQuery();
   // if(categories) {
   //   let {data} = categories

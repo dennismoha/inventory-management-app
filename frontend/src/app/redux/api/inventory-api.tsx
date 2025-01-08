@@ -830,9 +830,10 @@ const ProductPricingApi = InventoryApi.injectEndpoints({
     // Update an existing product pricing
     updateProductPricing: build.mutation<
       ProductPricing,
-      { product_pricing_id: string; patch: Partial<ProductPricing> }
+      Pick<ProductPricing, 'product_pricing_id'>
+     
     >({
-      query: ({ product_pricing_id, patch }) => ({
+      query: ({ product_pricing_id, ...patch }) => ({
         url: `/product-pricing/${product_pricing_id}`,
         method: "PUT",
         body: patch,

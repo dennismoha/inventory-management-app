@@ -56,7 +56,7 @@ const CollapseDefault: React.FC<MyComponentProps> = ({label,children, isCollapse
             isCollapsed ? "hidden" : "block"
           } font-medium text-gray-700`}
         >
-            {open ?  <ChevronDown /> : <ChevronRight /> }           
+            {open ?  <ChevronDown size={18}   /> : <ChevronRight size={18}  /> }           
            
         </span>
       </div>

@@ -16,8 +16,16 @@ import {
   useGetUnitsQuery,
 } from "@/app/redux/api/inventory-api"; // Assuming API hooks for product pricing are defined similarly
 import { ProductPricing } from "@/app/(admin)/admin/inventory/interfaces/inventory-interface"; // Assuming correct path
-import { Box, Button, IconButton, MenuItem, Tooltip } from "@mui/material";
+import { Box, Button, IconButton, MenuItem, Tooltip, TextField } from "@mui/material";
 import { EditIcon, DeleteIcon } from "lucide-react";
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 
 export default function ProductPricingList() {
   // Fetch product pricing via the Redux API
@@ -36,15 +44,15 @@ export default function ProductPricingList() {
   // Column definitions for Material React Table (adjusted for product pricing)
   const columns = useMemo<MRT_ColumnDef<ProductPricing>[]>(
     () => [
-      //   {
-      //     accessorKey: "product_pricing_id",
-      //     header: "Pricing ID",
-      //     enableEditing: false,
-      //     size: 30,
-      //     enableHiding: true,
-      //     enablePinning: true,
-      //     visibleInShowHideMenu: false,
-      //   },
+        {
+          accessorKey: "product_pricing_id",
+          header: "Pricing ID",
+          enableEditing: false,
+          size: 30,
+          enableHiding: true,
+          enablePinning: true,
+          visibleInShowHideMenu: false,
+        },
       {
         accessorKey: "supplier_products_id",
         header: "product Name",
@@ -151,17 +159,51 @@ export default function ProductPricingList() {
       {
         accessorKey: "effective_date",
         header: "Effective Date",
-        muiEditTextFieldProps: {
-          required: true,
-          error: !!validationErrors?.effective_date,
-          helperText: validationErrors?.effective_date,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              effective_date: undefined,
-            }),
-        },
+        enableEditing:false,
+        Cell: ({ cell }) =>
+          new Date(cell.getValue() as string).toLocaleDateString(),
+        // muiEditTextFieldProps: {
+        //   required: true,
+        //   type:'datetime-local',
+        //   error: !!validationErrors?.effective_date,
+        //   helperText: validationErrors?.effective_date,
+        //   onFocus: () =>
+        //     setValidationErrors({
+        //       ...validationErrors,
+        //       effective_date: undefined,
+        //     }),
+        // },
       },
+      // {
+      //   accessorKey: "effective_date",
+      //   header: "Effective Date",
+      //   muiEditTextFieldProps: {
+      //     required: true,
+      //     error: !!validationErrors?.effective_date,
+      //     helperText: validationErrors?.effective_date,
+      //     onFocus: () =>
+      //       setValidationErrors({
+      //         ...validationErrors,
+      //         effective_date: undefined,
+      //       }),
+      //   },
+      //   Cell: ({ cell, row, }) => {
+      //     const effectiveDate = cell.getValue() as string;  // Type assertion
+      //     return (
+      //       <TextField
+      //       type="date"
+      //       value={dayjs.utc(effectiveDate).format('YYYY-MM-DD')} // Format the date in 'YYYY-MM-DD' for the input
+      //       // onChange={(e) => {
+      //       //   // const newData = [...data];
+      //       //   // newData[row.index].effective_date = e.target.value;
+      //       //   // setData(newData);
+      //       // }}
+      //     />
+         
+      //     );
+      //   }
+      // },
+      
     ],
     [validationErrors, unitsData]
   );
@@ -178,15 +220,16 @@ export default function ProductPricingList() {
       price: !validateRequired(pricing.price.toString())
         ? "Price is required"
         : "",
-      effective_date: !validateRequired(pricing.effective_date)
-        ? "Effective Date is required"
-        : "",
+      // effective_date: !validateRequired(pricing.effective_date)
+      //   ? "Effective Date is required"
+      //   : "",
     };
   };
 
   // Handle row creation
   const handleCreateProductPricing: MRT_TableOptions<ProductPricing>["onCreatingRowSave"] =
     async ({ values, table }) => {
+      console.log('creating new prices')
       const newValidationErrors = validateProductPricing(values);
       if (Object.values(newValidationErrors).some((error) => error)) {
         setValidationErrors(newValidationErrors);
@@ -194,6 +237,7 @@ export default function ProductPricingList() {
       }
       setValidationErrors({});
       values = { ...values };
+      delete values.effective_date
       delete values.product_pricing_id; // Assuming the API generates a new ID on creation
       await createProductPricing(values);
       table.setCreatingRow(null); // Exit creating mode
@@ -208,6 +252,9 @@ export default function ProductPricingList() {
         return;
       }
       setValidationErrors({});
+      values = { ...values };
+      delete values.effective_date
+      console.log('----------------------updating product pricing')
       await updateProductPricing(values);
       table.setEditingRow(null); // Exit editing mode
     };

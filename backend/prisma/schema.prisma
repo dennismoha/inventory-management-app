@@ -278,7 +278,7 @@ model ProductPricing {
   price                Decimal          @db.Decimal(8, 2)
   VAT                  Decimal?         @db.Decimal(8, 2)
   discount             Decimal?         @db.Decimal(8, 2)
-  effective_date       DateTime         @db.Date
+  effective_date       DateTime         @updatedAt @db.Timestamp(6)
   created_at           DateTime         @default(now()) @db.Timestamp(6)
   updated_at           DateTime         @updatedAt @db.Timestamp(6)
   supplierProduct      SupplierProducts @relation(fields: [supplier_products_id], references: [supplier_products_id])

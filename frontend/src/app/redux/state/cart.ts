@@ -121,7 +121,7 @@ const checkoutSlice = createSlice({
             state.totalCost.total = totalCost;    // Total includes VAT and subtracts discount
            
         },
-        clearCart(state) {
+        clearCart() {
             // Reset to initial state
             return initialState;
         },
