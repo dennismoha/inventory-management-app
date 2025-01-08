@@ -1,9 +1,9 @@
 name: Frontend CI/CD Pipeline
 
 on:
-  push:
+  pull_request:
     branches:
-      - deployment-setup  # Trigger deployment on changes to the main branch
+      - develop  # Trigger deployment on changes to the main branch
     paths:
       - 'frontend/**'  # Only trigger if files in the frontend folder are changed
 
