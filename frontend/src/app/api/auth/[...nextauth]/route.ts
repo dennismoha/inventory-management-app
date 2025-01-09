@@ -1,8 +1,9 @@
 import NextAuth from 'next-auth'
 import { options } from './options'
-import { NextApiRequest, NextApiResponse } from 'next'
+// import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextRequest, NextResponse } from 'next/server'
 
-const handler = (req: NextApiRequest, res: NextApiResponse) => {
+const handler = (req: NextRequest, res: NextResponse) => {
     return NextAuth(req, res, options)
 }
 
