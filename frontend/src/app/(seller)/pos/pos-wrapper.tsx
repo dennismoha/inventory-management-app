@@ -69,7 +69,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const dashboardwrapper = ({ children }: Props) => {
+const Dashboardwrapper:React.FC<Props> = ({ children }: Props) => {
   return (
     <StoreProvider>
       <DashboardLayout>{children}</DashboardLayout>
@@ -77,4 +77,4 @@ const dashboardwrapper = ({ children }: Props) => {
   );
 };
 
-export default dashboardwrapper;
+export default Dashboardwrapper;
