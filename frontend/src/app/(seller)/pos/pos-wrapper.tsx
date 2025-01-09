@@ -16,7 +16,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
 
-type Props = { children: React.ReactNode };
+// type Props = { children: React.ReactNode };
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   // const dispatch = useAppDispatch()
@@ -69,7 +69,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const Dashboardwrapper:React.FC<Props> = ({ children }: Props) => {
+const Dashboardwrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <StoreProvider>
       <DashboardLayout>{children}</DashboardLayout>
