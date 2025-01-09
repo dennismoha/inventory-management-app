@@ -4,7 +4,7 @@ import Sidebar from "@/app/(components)/Sidebar/Index";
 import StoreProvider, { useAppSelector } from "@/app/redux/redux";
 // import { Suspense } from "react";
 // import Loading from "./loading";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 //Date Picker Imports - these should just be in your Context Provider
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,7 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 // type Props = { children: React.ReactNode };
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+const DashboardLayout = ({ children }: { children?: React.ReactNode }) => {
   // const dispatch = useAppDispatch()
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed
@@ -69,7 +69,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const Dashboardwrapper = ({ children }: { children: React.ReactNode }) => {
+type Props = { children?: React.ReactNode };
+
+
+// const Dashboardwrapper = ({ children }: { children: React.ReactNode }) => {
+const DashboardWrapper: React.FC<Props> = ({ children }) => {
   return (
     <StoreProvider>
       <DashboardLayout>{children}</DashboardLayout>
@@ -77,4 +81,4 @@ const Dashboardwrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default Dashboardwrapper;
+export default DashboardWrapper;
