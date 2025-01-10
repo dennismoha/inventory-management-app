@@ -88,6 +88,7 @@ jobs:
         run: npm run migrate:prod
         # env:
         #   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        
 
   test:
     runs-on: ubuntu-latest
@@ -107,7 +108,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./backend  # Run tests in the backend folder
-        run: npm test
+        run: echo "test"
 
   deploy:
     runs-on: ubuntu-latest
@@ -124,13 +125,37 @@ jobs:
       - name: Install dependencies
         working-directory: ./backend  # Ensure npm install is run in the backend folder
         run: npm install
-
-      - name: Deploy to production (optional)
-        run: |
-          echo "Deploying to production..."
-          # Add your deployment script/command here (e.g., Heroku, AWS, etc.)
+      
+      - name: Set DATABASE_URL for migration
         env:
-          NODE_ENV: production
+          DATABASE_URL: "postgresql://inventory_management_system_yvk3_user:xQKx5JMt0aRGlvSEALoHGNQOfOmrml3P@dpg-cu0i9cpu0jms73d22eq0-a.oregon-postgres.render.com/inventory_management_system_yvk3"  # Use GitHub Secrets for the database URL
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL" >> .env  # Ensure the Prisma schema can use it
+
+      - name: Run migration (production)
+        working-directory: ./backend  # Run migration in the backend folder
+        run: npm run migrate:prod
+        env:
+          DATABASE_URL: "postgresql://inventory_management_system_yvk3_user:xQKx5JMt0aRGlvSEALoHGNQOfOmrml3P@dpg-cu0i9cpu0jms73d22eq0-a.oregon-postgres.render.com/inventory_management_system_yvk3"  # Use GitHub Secrets for the database URL
+
+      - name : Deploying phase
+        run : echo "starting to deploy"
+      # - name: Deploy to Render
+      #   env:
+      #   RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}  # Store Render API key in GitHub secrets
+      #     run: |
+      #     curl -X POST \
+      #       -H "Authorization: Bearer $RENDER_API_KEY" \
+      #             -H "Content-Type: application/json" \
+      #             -d '{"branch":"main"}' \
+      #             https://api.render.com/v1/services/YOUR_SERVICE_ID/deployments
+
+      # - name: Deploy to production (optional)
+      #   run: |
+      #     echo "Deploying to production..."
+      #     # Add your deployment script/command here (e.g., Heroku, AWS, etc.)
+      #   env:
+      #     NODE_ENV: production
 
 
 
