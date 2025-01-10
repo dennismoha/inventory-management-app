@@ -5,7 +5,7 @@ on:
     branches:
       - deployment-setup  # Trigger deployment on changes to the main branch
     paths:
-      - 'backend/**'  # Only trigger if files in the backend folder are changed
+      - "backend/**"  # Only trigger if files in the backend folder are changed
 
 jobs:
   setup:
