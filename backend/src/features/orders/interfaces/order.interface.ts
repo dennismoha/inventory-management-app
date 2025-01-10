@@ -16,9 +16,8 @@ export interface Order {
   comments?: string | null;
   created_at: Date;
   last_updated_at: Date;
-  orderProducts?: OrderProducts[]
+  orderProducts?: OrderProducts[];
 }
-
 
 export interface OrderProducts {
   orderProductsId: string;
@@ -33,5 +32,5 @@ export interface OrderProducts {
   supplierProductsPricingId: string;
   order?: Order;
   supplierPricing?: SupplierPricing;
-  inventoryTracking?: Inventory
+  inventoryTracking?: Inventory;
 }

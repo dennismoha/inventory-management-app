@@ -92,15 +92,13 @@ export class MiscellaneousController {
         refund_amount,
         other_fees,
         payment_status,
-        notes,
+        notes
       }
     });
 
     const message = utilMessage.created('Miscellaneous details ');
 
-    res
-      .status(StatusCodes.CREATED)
-      .send(GetSuccessMessage(StatusCodes.CREATED, newMiscellaneous, message));
+    res.status(StatusCodes.CREATED).send(GetSuccessMessage(StatusCodes.CREATED, newMiscellaneous, message));
   }
 
   /**
@@ -140,14 +138,11 @@ export class MiscellaneousController {
       throw new BadRequestError(`miscellaneous with ID ${orderId} not found`);
     }
 
-
     // Check if the order status is 'fulfilled'
     if (order.orderStatus === 'fulfilled' || order.orderStatus === 'failed') {
       // Prevent deletion of orders with the status 'fulfilled'
       throw new BadRequestError('miscellanoues details of Fulfilled or failed orders cannot be updated');
     }
-
-
 
     const updatedMiscellaneous: Miscellaneous = await prisma.miscellaneous.update({
       where: { order_id: order_id },
@@ -214,8 +209,8 @@ export class MiscellaneousController {
   public async deleteMiscellaneous(req: Request, res: Response): Promise<void> {
     const { orderId } = req.params;
 
-          // Fetch the order to check its status
-    
+    // Fetch the order to check its status
+
     const order = await prisma.order.findUnique({
       where: { orderId }
     });
@@ -226,18 +221,16 @@ export class MiscellaneousController {
       throw new BadRequestError(`miscellaneous with ID ${orderId} not found`);
     }
 
-
     // Check if the order status is 'fulfilled'
     if (order.orderStatus === 'fulfilled') {
       // Prevent deletion of orders with the status 'fulfilled'
       throw new BadRequestError('miscellanoues details of Fulfilled orders cannot be deleted');
     }
 
-
     await prisma.miscellaneous.delete({
       where: { order_id: orderId }
     });
-   // const message = utilMessage.deleted('Miscellaneous details ');
+    // const message = utilMessage.deleted('Miscellaneous details ');
 
     res.status(StatusCodes.NO_CONTENT).send();
   }

@@ -8,8 +8,6 @@ import { ConflictError } from '@src/shared/globals/helpers/error-handler';
 import GetSuccessMessage from '@src/shared/globals/helpers/success-messages';
 import { Product } from '@src/features/products/interfaces/product.interface';
 
-
-
 export class ProductsController {
   /**
    * Fetch all products.
@@ -18,12 +16,12 @@ export class ProductsController {
    */
   public async fetchProducts(req: Request, res: Response): Promise<void> {
     const products: Product[] = await prisma.products.findMany({
-      include: {      
+      include: {
         category: true, // Include related Products
         subcategory: true
       }
     });
-    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, products, 'succesfully fetched'));  
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, products, 'succesfully fetched'));
   }
 
   /**
@@ -34,24 +32,21 @@ export class ProductsController {
 
   @joiValidation(productSchema)
   public async createProduct(req: Request, res: Response): Promise<void> {
-   
-
     const { name, description, category_id, subcategory_id, image_url, sku } = req.body;
 
-     // Check if product sku already exists
-     const existingProductSku = await prisma.products.findUnique({
+    // Check if product sku already exists
+    const existingProductSku = await prisma.products.findUnique({
       where: { sku }
     });
 
     if (existingProductSku) {
       throw new ConflictError('sku arleady exists');
     }
- 
-      const product: Product = await prisma.products.create({
-        data: { name, description, category_id, subcategory_id, image_url, sku }
-      });
-      res.status(StatusCodes.CREATED).send(GetSuccessMessage(StatusCodes.OK, product, 'succesfully fetched'));  
-    
+
+    const product: Product = await prisma.products.create({
+      data: { name, description, category_id, subcategory_id, image_url, sku }
+    });
+    res.status(StatusCodes.CREATED).send(GetSuccessMessage(StatusCodes.OK, product, 'succesfully fetched'));
   }
 
   /**
@@ -64,14 +59,13 @@ export class ProductsController {
   public async updateProduct(req: Request, res: Response): Promise<void> {
     const { product_id } = req.params;
     const { name, description, category_id, subcategory_id, image_url, sku } = req.body;
-  
-      const updatedProduct = await prisma.products.update({
-        where: { product_id },
-        data: { name, description, category_id, subcategory_id, image_url, sku }
-      });
-      res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, updatedProduct, 'succesfully fetched'));  
-      // json(updatedProduct);
-    
+
+    const updatedProduct = await prisma.products.update({
+      where: { product_id },
+      data: { name, description, category_id, subcategory_id, image_url, sku }
+    });
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, updatedProduct, 'succesfully fetched'));
+    // json(updatedProduct);
   }
 
   /**
@@ -81,11 +75,10 @@ export class ProductsController {
    */
   public async deleteProduct(req: Request, res: Response): Promise<void> {
     const { product_id } = req.params;
-  
-      await prisma.products.delete({
-        where: { product_id }
-      });
-      res.status(StatusCodes.NO_CONTENT).send();
-   
+
+    await prisma.products.delete({
+      where: { product_id }
+    });
+    res.status(StatusCodes.NO_CONTENT).send();
   }
 }

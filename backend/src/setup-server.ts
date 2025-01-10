@@ -49,7 +49,7 @@ export class ServerSetup {
     this.swaggerUISetup(this.app);
     this.routeMiddleware(this.app);
     this.globalErrorHandler(this.app);
-    this.startServer(this.app);    
+    this.startServer(this.app);
   }
 
   private securityMiddleware(app: Application): void {
@@ -59,10 +59,10 @@ export class ServerSetup {
         keys: [config.SECRET_COOKIE_KEY_ONE!, config.SECRET_COOKIE_KEY_TWO!],
         maxAge: 24 * 7 * 3600000,
         // secure: config.NODE_ENV !== 'development'
-          secure: false,
-          signed:false,
-          httpOnly:false,
-          sameSite:'none',
+        secure: false,
+        signed: false,
+        httpOnly: false,
+        sameSite: 'none'
       })
     );
     app.use(cookieParser()); // Use cookie-parser to access cookies in req.cookie
@@ -73,7 +73,7 @@ export class ServerSetup {
         origin: '*',
         // credentials: true,
         optionsSuccessStatus: 200,
-        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']      
+        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
       })
     );
   }
@@ -87,26 +87,24 @@ export class ServerSetup {
     ApplicationRoutes(app);
   }
 
-
   private globalErrorHandler(app: Application): void {
-
     app.use('*', (req: Request, res: Response) => {
       log.error('not found');
       return res.status(HTTP_STATUS.NOT_FOUND).json({ message: `${req.originalUrl} not found` });
     });
 
-    app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {     
+    app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
       log.error('global error:', error);
-      if (error instanceof CustomError) {    
+      if (error instanceof CustomError) {
         return res.status(error.statusCode).json(error.serializeErrors());
       }
-      
+
       next();
     });
   }
   private swaggerUISetup(app: Application) {
     const baseURL = `${config.LOCAL_DEVELOPMENT_BASE_URL}${BASE_PATH}`;
-    swaggerDocument.servers =[{url: baseURL}];
+    swaggerDocument.servers = [{ url: baseURL }];
     // Serve Swagger UI
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   }

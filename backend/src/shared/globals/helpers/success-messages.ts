@@ -4,7 +4,7 @@ import { ProductUnit } from '@src/features/products/interfaces/product.interface
 import { Unit } from '@src/features/units/interfaces/units.interface';
 import { Supplier, SupplierPricing, SupplierProduct } from '@src/features/suppliers/interfaces/supplier.interface';
 import { Order, OrderProducts } from '@src/features/orders/interfaces/order.interface';
-import { Inventory, ProductPricing  } from '@src/features/inventory/interfaces/inventory.interface';
+import { Inventory, ProductPricing } from '@src/features/inventory/interfaces/inventory.interface';
 import { Miscellaneous } from '@src/features/miscellaneous/interfaces/miscellaneous.interface';
 import { Customer } from '@src/features/customers/interfaces/customer.interface';
 import { Transaction } from '@src/features/transactions/interfaces/transaction.interface';
@@ -14,34 +14,30 @@ type WithArray<T> = T | T[];
 
 // success_data type using WithArray
 type success_data =
-    | WithArray<Miscellaneous>
-    | WithArray<Inventory>
-    | WithArray<Order>
-    | WithArray<OrderProducts>
-    | WithArray<SupplierPricing>
-    | WithArray<SupplierProduct>
-    | WithArray<Supplier>
-    | WithArray<Unit>
-    | WithArray<Category>
-    | WithArray<SubCategory>
-    | WithArray<Product>
-    | WithArray<ProductUnit>
-    | WithArray<ProductPricing>
-    | WithArray<Customer>
-    | WithArray<Transaction>
-    | null;
+  | WithArray<Miscellaneous>
+  | WithArray<Inventory>
+  | WithArray<Order>
+  | WithArray<OrderProducts>
+  | WithArray<SupplierPricing>
+  | WithArray<SupplierProduct>
+  | WithArray<Supplier>
+  | WithArray<Unit>
+  | WithArray<Category>
+  | WithArray<SubCategory>
+  | WithArray<Product>
+  | WithArray<ProductUnit>
+  | WithArray<ProductPricing>
+  | WithArray<Customer>
+  | WithArray<Transaction>
+  | null;
 
 // GetSuccessMessage function
-export default function GetSuccessMessage(
-    statusCode: number,
-    data: success_data,
-    statusMessage: string
-) {
-    return {
-        statusCode: statusCode || 200,  // Default to 200 if statusCode is not provided
-        data: data || [],  // Default to empty array if data is not provided (no null data allowed)
-        status: statusMessage || 'Success'  // Default to 'Success' if statusMessage is not provided
-    };
+export default function GetSuccessMessage(statusCode: number, data: success_data, statusMessage: string) {
+  return {
+    statusCode: statusCode || 200, // Default to 200 if statusCode is not provided
+    data: data || [], // Default to empty array if data is not provided (no null data allowed)
+    status: statusMessage || 'Success' // Default to 'Success' if statusMessage is not provided
+  };
 }
 
 // type success_data =
@@ -63,8 +59,6 @@ export default function GetSuccessMessage(
 //     | ProductUnit
 //     | ProductUnit[]
 //     | [];
-
-
 
 // export default function GetSuccessMessage(statusCode: number, data: success_data, statusMessage: string) {
 //     return {

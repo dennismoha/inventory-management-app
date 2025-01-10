@@ -3,7 +3,6 @@ import { Customer } from '@src/features/customers/interfaces/customer.interface'
 import { Inventory } from '@src/features/inventory/interfaces/inventory.interface';
 import { SupplierProduct } from '@src/features/suppliers/interfaces/supplier.interface';
 
-
 // Transaction Type (in interfaces/transaction.interface.ts)
 // export interface Transaction {
 //     transactionId: string;
@@ -30,53 +29,47 @@ export interface Transaction {
   totalCost: number; // Total cost after applying discounts and VAT
   paymentMethod: string; // Payment method (e.g., card, PayPal, cash)
   subtotal: number; // Subtotal (price * quantity). total before taxes and others are added
- 
+
   // Relationships
   customer?: Customer | null;
 
-  TransactionProduct?: TransactionProduct[]
+  TransactionProduct?: TransactionProduct[];
   // List of related transaction products
 }
 
 // This is the structure of the data of all items in a transaction
 export type TransactionProduct = Pick<Inventory, 'inventoryId' | 'stock_quantity' | 'supplier_products_id'> & {
-  quantity: number,
-  productName: string,
-  price: number,
-  VAT: number,
-  discount: number
-  transactionId: string
-  productSubTotalCost?: number,
-  productTotalCost?: number,
-  SupplierProduct?: SupplierProduct
-
-}
+  quantity: number;
+  productName: string;
+  price: number;
+  VAT: number;
+  discount: number;
+  transactionId: string;
+  productSubTotalCost?: number;
+  productTotalCost?: number;
+  SupplierProduct?: SupplierProduct;
+};
 
 // Assuming the types for SupplierProducts and Transaction are defined elsewhere
 
-// export interface TransactionProduct {  
+// export interface TransactionProduct {
 //   quantity: number; // Quantity of the product
 //   productName: string; // Name of the product
 //   price: number; // Price of the product
 //   discount: number; // Discount applied to the product
 //   vat: number; // VAT applied to the product
-//   transactionId: string; // ID of the related transaction   
+//   transactionId: string; // ID of the related transaction
 // }
 
 // this is the structure of the data from the frontend
 
 export interface TransactionProductItems {
-  cartProducts: TransactionProduct[]
-  statusTab: boolean,
+  cartProducts: TransactionProduct[];
+  statusTab: boolean;
   totalCost: {
-    total: number
-    subtotal: number
-  }
-  paymentMethod: 'cash' |
-  'bank' |
-  'credit'
-  customerId?: string
+    total: number;
+    subtotal: number;
+  };
+  paymentMethod: 'cash' | 'bank' | 'credit';
+  customerId?: string;
 }
-
-
-

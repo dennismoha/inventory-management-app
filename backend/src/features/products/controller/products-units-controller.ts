@@ -17,7 +17,7 @@ export class ProductUnitsController {
    */
   public async fetchProductUnits(req: Request, res: Response): Promise<void> {
     const productUnits: ProductUnit[] = await prisma.productUnits.findMany();
-    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, productUnits, 'succesfully fetched')); 
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, productUnits, 'succesfully fetched'));
     // json(productUnits);
   }
 
@@ -28,15 +28,12 @@ export class ProductUnitsController {
    */
   @joiValidation(productUnitSchema)
   public async createProductUnit(req: Request, res: Response): Promise<void> {
-   
-
     const { product_id, unit_id } = req.body;
-    
-      const productUnit = await prisma.productUnits.create({
-        data: { product_id, unit_id }
-      });
-      res.status(StatusCodes.CREATED).json(productUnit);
-   
+
+    const productUnit = await prisma.productUnits.create({
+      data: { product_id, unit_id }
+    });
+    res.status(StatusCodes.CREATED).json(productUnit);
   }
 
   /**
@@ -49,13 +46,12 @@ export class ProductUnitsController {
   public async updateProductUnit(req: Request, res: Response): Promise<void> {
     const { product_unit_id } = req.params;
     const { product_id, unit_id } = req.body;
- 
-      const updatedProductUnit = await prisma.productUnits.update({
-        where: { product_unit_id },
-        data: { product_id, unit_id }
-      });
-      res.status(StatusCodes.OK).json(updatedProductUnit);
-   
+
+    const updatedProductUnit = await prisma.productUnits.update({
+      where: { product_unit_id },
+      data: { product_id, unit_id }
+    });
+    res.status(StatusCodes.OK).json(updatedProductUnit);
   }
 
   /**
@@ -66,10 +62,9 @@ export class ProductUnitsController {
   public async deleteProductUnit(req: Request, res: Response): Promise<void> {
     const { product_unit_id } = req.params;
 
-      await prisma.productUnits.delete({
-        where: { product_unit_id }
-      });
-      res.status(StatusCodes.NO_CONTENT).send();
-   
+    await prisma.productUnits.delete({
+      where: { product_unit_id }
+    });
+    res.status(StatusCodes.NO_CONTENT).send();
   }
 }

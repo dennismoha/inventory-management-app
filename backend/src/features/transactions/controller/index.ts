@@ -11,13 +11,13 @@ import { BadRequestError } from '@src/shared/globals/helpers/error-handler';
 
 export class TransactionsController {
   /**
-   * Fetch all transactions.  
+   * Fetch all transactions.
    */
   public async fetchTransactions(req: Request, res: Response): Promise<void> {
     const transactions: Transaction[] = await prisma.transaction.findMany({
-      include: {    
+      include: {
         customer: true, // If customer is provided,
-        TransactionProduct:true
+        TransactionProduct: true
       }
     });
     const message = utilMessage.fetchedMessage('transactions');
@@ -30,96 +30,95 @@ export class TransactionsController {
   @joiValidation(transactionSchema)
   public async createTransaction(req: Request, res: Response): Promise<void> {
     const {
-        cartProducts, // Array of cartProducts
-        customerId,
-        paymentMethod,
-        totalCost,
-        
+      cartProducts, // Array of cartProducts
+      customerId,
+      paymentMethod,
+      totalCost
     }: TransactionProductItems = req.body; // Typecasting the request body to ProductItems
 
     // Step 1: Generate a unique transaction ID
     const transactionId = crypto.randomUUID();
 
     // Step 2: Initialize transaction-related data
-    let transaction : Transaction;
+    let transaction: Transaction;
 
     // Step 3: Check if customer exists (if provided), otherwise handle as a generic transaction
     if (customerId) {
-        // Step : Create a new transaction record for the customer
-        transaction = await prisma.transaction.create({
-            data: {
-                transactionId,
-                customerId,
-                totalCost: totalCost.total, // Total cost (after VAT & discounts)
-                paymentMethod,
-                subtotal: totalCost.subtotal
-              
-            }
-        });
-    } else {  
-        transaction = await prisma.transaction.create({
-            data: {
-              transactionId,            
-              totalCost: totalCost.total, // Total cost (after VAT & discounts)
-              paymentMethod,
-              subtotal: totalCost.subtotal
-            }
-        });
+      // Step : Create a new transaction record for the customer
+      transaction = await prisma.transaction.create({
+        data: {
+          transactionId,
+          customerId,
+          totalCost: totalCost.total, // Total cost (after VAT & discounts)
+          paymentMethod,
+          subtotal: totalCost.subtotal
+        }
+      });
+    } else {
+      transaction = await prisma.transaction.create({
+        data: {
+          transactionId,
+          totalCost: totalCost.total, // Total cost (after VAT & discounts)
+          paymentMethod,
+          subtotal: totalCost.subtotal
+        }
+      });
     }
 
     //  Process each cart product and check inventory
     const transactionProducts = [];
 
     for (const product of cartProducts) {
-        //  Check stock availability for each product
-        const inventory = await prisma.inventory.findUnique({
-            where: { supplier_products_id: product.supplier_products_id }
-        });
+      //  Check stock availability for each product
+      const inventory = await prisma.inventory.findUnique({
+        where: { supplier_products_id: product.supplier_products_id }
+      });
 
-        console.log('this new ============== ', inventory);
+      console.log('this new ============== ', inventory);
 
-        if (!inventory || Number(inventory.stock_quantity) < product.quantity) {
-            throw new BadRequestError(`Insufficient stock for product: ${product.productName} ${inventory?.stock_quantity} ${product.quantity}`);
+      if (!inventory || Number(inventory.stock_quantity) < product.quantity) {
+        throw new BadRequestError(
+          `Insufficient stock for product: ${product.productName} ${inventory?.stock_quantity} ${product.quantity}`
+        );
+      }
+
+      // Step Deduct the quantity from the inventory
+      await prisma.inventory.update({
+        where: { supplier_products_id: product.supplier_products_id },
+        data: {
+          stock_quantity: Number(inventory.stock_quantity) - product.quantity
         }
+      });
 
-        // Step Deduct the quantity from the inventory
-        await prisma.inventory.update({
-            where: { supplier_products_id: product.supplier_products_id },
-            data: {
-                stock_quantity: Number(inventory.stock_quantity) - product.quantity
-            }
-        });
+      // Step Calculate total cost for this product (taking VAT and discount into account)
+      const productTotalCost = product.price * product.quantity * (1 + product.VAT / 100) - product.discount;
+      const productSubTotalCost = product.price * product.quantity;
 
-        // Step Calculate total cost for this product (taking VAT and discount into account)
-        const productTotalCost = (product.price * product.quantity) * (1 + product.VAT / 100) - product.discount;
-        const productSubTotalCost = (product.price * product.quantity);
-
-        // Step Prepare the transaction product data
-        transactionProducts.push({
-          inventoryId: product.inventoryId, 
-          stock_quantity: product.stock_quantity,
-           VAT:  Number(product.VAT),
-          supplier_products_id: product.supplier_products_id,
-            quantity: product.quantity,
-            productName: product.productName,
-            price: product.price,
-            discount: Number(product.discount),
-            productSubTotalCost,
-            productTotalCost,
-            transactionId // Link to the current transaction
-        });
+      // Step Prepare the transaction product data
+      transactionProducts.push({
+        inventoryId: product.inventoryId,
+        stock_quantity: product.stock_quantity,
+        VAT: Number(product.VAT),
+        supplier_products_id: product.supplier_products_id,
+        quantity: product.quantity,
+        productName: product.productName,
+        price: product.price,
+        discount: Number(product.discount),
+        productSubTotalCost,
+        productTotalCost,
+        transactionId // Link to the current transaction
+      });
     }
-    
+
     // Step  Create the transaction products in the database
     await prisma.transactionProduct.createMany({
-        data: transactionProducts
+      data: transactionProducts
     });
 
     // Step 6: Send response with success message
     const message = utilMessage.created('transaction');
     res.status(StatusCodes.CREATED).send(GetSuccessMessage(StatusCodes.CREATED, transaction, message));
-}  
-
+  }
 
   // @joiValidation(transactionSchema)
   // public async createTransaction(req: Request, res: Response): Promise<void> {
@@ -143,11 +142,11 @@ export class TransactionsController {
   //     const inventory = await prisma.inventory.findUnique({
   //       where: { supplier_products_id: supplierProductId }
   //     });
-  
+
   //     if (!inventory || inventory.stock_quantity < quantity) {
   //      throw new BadRequestError('insufficient stock');
   //     }
-  
+
   //     // Step 3: Deduct the quantity from the inventory
   //     await prisma.inventory.update({
   //       where: { supplier_products_id: supplierProductId },
@@ -193,7 +192,6 @@ export class TransactionsController {
   //     }
   //   });
   //     }
- 
 
   //   const message = utilMessage.created('transaction');
   //   res.status(StatusCodes.CREATED).send(GetSuccessMessage(StatusCodes.CREATED, transaction, message));
@@ -231,8 +229,6 @@ export class TransactionsController {
   //   res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, updatedTransaction, message));
   // }
 
-
-
   /**
    * Delete an existing transaction.
    * @param req The Express request object containing the transaction ID in the params.
@@ -248,4 +244,4 @@ export class TransactionsController {
 
   //   res.status(StatusCodes.NO_CONTENT).send();
   // }
-};
+}
