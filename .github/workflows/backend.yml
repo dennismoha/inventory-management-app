@@ -8,12 +8,126 @@ on:
       - 'backend/**'  # Only trigger if files in the backend folder are changed
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # or your desired version
+
+      - name: Install dependencies
+        run: npm install
+
   lint:
     runs-on: ubuntu-latest
-
+    needs: setup
     steps:
-      - name: run build
-        run: echo "backend running..."
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint check
+        run: npm run lint:check
+
+      - name: Run Prettier check
+        run: npm run prettier:check
+
+  build:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+  migrate:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run migration (production)
+        run: npm run migrate:prod
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test # You can adjust this if you're using a testing framework like Jest or Mocha
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: migrate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to production (optional)
+        run: |
+          echo "Deploying to production..."
+          # Add your deployment script/command here (e.g., Heroku, AWS, etc.)
+        env:
+          NODE_ENV: production
+
+
+
+
+
+
+
+
   #     - name: Checkout code
   #       uses: actions/checkout@v2
 
