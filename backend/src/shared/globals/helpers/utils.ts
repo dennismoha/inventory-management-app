@@ -180,11 +180,12 @@ export function getUnitCategory(unit: string): string {
  * await convertToBaseUnit(5000, 'g', 'weight', true); // 5
  */
 
-type convertToBaseUnit = {
+type convertToBaseUnits = {
   convertedValue: number;
   baseUnit: string
 }
-export async function convertToBaseUnit(value: number, fromUnit: string, unitCategory: string, inverse: boolean): Promise<convertToBaseUnit> {
+
+export async function convertToBaseUnit(value: number, fromUnit: string, unitCategory: string, inverse: boolean): Promise<convertToBaseUnits> {
   let convertedValue: number;
   let baseUnit: string;
 
