@@ -18,6 +18,8 @@ export interface Customer {
     preferredPaymentMethod: string | null; // Optional: Preferred payment method (e.g., Credit card, PayPal)
 }
 
+
+
 export interface NewCustomerPayload {
     statusCode: number;
     data: Customer[]
