@@ -285,7 +285,7 @@ const OrdersTable = () => {
       "Are you sure you want to delete this order?"
     );
     if (confirmed) {
-      await deleteOrder({ orderId: row.orderId });
+      await deleteOrder( row.orderId );
     }
   };
 

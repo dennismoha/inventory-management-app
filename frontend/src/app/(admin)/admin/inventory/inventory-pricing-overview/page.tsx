@@ -71,10 +71,10 @@ export default function InventoryPricingOverview() {
         header: "inventory Quantity",
         size: 100,
         Cell: ({ cell }) => {
-           if(cell.getValue() === null || cell.getValue===undefined || cell.getValue === ''){
+           if(cell.getValue() === null || cell.getValue===undefined){
             return <div>product not in the inventory</div>;
            }else {
-            return <div>{cell.getValue()}</div>
+            return <div>{cell.getValue() as unknown as number || null }</div>
            }
            
           },

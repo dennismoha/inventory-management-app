@@ -367,7 +367,7 @@ if(transactionSuccess) {
 
     {transactionError ? (
       <div className="bg-amber-600 text-white p-1 mb-1 text-xl sm:text-2xl">
-        {transactionErrorMessage.data?.message}
+        {'transaction error'}
       </div>
     ) : (
       <>

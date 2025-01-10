@@ -14,7 +14,7 @@ import {
   useUpdateUnitMutation,
   useDeleteUnitMutation,
 } from "@/app/redux/api/inventory-api"; // Assuming you have these API hooks set up
-import { Unit } from "@/app/units/interface/units-interface"; // The Unit interface
+import { Unit } from "@/app/(admin)/admin/units/interface/units-interface"; // The Unit interface
 
 import { Box, Button, IconButton,  Tooltip } from "@mui/material";
 import { EditIcon, DeleteIcon } from "lucide-react";
@@ -26,7 +26,9 @@ export default function UnitList() {
   const { data: response, isLoading, isError } = useGetUnitsQuery("");
 
   const units: Unit[] = response ? response.data : [];
-  
+  const [createUnit] = useCreateUnitMutation();
+  const [updateUnit] = useUpdateUnitMutation();
+  const [deleteUnit] = useDeleteUnitMutation();
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
 
@@ -89,9 +91,7 @@ export default function UnitList() {
   );
   const { data: session } = useSession();
   console.log('Session data: ', session);  // Log session to inspect user data
-  if (!session) {
-    return <div>Loading...</div>;
-  }
+
 
  
 
@@ -105,7 +105,7 @@ export default function UnitList() {
   };
 
   // Handle row creation
-  const [createUnit] = useCreateUnitMutation();
+
   const handleCreateUnit: MRT_TableOptions<Unit>["onCreatingRowSave"] = async ({ values, table }) => {
     const newValidationErrors = validateUnit(values);
     if (Object.values(newValidationErrors).some((error) => error)) {
@@ -117,14 +117,14 @@ export default function UnitList() {
     delete values.unit_id; // Ensure no unit_id is sent during creation   
     delete values.created_at;
     delete values. updated_at; 
-    let no_of_products = Number(values.no_of_products)
+    const no_of_products = Number(values.no_of_products)
     values = {...values, no_of_products};
     await createUnit(values);
     table.setCreatingRow(null); // Exit creating mode
   };
 
   // Handle row update
-  const [updateUnit] = useUpdateUnitMutation();
+
   const handleUpdateUnit: MRT_TableOptions<Unit>["onEditingRowSave"] = async ({ values, table }) => {
     const newValidationErrors = validateUnit(values);
     if (Object.values(newValidationErrors).some((error) => error)) {
@@ -140,7 +140,7 @@ export default function UnitList() {
   };
 
   // Handle delete
-  const [deleteUnit] = useDeleteUnitMutation();
+ 
   const openDeleteConfirmModal = (row: MRT_Row<Unit>) => {
     if (window.confirm(`Are you sure you want to delete this unit? ${JSON.stringify({ unit_id: row.id })}`)) {
       deleteUnit({ unit_id: row.id });
@@ -203,9 +203,13 @@ export default function UnitList() {
   if (isError ) {
     return <div className="text-center text-red-500 py-4">Failed to fetch units</div>;
   }
+  if (!session) {
+    return <div>Loading...</div>;
+  }
 
   // Rendering the MaterialReactTable component
   return(<>
+  
   {!units || units.length === 0 ?( <div>No units available</div>): null }
      <MaterialReactTable table={table} />
   </>)
