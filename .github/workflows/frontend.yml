@@ -3,36 +3,50 @@ name: Frontend CI/CD Pipeline
 on:
   push:
     branches:
-      - deployment-setup  # Trigger deployment on changes to the main branch
+      - deployment-setup # Trigger deployment on changes to the main branch
     paths:
-      - 'frontend/**'  # Only trigger if files in the frontend folder are changed
+      - "frontend/**" # Only trigger if files in the frontend folder are changed
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v4
-      - name: starting runnig build
-        run : echo 'running'
+        uses: actions/checkout@v3
 
+      # Step 2: Set up Node.js and install dependencies
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'  # Set the Node.js version required for the project
+          node-version: "20" # Specify Node.js version, can be '16', '18', etc.
 
       - name: Install dependencies
-        working-directory: ./frontend
-        run: npm install
+        run: |
+          npm ci   # Clean install of dependencies
 
-      - name: Build Next.js app
-        working-directory: ./frontend
-        run: npm run build
+      # Step 3: TypeScript check (optional)
+      - name: Run TypeScript type checks
+        run: |
+          npm run type-check   # Make sure this script is defined in package.json
 
-      - name: runni build
-        run : echo 'finished building'
+      # Step 4: Run tests (optional, if you have tests set up)
+      - name: Run tests
+        run: |
+          npm run test   # This assumes you have a test script in your package.json
 
-      # - name: Deploy to Vercel
-      #   working-directory: ./frontend
-      #   run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }}  # Use Vercel token from secrets
+      # Step 5: Build the project
+      - name: Build Next.js project
+        run: |
+          npm run build   # Make sure this is the correct build command for Next.js
+
+      # Step 6: Lint the project (optional, if you're using eslint)
+      - name: Lint code
+        run: |
+          npm run lint  # If you have linting set up in your package.json
+
+      # Step 7: Optionally, deploy (you can replace this with your deployment steps)
+      - name: Deploy (example step, adjust according to your deployment method)
+        run: |
+          echo "Deploying your project..."  # Replace with actual deployment script
