@@ -255,7 +255,7 @@ const CustomersManagement = () => {
     muiToolbarAlertBannerProps: cusomerError || getCustomersError
       ? {
           color: 'error',
-          children: cusomerError ? customerErrorCreating?.data.message: 'error fetching customers',
+          children: cusomerError ? 'error creating customer': 'error',
         }
       : undefined,
     onEditingRowSave: handleSaveCustomer,

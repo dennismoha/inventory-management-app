@@ -138,6 +138,7 @@ export interface Miscellaneous {
 export const InventoryApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+      
   
     // credentials: "include"
   }),
@@ -756,6 +757,7 @@ const MiscellaneousApi = InventoryApi.injectEndpoints({
   overrideExisting: true,
 });
 
+
 // inventory
 const ProductsInventoryApi = InventoryApi.injectEndpoints({
   endpoints: (build) => ({
@@ -781,15 +783,15 @@ const ProductsInventoryApi = InventoryApi.injectEndpoints({
 
     // Update an existing inventory item
     updateInventoryItem: build.mutation<
-      InventoryItem,
-      { inventory_item_id: string; patch: Partial<InventoryItem> }
+      InventoryItem, Pick<InventoryItem, 'inventoryId'>
     >({
-      query: ({ inventory_item_id, patch }) => ({
-        url: `/inventory-items/${inventory_item_id}`,
+      query: ({ inventoryId, ...patch }) => ({
+        url: `/inventory/${inventoryId}`,
         method: "PUT",
         body: patch,
       }),
       invalidatesTags: ["InventoryItems"],
+      
     }),
 
     // Delete an inventory item
@@ -874,7 +876,7 @@ const CustomerApi = InventoryApi.injectEndpoints({
     // }),
 
     // Create a new customer
-    createCustomer: build.mutation<Customer, NewCustomerPayload>({
+    createCustomer: build.mutation<NewCustomerPayload,Customer>({
       query: (newCustomer) => ({
         url: '/customers',
         method: 'POST',

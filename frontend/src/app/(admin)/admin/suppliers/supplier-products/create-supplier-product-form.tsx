@@ -1,27 +1,29 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState,  } from 'react';
 
 import { useCreateSupplierProductMutation, useGetProductsQuery,useGetSuppliersQuery } from '@/app/redux/api/inventory-api'; // Import RTK query hook
+import { Supplier } from '../interface/supplier-interface';
+import { Product } from '../../products/interface/products-Interface';
 
-interface Product {
-  product_id: string;
-  name: string;
-  description: string;
-  category_id: string;
-  subcategory_id: string;
-  image_url: string;
-  sku: string;
-  created_at: string;
-  updated_at: string;
-}
+// interface Product {
+//   product_id: string;
+//   name: string;
+//   description: string;
+//   category_id: string;
+//   subcategory_id: string;
+//   image_url: string;
+//   sku: string;
+//   created_at: string;
+//   updated_at: string;
+// }
 
-interface Supplier {
-  supplier_products_id: string;
-  supplier_id: string;
-  product_id: string;
-  created_at: string;
-  updated_at: string;
-  name: string;
-}
+// interface Supplier {
+//   supplier_products_id: string;
+//   supplier_id: string;
+//   product_id: string;
+//   created_at: string;
+//   updated_at: string;
+//   name: string;
+// }
 
 
 const SupplierProductDropdown: React.FC = () => {
@@ -36,20 +38,14 @@ const SupplierProductDropdown: React.FC = () => {
 
 
   // let suppliersdata : Supplier[] | undefined = []
-  let suppliersData : Supplier[] = SuppliersData?.data;
-  let productsData: Product[] = ProductsData?.data 
+  const suppliersData : Supplier[] = SuppliersData?.data ?? [];
+  console.log('supplier products are ', suppliersData)
+  const productsData: Product[] = ProductsData?.data ?? []
 
 
   console.log('suppliers data is ', suppliersData)
 
-  if(suppliersData === undefined ) {
-    console.log('supplier is undefined')
-    suppliersData = []
-  }
 
-  if (productsData === undefined) {
-    productsData = []
-  }
 
 
 
@@ -152,6 +148,12 @@ const SupplierProductDropdown: React.FC = () => {
           {/* Error: {error?.message || 'Something went wrong!'} */}
         </div>
       )}
+
+      {getSuppliersLoading ? <p>fetching suppliers....</p>: null}
+      {getProductsLoading ? <p>getting products.....</p>: null}
+      {getProductsError ? <p> error getting products</p>: null}
+      {getSuppliersError? <p> error getting suppliers</p>: null}
+      {error ? <p> error creating supplier products</p>: null}
 
       <div>
         {selectedSupplier && selectedProduct && (
