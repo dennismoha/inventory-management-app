@@ -10,7 +10,7 @@ export class AuthMiddleware {
   public verifyUser(req: Request, _res: Response, next: NextFunction): void {
     // console.log('req.session', req);
 
-    console.log('req.session 222', req.cookies);
+    // console.log('req.session 222', req.cookies);
     console.log('req session next cookies ', req.cookies.session.jwt);
     const sessionToken = req.cookies['next-auth.session-token'];
     console.log('session token is ', sessionToken);
