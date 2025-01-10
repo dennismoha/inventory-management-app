@@ -2,7 +2,6 @@
 import express, { Router } from 'express';
 import { OrderController } from '@src/features/orders/controller/orders-controller';
 
-
 class OrdersRoutes {
   private router: Router;
 

@@ -8,8 +8,6 @@ import GetSuccessMessage from '@src/shared/globals/helpers/success-messages';
 import { Unit } from '@src/features/units/interfaces/units.interface';
 import { ConflictError } from '@src/shared/globals/helpers/error-handler';
 
-
-
 export class UnitsController {
   /**
    * Fetch all units.
@@ -33,23 +31,21 @@ export class UnitsController {
     const { unit, short_name, no_of_products } = req.body;
     const message = 'units created successfully';
 
-     // Check if category_slug already exists
-     const existingUnitShortName = await prisma.units.findUnique({
-        where: { short_name }
-      });
+    // Check if category_slug already exists
+    const existingUnitShortName = await prisma.units.findUnique({
+      where: { short_name }
+    });
 
-      const existingUnit = await prisma.units.findUnique({
-        where: { short_name }
-      });
-  
-  
-      if (existingUnit || existingUnitShortName) {
-        throw new ConflictError('resource arleady exists');
-      }
-  
+    const existingUnit = await prisma.units.findUnique({
+      where: { short_name }
+    });
+
+    if (existingUnit || existingUnitShortName) {
+      throw new ConflictError('resource arleady exists');
+    }
 
     const newUnit = await prisma.units.create({
-      data: {unit, short_name, no_of_products }
+      data: { unit, short_name, no_of_products }
     });
     res.status(StatusCodes.CREATED).send(GetSuccessMessage(StatusCodes.CREATED, newUnit, message));
     //json(newUnit);

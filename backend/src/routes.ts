@@ -1,4 +1,3 @@
-
 import { Application } from 'express';
 import { categoryRoutes } from '@src/features/categories/routes/category-routes';
 import { subCategoryRoutes } from '@src/features/categories/routes/subcategory-routes';
@@ -20,30 +19,26 @@ import { transactionRoutes } from '@src/features/transactions/routes/transaction
 import { customerRoutes } from '@src/features/customers/routes/customers-routes';
 // import { authMiddleware } from './shared/globals/helpers/auth-middleware';
 
+export default (app: Application) => {
+  const routes = () => {
+    app.use(BASE_PATH, authRoutes.routes());
+    app.use(BASE_PATH, authRoutes.signoutRoute());
+    app.use(BASE_PATH, categoryRoutes.routes());
+    app.use(BASE_PATH, subCategoryRoutes.routes());
+    app.use(BASE_PATH, productUnitsRoutes.routes());
+    app.use(BASE_PATH, productsRoutes.routes());
+    app.use(BASE_PATH, suppliersRoutes.routes());
+    app.use(BASE_PATH, supplierProductsRoutes.routes());
+    app.use(BASE_PATH, supplierPricingRoutes.routes());
+    app.use(BASE_PATH, ordersRoutes.routes());
+    app.use(BASE_PATH, orderProductsRoutes.routes());
+    app.use(BASE_PATH, miscellaneousRoutes.routes());
+    app.use(BASE_PATH, inventoryRoutes.routes());
+    app.use(BASE_PATH, productPricingRoutes.routes());
+    app.use(BASE_PATH, transactionRoutes.routes());
+    app.use(BASE_PATH, customerRoutes.routes());
+    app.use(BASE_PATH, unitsRoutes.routes());
+  };
 
-
-
-export default(app:Application) => {
-    const routes = () =>{
-        app.use(BASE_PATH, authRoutes.routes());
-        app.use(BASE_PATH, authRoutes.signoutRoute());
-        app.use(BASE_PATH, categoryRoutes.routes());
-        app.use(BASE_PATH, subCategoryRoutes.routes());
-        app.use(BASE_PATH, productUnitsRoutes.routes());
-        app.use(BASE_PATH, productsRoutes.routes());
-        app.use(BASE_PATH, suppliersRoutes.routes());
-        app.use(BASE_PATH, supplierProductsRoutes.routes());
-        app.use(BASE_PATH, supplierPricingRoutes.routes());
-        app.use(BASE_PATH, ordersRoutes.routes());
-        app.use(BASE_PATH, orderProductsRoutes.routes());
-        app.use(BASE_PATH, miscellaneousRoutes.routes());
-        app.use(BASE_PATH, inventoryRoutes.routes());
-        app.use(BASE_PATH, productPricingRoutes.routes());
-        app.use(BASE_PATH, transactionRoutes.routes());
-        app.use(BASE_PATH, customerRoutes.routes());
-        app.use(BASE_PATH, unitsRoutes.routes());
-     
-    };
-
-    routes();
+  routes();
 };

@@ -32,8 +32,8 @@ export class InventoryController {
         supplierProduct: {
           include: {
             product: true,
-            supplier: true,     
-            ProductPricing:true,          
+            supplier: true,
+            ProductPricing: true
           }
         },
         unit: true
@@ -103,7 +103,7 @@ export class InventoryController {
   @joiValidation(inventorySchema)
   public async createInventory(req: Request, res: Response): Promise<void> {
     // eslint-disable-next-line prefer-const
-    let { supplier_products_id,  stock_quantity, reorder_level,  unit_id } = req.body;
+    let { supplier_products_id, stock_quantity, reorder_level, unit_id } = req.body;
 
     // 1) Validate Unique Product Identifiers (SKU or product code)
     // const existingProduct = await prisma.inventory.findFirst({

@@ -12,13 +12,13 @@ export class AuthMiddleware {
 
     console.log('req.session 222', req.cookies);
     console.log('req session next cookies ', req.cookies.session.jwt);
-    const sessionToken = req.cookies['next-auth.session-token']; 
+    const sessionToken = req.cookies['next-auth.session-token'];
     console.log('session token is ', sessionToken);
     console.log('jwt token is ', req.session?.jwt);
     if (!req.session?.jwt || !req.cookies?.session) {
       throw new NotAuthorizedError(' Token invalid');
-    }  
- 
+    }
+
     try {
       console.log('in this try catch');
       const payload: AuthPayload = JWT.verify(req.session?.jwt, config.JWT_SECRET) as AuthPayload;

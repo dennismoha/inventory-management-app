@@ -7,19 +7,16 @@ import { BadRequestError, ConflictError } from '@src/shared/globals/helpers/erro
 import GetSuccessMessage from '@src/shared/globals/helpers/success-messages';
 import { Category } from '@src/features/categories/interfaces/categories.interface';
 
-
-
 export class Categories {
   public async fetchCategories(req: Request, res: Response) {
-    const categories:Category[] = await prisma.categories.findMany({
-      include: {      
+    const categories: Category[] = await prisma.categories.findMany({
+      include: {
         Products: true // Include related Products
       }
     });
 
     res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.CREATED, categories, 'categories fetched succesfully'));
     // json({ data: categories });
-   
   }
 
   @joiValidation(categorySchema)
@@ -44,17 +41,14 @@ export class Categories {
       }
     });
 
-
     res.status(StatusCodes.CREATED).send(GetSuccessMessage(StatusCodes.CREATED, category, 'category created succesfully'));
   }
 
   // Update an existing category
   @joiValidation(categorySchema)
   public async updateCategory(req: Request, res: Response): Promise<void> {
-
-    const { categoryId } = req.params; // Assuming categoryId is in the URL path  
+    const { categoryId } = req.params; // Assuming categoryId is in the URL path
     const { category_slug, category_name, description } = req.body;
-
 
     // Check if category name exists
     const category = await prisma.categories.findUnique({
@@ -78,7 +72,6 @@ export class Categories {
     }
 
     res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.CREATED, updatedCategory, 'category updated succesfully'));
-
   }
 
   // Delete a category

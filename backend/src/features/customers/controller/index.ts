@@ -10,7 +10,7 @@ import { ConflictError } from '@src/shared/globals/helpers/error-handler';
 
 export class CustomersController {
   /**
-   * Fetch all customers.  
+   * Fetch all customers.
    */
   public async fetchCustomers(req: Request, res: Response): Promise<void> {
     const customers: Customer[] = await prisma.customer.findMany({
@@ -23,7 +23,7 @@ export class CustomersController {
   }
 
   /**
-   * Create a new customer.   
+   * Create a new customer.
    */
   @joiValidation(customerSchema)
   public async createCustomer(req: Request, res: Response): Promise<void> {
@@ -36,11 +36,11 @@ export class CustomersController {
       country,
       status,
       loyaltyPoints,
-    
+
       notes,
       preferredPaymentMethod
     } = req.body;
-console.log('req. body is ', req.body);
+    console.log('req. body is ', req.body);
     // Check if the email already exists in the database
     const existingEmail = await prisma.customer.findUnique({
       where: { email }
@@ -51,17 +51,15 @@ console.log('req. body is ', req.body);
       throw new ConflictError('Email already exists.');
     }
 
-
     // Check if the phone number already exists in the database
     const existingPhone = await prisma.customer.findUnique({
       where: { phoneNumber }
     });
 
-
     if (existingPhone) {
       throw new ConflictError('Phone number already exists.');
     }
-  
+
     // Create the new customer entry in the database
     const customer = await prisma.customer.create({
       data: {
@@ -75,7 +73,7 @@ console.log('req. body is ', req.body);
 
         status, // Customer status: "active", "inactive", etc.
         loyaltyPoints,
-     
+
         notes, // Optional: Any special notes or preferences about the customer
         preferredPaymentMethod // Optional: Preferred payment method (e.g., Credit card, PayPal)
       }
@@ -102,7 +100,7 @@ console.log('req. body is ', req.body);
       country,
       status,
       loyaltyPoints,
-   
+
       notes,
       preferredPaymentMethod
     } = req.body;
@@ -121,7 +119,6 @@ console.log('req. body is ', req.body);
 
         status, // Customer status: "active", "inactive", etc.
         loyaltyPoints,
-      
 
         notes, // Optional: Any special notes or preferences about the customer
         preferredPaymentMethod // Optional: Preferred payment method (e.g., Credit card, PayPal)

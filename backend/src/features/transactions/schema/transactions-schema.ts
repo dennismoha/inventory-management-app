@@ -27,18 +27,17 @@ import Joi from 'joi';
 // });
 
 const cartProductSchema = Joi.object().keys({
-  inventoryId: Joi.string().uuid().required(),  // `inventoryId` as UUID (required)
-  quantity: Joi.number().min(1).required(),  // `quantity` (positive number, min 1)
-  productName: Joi.string().min(1).max(255).required(),  // `productName` (non-empty string)
-  price: Joi.number().precision(2).min(0).required(),  // `price` (positive number with 2 decimals)
-  VAT: Joi.number().precision(2).min(0).required(),  // `VAT` (non-negative number with 2 decimals)
-  discount: Joi.number().precision(2).min(0).required(),  // `discount` (non-negative number with 2 decimals)
+  inventoryId: Joi.string().uuid().required(), // `inventoryId` as UUID (required)
+  quantity: Joi.number().min(1).required(), // `quantity` (positive number, min 1)
+  productName: Joi.string().min(1).max(255).required(), // `productName` (non-empty string)
+  price: Joi.number().precision(2).min(0).required(), // `price` (positive number with 2 decimals)
+  VAT: Joi.number().precision(2).min(0).required(), // `VAT` (non-negative number with 2 decimals)
+  discount: Joi.number().precision(2).min(0).required(), // `discount` (non-negative number with 2 decimals)
   // transactionId: Joi.string().uuid().required(),  // `transactionId` as UUID (required)
   status: Joi.string().allow(null),
-  stock_quantity: Joi.number().min(0).required(),  // `stock_quantity` (non-negative number)
-  supplier_products_id: Joi.string().uuid().required()  // `supplier_products_id` as UUID (required)
+  stock_quantity: Joi.number().min(0).required(), // `stock_quantity` (non-negative number)
+  supplier_products_id: Joi.string().uuid().required() // `supplier_products_id` as UUID (required)
 });
-
 
 // Validate product items schema
 // export const transactionSchema = Joi.object().keys({
@@ -52,14 +51,14 @@ const cartProductSchema = Joi.object().keys({
 // });
 
 export const transactionSchema = Joi.object().keys({
-  cartProducts: Joi.array().items(cartProductSchema).required(),  // Array of `cartProducts` (required)
-  statusTab: Joi.boolean().required(),  // `statusTab` (boolean, required)
-  totalCost: Joi.object().keys({
-    total: Joi.number().precision(2).min(0).required(),  // `total` (non-negative number with 2 decimals)
-    subtotal: Joi.number().precision(2).min(0).required(),  // `subtotal` (non-negative number with 2 decimals)
-  }).required(),  // `totalCost` (required)
-  paymentMethod: Joi.string().valid('cash', 'bank', 'credit').required(),  // `paymentMethod` (valid string values)
-  customerId: Joi.string().uuid().allow(null),  // `customerId` (UUID, can be null or omitted)
+  cartProducts: Joi.array().items(cartProductSchema).required(), // Array of `cartProducts` (required)
+  statusTab: Joi.boolean().required(), // `statusTab` (boolean, required)
+  totalCost: Joi.object()
+    .keys({
+      total: Joi.number().precision(2).min(0).required(), // `total` (non-negative number with 2 decimals)
+      subtotal: Joi.number().precision(2).min(0).required() // `subtotal` (non-negative number with 2 decimals)
+    })
+    .required(), // `totalCost` (required)
+  paymentMethod: Joi.string().valid('cash', 'bank', 'credit').required(), // `paymentMethod` (valid string values)
+  customerId: Joi.string().uuid().allow(null) // `customerId` (UUID, can be null or omitted)
 });
-
-

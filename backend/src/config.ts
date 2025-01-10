@@ -10,10 +10,10 @@ class Config {
   public CLOUD_NAME: string | undefined;
   public CLOUD_API_KEY: string | undefined;
   public CLOUD_API_SECRET: string | undefined;
-  public LOCAL_DEVELOPMENT_BASE_URL : string | undefined;
+  public LOCAL_DEVELOPMENT_BASE_URL: string | undefined;
   public SECRET_COOKIE_KEY_ONE: string | undefined;
   public SECRET_COOKIE_KEY_TWO: string | undefined;
-  public JWT_SECRET: string; 
+  public JWT_SECRET: string;
 
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL || '';
@@ -23,7 +23,7 @@ class Config {
     this.CLOUD_NAME = process.env.CLOUD_NAME;
     this.CLOUD_API_KEY = process.env.CLOUD_API_KEY;
     this.CLOUD_API_SECRET = process.env.CLOUD_API_SECRET;
-    this.LOCAL_DEVELOPMENT_BASE_URL  = process.env.LOCAL_DEVELOPMENT_BASE_URL ;
+    this.LOCAL_DEVELOPMENT_BASE_URL = process.env.LOCAL_DEVELOPMENT_BASE_URL;
     this.JWT_SECRET = process.env.JWT_SECRET!;
   }
 

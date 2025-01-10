@@ -22,22 +22,21 @@ async function seed() {
   const users: UserInterface[] = [
     {
       username: process.env.ADMIN_USERNAME as string, // Type assertion
-      email: process.env.ADMIN_EMAIL as string, 
+      email: process.env.ADMIN_EMAIL as string,
       password: process.env.ADMIN_PASSWORD as string,
       role: process.env.ADMIN_ROLE as UserRole.admin
     },
 
     // Normal user from environment variables
     {
-      username: process.env.USER_USERNAME as string, 
-      email: process.env.USER_EMAIL as string, 
-      password: process.env.USER_PASSWORD as string, 
+      username: process.env.USER_USERNAME as string,
+      email: process.env.USER_EMAIL as string,
+      password: process.env.USER_PASSWORD as string,
       role: process.env.USER_ROLE as UserRole.user
     }
   ];
 
   try {
-   
     const response = await axios.post('http://localhost:8081/api/v1/signup', users);
     console.log('Users created:', response.data);
   } catch (e: unknown) {
