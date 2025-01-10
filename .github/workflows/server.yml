@@ -86,8 +86,9 @@ jobs:
       - name: Run migration (production)
         working-directory: ./backend  # Run migration in the backend folder
         run: npm run migrate:prod
-        # env:
-        #   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        env:
+          DATABASE_URL: "postgresql://inventory_management_system_yvk3_user:xQKx5JMt0aRGlvSEALoHGNQOfOmrml3P@dpg-cu0i9cpu0jms73d22eq0-a.oregon-postgres.render.com/inventory_management_system_yvk3"  # Use GitHub Secrets for the database URL
+
         
 
   test:
