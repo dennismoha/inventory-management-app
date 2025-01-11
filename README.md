@@ -23,25 +23,43 @@ This project is a custom inventory management system designed for a small shop. 
 - Both the backend and frontend contain detailed `README.md` files explaining the project structure and how to run the application.
 - The entire project is written in TypeScript.
 
-# Deployment
 
-## Backend
+# Deployment Guide
 
-- The backend is deployed on render through githubActions.
-- on the root of this , go check the workflows on github actions
-- the server.yml workflow is responsible for deploying the code to render.
+## Overview
+The deployment is managed using GitHub Actions.
 
-# caveats.
-1)  When deploying on render, don't add `NODE_ENV` others you will get issues with `tscp` as noted here `https://community.render.com/t/tsc-not-found-during-build/6428`
+### Backend Deployment
 
-2) To understand how to fully setup a `github Action render deployment` check out this link from render. <a href="https://render.com/docs/cli?_gl=1*vyo77d*_gcl_au*MTY5Nzk3NzExOS4xNzMxOTM1NjQw*_ga*NTQzNzk3MjQ4LjE3MTY0OTU5ODI.*_ga_QK9L9QJC5N*MTczNjU4MzA3MC4yNi4xLjE3MzY1ODM2MTYuNjAuMC4w#example-github-actions">Deploy to render from github actions </a>
+- The backend is deployed on Render through GitHub Actions.
+- To see how the deployment works, navigate to the **GitHub Actions workflows** in the repository.
+- The `server.yml` workflow is responsible for deploying the backend code to Render.
 
-3) To successfully get the render_service id which might be an issue follow this instruction on this video.
-<iframe width="560" height="315" src="https://www.youtube.com/embed/DBlmF91Accg?si=Ze1lKvN6zpphtwiE&amp;start=458" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+### Deployment Considerations
 
-5) The render API. To fetch this either use the above link or use this link <a href="https://render.com/docs/api"> render api key</a>
+1. **Do not add `NODE_ENV` when deploying on Render**  
+   Adding `NODE_ENV` may cause issues with `tsc` (TypeScript Compiler), as noted in this [Render community post](https://community.render.com/t/tsc-not-found-during-build/6428).
 
-6) To setup postgresql for render and retrieve the database url. follow the following instructions from render <a href="https://render.com/docs/postgresql-creating-connecting#create-your-database">Render postgresql database </a>
-## Frontend.
+2. **Setting up GitHub Actions for Render Deployment**  
+   For a complete guide on how to set up GitHub Actions for deployment to Render, check out this official Render documentation:  
+   [Deploy to Render from GitHub Actions](https://render.com/docs/cli?_gl=1*vyo77d*_gcl_au*MTY5Nzk3NzExOS4xNzMxOTM1NjQw*_ga*NTQzNzk3MjQ4LjE3MTY0OTU5ODI.*_ga_QK9L9QJC5N*MTczNjU4MzA3MC4yNi4xLjE3MzY1ODM2MTYuNjAuMC4w#example-github-actions)
 
+3. **Finding the Render Service ID**  
+   If you're having trouble finding the Render service ID, follow the instructions in this video:  
+   [YouTube: How to get Render Service ID](https://www.youtube.com/embed/DBlmF91Accg?si=Ze1lKvN6zpphtwiE&amp;start=458)
+
+4. **Render API Key**  
+   To interact with the Render API, you can find the necessary documentation and instructions here:  
+   [Render API Documentation](https://render.com/docs/api)
+
+5. **Setting Up PostgreSQL on Render**  
+   To set up a PostgreSQL database on Render and retrieve the database URL, follow these instructions:  
+   [Render PostgreSQL Setup Guide](https://render.com/docs/postgresql-creating-connecting#create-your-database)
+
+---
+
+### Frontend Deployment
+
+- The frontend deployment is managed by the `frontend.yml` workflow.
+- The workflow file can be found in the **workflows** folder of the repository.
 
