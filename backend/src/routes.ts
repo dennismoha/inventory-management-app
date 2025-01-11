@@ -22,7 +22,7 @@ import { customerRoutes } from '@src/features/customers/routes/customers-routes'
 export default (app: Application) => {
   const routes = () => {
     app.use('', healthRoutes.health()); // checks the health of the application
-    app.use('', healthRoutes.env()); 
+    app.use('', healthRoutes.env());
     app.use('', healthRoutes.fiboRoutes());
     app.use(BASE_PATH, authRoutes.routes());
     app.use(BASE_PATH, authRoutes.signoutRoute());

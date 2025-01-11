@@ -34,17 +34,18 @@ class HealthRoutes {
     return this.router;
   }
 
-
   public fiboRoutes(): Router {
     this.router.get('/fibo/:num', async (req: Request, res: Response) => {
       const { num } = req.params;
       const start: number = performance.now();
       const result: number = this.fibo(parseInt(num, 10));
       const end: number = performance.now();
-    
-      res.status(HTTP_STATUS.OK).send(
-        `Fibonacci series of ${num} is ${result} and it took ${end - start}ms with process id ${process.pid} on ${moment().format('LL')}`
-      );
+
+      res
+        .status(HTTP_STATUS.OK)
+        .send(
+          `Fibonacci series of ${num} is ${result} and it took ${end - start}ms with process id ${process.pid} on ${moment().format('LL')}`
+        );
     });
 
     return this.router;
