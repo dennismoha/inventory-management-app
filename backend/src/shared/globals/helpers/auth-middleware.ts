@@ -14,7 +14,7 @@ export class AuthMiddleware {
     console.log('req session next cookies ', req.cookies.session.jwt);
     const sessionToken = req.cookies['next-auth.session-token'];
     console.log('session token is ', sessionToken);
-    // console.log('jwt token is ', req.session?.jwt);
+    console.log('jwt token is ', req.session?.jwt);
     if (!req.session?.jwt || !req.cookies?.session) {
       throw new NotAuthorizedError(' Token invalid');
     }
