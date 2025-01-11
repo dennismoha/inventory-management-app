@@ -36,7 +36,10 @@ async function seed() {
     }
   ];
 
-  const url = process.env.NODE_ENV === 'production'  ? 'https://inventory-management-app-arkv.onrender.com/api/v1/signup': 'http://localhost:8081/api/v1/signup';
+  const url =
+    process.env.NODE_ENV === 'production'
+      ? 'https://inventory-management-app-arkv.onrender.com/api/v1/signup'
+      : 'http://localhost:8081/api/v1/signup';
   try {
     const response = await axios.post(url, users);
     console.log('Users created:', response.data);
