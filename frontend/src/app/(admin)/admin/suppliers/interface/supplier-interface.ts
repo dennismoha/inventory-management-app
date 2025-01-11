@@ -1,6 +1,7 @@
 import { InventoryItem, ProductPricing } from "@/app/(admin)/admin/inventory/interfaces/inventory-interface";
 import { Product } from "@/app/(admin)/admin/products/interface/products-Interface";
-import { Unit } from "@/app/units/interface/units-interface";
+// import { Unit } from "@/app/units/interface/units-interface";
+import { Unit } from "@/app/(admin)/admin/units/interface/units-interface";
 
 export interface Supplier {
     supplier_id: string;  // UUID for supplier

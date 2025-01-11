@@ -4,17 +4,17 @@
 import  { useMemo } from 'react';
 import { MaterialReactTable, useMaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 import { Supplier } from "@/app/(admin)/admin/suppliers/interface/supplier-interface";
-import { Typography } from '@material-tailwind/react';
+//import { Typography } from '@material-tailwind/react';
 
 
 
 
 // Define the type for the product data
-interface Product {
-  name: string;
-  quantity: string;
-  price: string;
-}
+// interface Product {
+//   name: string;
+//   quantity: string;
+//   price: string;
+// }
 
 interface SupplierTableProps {
   data: Supplier[];

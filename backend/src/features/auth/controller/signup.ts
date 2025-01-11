@@ -21,21 +21,17 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { UserInterface } from '@src/features/auth/interfaces/auth.interface';
 
-
 import { StatusCodes } from 'http-status-codes';
 import prisma from '@src/shared/prisma/prisma-client'; // Prisma client to interact with the database
 
-import {  ConflictError } from '@src/shared/globals/helpers/error-handler';
+import { ConflictError } from '@src/shared/globals/helpers/error-handler';
 // import GetSuccessMessage from '@src/shared/globals/helpers/success-messages';
-
-
-
 
 export class Signup {
   /**
    * Creates multiple users, ensuring one user is assigned the "admin" role
    * and others are assigned the "user" role.
-   * 
+   *
    * @param {Request} req - The Express request object containing user details.
    * @param {Response} res - The Express response object to send the response.
    * @returns {Promise<Response>} A promise that resolves to the response object.
@@ -44,9 +40,9 @@ export class Signup {
     const users: UserInterface[] = req.body;
 
     // Validate roles: ensure there is exactly one "admin" role and others are "user"
-    const adminCount = users.filter(user => user.role === 'admin').length;
+    const adminCount = users.filter((user) => user.role === 'admin').length;
     if (adminCount !== 1) {
-      throw new ConflictError( 'There must be exactly one admin user.');
+      throw new ConflictError('There must be exactly one admin user.');
     }
 
     // Hash the passwords for all users and check if they already exist
@@ -66,19 +62,17 @@ export class Signup {
 
     // Create the users in the database
     await prisma.user.createMany({
-      data: hashedUsers,
+      data: hashedUsers
     });
 
     // Return the created users (excluding the passwords for security)
     return res.status(StatusCodes.CREATED).json({
       message: 'Users created successfully',
-      createdUsers: hashedUsers.map(user => ({
+      createdUsers: hashedUsers.map((user) => ({
         username: user.username,
         email: user.email,
-        role: user.role,
-      })),
+        role: user.role
+      }))
     });
   }
 }
-
-

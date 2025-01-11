@@ -8,7 +8,7 @@ export const orderSchema = Joi.object({
   totalAmount: Joi.number().required(),
   paymentStatus: Joi.string().valid('paid', 'unpaid', 'partially_paid').required(),
   paymentMethod: Joi.string().valid('cash', 'bank', 'credit').required(),
-  orderDate: Joi.string().required(),  
+  orderDate: Joi.string().required(),
   shippingDate: Joi.date().required(),
   orderDeliveryDate: Joi.date().required(),
   // orderStatus: Joi.string().valid('pending', 'empty', 'failed', 'fulfilled', 'extended', 'order_default').required(),
@@ -18,8 +18,6 @@ export const orderSchema = Joi.object({
   comments: Joi.string().optional(),
   notes: Joi.string().optional()
 });
-
-
 
 export const orderProductsSchema = Joi.object({
   orderId: Joi.string().uuid().required(),
@@ -32,4 +30,3 @@ export const orderProductsSchema = Joi.object({
   order_quantity: Joi.number(),
   supplierProductsPricingId: Joi.string()
 });
-

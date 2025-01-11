@@ -2,7 +2,6 @@ import { ObjectSchema } from 'joi';
 import { jOIRequestValidationError } from '@src/shared/globals/helpers/error-handler';
 import { Request } from 'express';
 
-
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
 type IJoiDecorator = (target: any, key: string, descriptor: PropertyDescriptor) => void;
 

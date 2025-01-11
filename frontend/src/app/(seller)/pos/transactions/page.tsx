@@ -9,7 +9,7 @@ import {
   Transaction,
   TransactionProduct,
 } from "@/app/(seller)/pos/transactions/interfaces/transactions-interface"; // Import your Transaction type
-import { Typography } from "@material-tailwind/react";
+import { Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { useGetTransactionsQuery } from "@/app/redux/api/inventory-api"; // Import the RTK hook for fetching transactions
 // Define the type for the transaction data
@@ -37,8 +37,8 @@ const TransactionTable = () => {
         accessorKey: "totalCost", // Total cost
         header: "Total Cost",
         size: 150,
-        Cell: ({ cell }) => (
-          <Typography>{cell.getValue().toFixed(2)} kes</Typography>
+        Cell: ({ cell }) => (          
+          <Typography>{(cell.getValue()as number).toFixed(2)} kes</Typography>
         ),
       },
       {
@@ -51,7 +51,7 @@ const TransactionTable = () => {
         header: "Subtotal",
         size: 150,
         Cell: ({ cell }) => (
-          <Typography>{cell.getValue().toFixed(2)} kes</Typography>
+          <Typography>{(cell.getValue() as number).toFixed(2)} kes</Typography>
         ),
       },
       {
