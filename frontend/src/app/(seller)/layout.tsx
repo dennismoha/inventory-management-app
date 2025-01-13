@@ -6,6 +6,7 @@ import "./globals.css";
 import PosWrapper from "./pos/pos-wrapper";
 // import Dashboardwrapper from "@/app/dashboardwrapper";
 import AuthProvider from "@/app/context/authProvider";
+import Head from 'next/head';
 
 // import Home from "./page";
 
@@ -21,6 +22,11 @@ export default function SellerLayout({
 }>) {
   return (
     <html lang="en">
+       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {/* You can also add other meta tags, title, etc. */}
+        <title>Your App Title</title>
+      </Head>
       <body>
         <AuthProvider>
           <PosWrapper>{children}</PosWrapper>

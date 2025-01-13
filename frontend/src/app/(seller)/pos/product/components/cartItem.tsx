@@ -52,14 +52,14 @@ const CartItem: React.FC<data> = (props) => {
         }));
     }
   return (
-    <div className='flex justify-between items-center bg-slate-600 text-white p-2 border-b-2 border-slate-700 gap-5 rounded-md'>
+    <div className='flex justify-between items-center bg-green-600 text-white p-2 border-b-2 border-green-700 gap-5 rounded-md'>
         <Image src={imageProduct8} height="100" width="100"alt="" className='w-12'/>
         <h3>{productName}</h3>
         <p>${price * quantity}</p>
         <div className='w-20 flex justify-between gap-2'>
-            <button className='bg-gray-200 rounded-full w-6 h-6 text-cyan-600' onClick={handleMinusQuantity}>-</button>
+            <button className='bg-gray-200 rounded-full w-6 h-6 text-teal-600' onClick={handleMinusQuantity}>-</button>
             <span>{quantity}</span>
-            <button className='bg-gray-200 rounded-full w-6 h-6 text-cyan-600' onClick={handlePlusQuantity}>+</button>
+            <button className='bg-gray-200 rounded-full w-6 h-6 text-teal-600' onClick={handlePlusQuantity}>+</button>
         </div>
     </div>
   )

@@ -330,12 +330,12 @@ if(transactionSuccess) {
 
   return (
     <>
- <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 `} style={{ height: "677px" }}>
+ <div className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3   gap-4`}>
   {/* Products Section */}
-  <div className={`col-span-1 sm:col-span-2 lg:col-span-2 bg-gray-100 p-6 overflow-y-auto`}>
-    <h2 className="text-xl sm:text-2xl font-semibold mb-4">Products</h2>
+  <div className={`col-span-1 sm:col-span-1 lg:col-span-2 bg-gray-100  overflow-y-auto`}>
+    <h2 className="text-xl sm:text-1xl font-semibold mt-4 text-center">Products</h2>
     
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3   lg:grid-cols-4 gap-4">
       {/* Mapping through inventory items and displaying each product */}
       {inventoryItemsData.map((product, key) => (
         <ProductList key={key} data={product} />
@@ -343,9 +343,9 @@ if(transactionSuccess) {
     </div>
   </div>
 
-  {/* Cart Section */}
+   {/* Cart Section */}
    {cartProducts.cartProducts.length === 0 ? null:
-  <div className="bg-gray-200 p-6 overflow-y-scroll shadow-2xl grid grid-rows-[60px_1fr_60px_60px_60px_60px_60px] transform transition-transform duration-500 max-h-[677px] col-span-1 sm:col-span-2 lg:col-span-1">
+  <div className="bg-gray-200 h-full p-6 overflow-y-scroll shadow-2xl grid grid-rows-[60px_1fr_60px_60px_60px_60px_60px] transform transition-transform duration-500 max-h-[677px] col-span-1 sm:col-span-2 lg:col-span-1">
     <h2 className="text-xl sm:text-2xl font-semibold mb-2">Cart</h2>
     <div className="bg-white p-4 mb-4 rounded-lg shadow-md">
       <div className="flex flex-row justify-between mb-2 border-b-2">
@@ -361,23 +361,23 @@ if(transactionSuccess) {
       </div>
     </div>
 
-    <div className="bg-amber-600 rounded-lg text-white p-1 mb-1 text-xl sm:text-2xl flex items-center justify-start">
+    <div className="bg-green-600 rounded-lg text-white p-1 mb-1 text-xl sm:text-2xl flex items-center justify-start">
       <CustomersList />
     </div>
 
     {transactionError ? (
-      <div className="bg-amber-600 text-white p-1 mb-1 text-xl sm:text-2xl">
+      <div className="bg-green-600 text-white p-1 mb-1 text-xl sm:text-2xl">
         {'transaction error'}
       </div>
     ) : (
       <>
         {transactionSuccess ? (
-          <div className="bg-amber-600 text-white p-1 mb-1 text-xl sm:text-2xl">Success</div>
+          <div className="bg-green-600 text-white p-1 mb-1 text-xl sm:text-2xl">Success</div>
         ) : null}
       </>
     )}
 
-    <div className="bg-amber-600 text-white p-1 mb-1 text-xl sm:text-2xl">
+    <div className="bg-green-600 text-white p-1 mb-1 text-xl sm:text-2xl">
       Total cost is: {totalcost.total}
     </div>
 
@@ -392,12 +392,14 @@ if(transactionSuccess) {
         <button className="bg-black text-white" onClick={handleCloseTabCart}>
           CLOSE
         </button>
-        <button onClick={handleCheckoutHandler} className="bg-amber-600 text-white">
+        <button onClick={handleCheckoutHandler} className="bg-green-600 text-white">
           CHECKOUT
         </button>
       </div>
     )}
   </div>}
+
+
 </div>
 
     </>

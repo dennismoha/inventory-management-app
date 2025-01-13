@@ -1,86 +1,161 @@
+// "use client";
+// import React from "react";
+// // import { Menu, Bell, Sun, Settings, Moon,LogOut } from "lucide-react";
+// import { Menu,  Sun,  Moon,LogOut } from "lucide-react";
+// // import Image from "next/image";
+// import Link from "next/link";
+// import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
+// import { setIsDarkMode, setIsSidebarCollapsed } from "@/app/redux/state";
+// // import Image from "next/image";
+
+
+
+// const Navbar = () => {
+//     const dispatch = useAppDispatch();
+//     const isSidebarCollapsed = useAppSelector(
+//       (state) => state.global.isSidebarCollapsed
+//     );
+//     const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  
+//     const toggleSidebar = () => {
+//       dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
+//     };
+  
+//     const toggleDarkMode = () => {
+//       dispatch(setIsDarkMode(!isDarkMode));
+//     };
+//   return (
+//     <div className={"flex p-3  justify-between items-center w-full mb-7 bg-gray-100 border-b-2 sticky top-0 z-10"}>
+//       <div className={"flex justify-between items-center gap-5"}>
+//         <button
+//           className="px-3 py-3 bg-green-600 rounded-full hover:bg-green-300"
+//           onClick={toggleSidebar}
+//         >
+//           <Menu className="w-4 h-4" color="white" />
+//         </button>
+//         {/* <div className="relative">
+//           <input
+//             type="search"
+//             placeholder="Start type to search groups & products"
+//             className="pl-10 pr-4 py-2 w-50 md:w-60 border-2 border-gray-300 bg-white rounded-lg focus:outline-none focus:border-blue-500"
+//           />
+
+//           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-non">
+//             <Bell className="text-gray-500" size={20} />
+//           </div>
+//         </div> */}
+//       </div>
+
+//       {/* Right Side */}
+//       <div className="flex justify-between items-center gap-5">
+//         <div className="hidden md:flex justify-between items-center gap-5">
+//           <div>
+//             <button  onClick={toggleDarkMode}>
+//             {isDarkMode ? (
+//                 <Sun className="cursor-pointer text-green-600" size={24} />
+//               ) : (
+//                 <Moon className="cursor-pointer text-green-600" size={24} />
+//               )}
+//             </button>
+//           </div>
+//           {/* <div className="relative">
+//           <Bell className="cursor-pointer text-gray-500" size={24} />
+//             <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full">
+//               3
+//             </span>
+
+//           </div> */}
+//           <hr className="w-0 h-7 border border-solid border-l border-gray-300 mx-3" />
+//           {/* <div className="flex items-center gap-3 cursor-pointer">
+//             <Image
+//               src="https://s3-ed-inventory.s3.eu-north-1.amazonaws.com/profile.jpg"
+//               alt="Profile"
+//               width={50}
+//               height={50}
+//               className="rounded-full h-full object-cover"
+//             /> *
+//             <span className="font-semibold">User Name</span>
+//           </div> */}
+//         </div>
+//         {/* <Link href="/settings">
+//           <Settings className="cursor-pointer text-gray-500" size={24} />
+//         </Link> */}
+//         <Link href="/api/auth/signout">
+//           <LogOut className="cursor-pointer text-green-600" size={24}  />
+//         </Link>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Navbar;
+
 "use client";
 import React from "react";
-import { Menu, Bell, Sun, Settings, Moon,LogOut } from "lucide-react";
-// import Image from "next/image";
+import { Menu, Sun, Moon, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
 import { setIsDarkMode, setIsSidebarCollapsed } from "@/app/redux/state";
-import Image from "next/image";
-
-
 
 const Navbar = () => {
-    const dispatch = useAppDispatch();
-    const isSidebarCollapsed = useAppSelector(
-      (state) => state.global.isSidebarCollapsed
-    );
-    const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
-  
-    const toggleSidebar = () => {
-      dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
-    };
-  
-    const toggleDarkMode = () => {
-      dispatch(setIsDarkMode(!isDarkMode));
-    };
+  const dispatch = useAppDispatch();
+  const isSidebarCollapsed = useAppSelector(
+    (state) => state.global.isSidebarCollapsed
+  );
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+
+  const toggleSidebar = () => {
+    dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
+  };
+
+  const toggleDarkMode = () => {
+    dispatch(setIsDarkMode(!isDarkMode));
+  };
+
   return (
-    <div className={"flex  justify-between items-center w-full mb-7 "}>
-      <div className={"flex justify-between items-center gap-5"}>
+    <div
+      className={`flex p-4 justify-between items-center w-full bg-white dark:bg-gray-800 border-b-2 sticky top-0 z-10 transition-all duration-300 ease-in-out transform ${
+        isDarkMode ? "border-gray-600" : "border-gray-200"
+      }`}
+    >
+      {/* Left Side: Sidebar Toggle */}
+      <div className="flex items-center gap-4">
         <button
-          className="px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100"
+          className="p-3 rounded-full bg-green-600 hover:bg-green-500 transform transition-all duration-300 hover:scale-105"
           onClick={toggleSidebar}
         >
-          <Menu className="w-4 h-4" />
+          <Menu className="w-5 h-5 text-white transition-all duration-300 transform" />
         </button>
-        <div className="relative">
-          <input
-            type="search"
-            placeholder="Start type to search groups & products"
-            className="pl-10 pr-4 py-2 w-50 md:w-60 border-2 border-gray-300 bg-white rounded-lg focus:outline-none focus:border-blue-500"
-          />
-
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-non">
-            <Bell className="text-gray-500" size={20} />
-          </div>
-        </div>
       </div>
 
-      {/* Right Side */}
-      <div className="flex justify-between items-center gap-5">
-        <div className="hidden md:flex justify-between items-center gap-5">
-          <div>
-            <button  onClick={toggleDarkMode}>
-            {isDarkMode ? (
-                <Sun className="cursor-pointer text-gray-500" size={24} />
-              ) : (
-                <Moon className="cursor-pointer text-gray-500" size={24} />
-              )}
-            </button>
-          </div>
-          <div className="relative">
-          <Bell className="cursor-pointer text-gray-500" size={24} />
-            <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full">
-              3
-            </span>
+      {/* Right Side: Dark Mode Toggle and Logout */}
+      <div className="flex items-center gap-6">
+        {/* Dark Mode Toggle */}
+        <button
+          onClick={toggleDarkMode}
+          className="p-2 rounded-full hover:bg-green-100 dark:hover:bg-gray-700 transition-colors duration-300 transform hover:scale-105"
+        >
+          {isDarkMode ? (
+            <Sun
+              className="text-green-500 transition-all duration-300 transform"
+              size={24}
+            />
+          ) : (
+            <Moon
+              className="text-green-500 transition-all duration-300 transform"
+              size={24}
+            />
+          )}
+        </button>
 
-          </div>
-          <hr className="w-0 h-7 border border-solid border-l border-gray-300 mx-3" />
-          <div className="flex items-center gap-3 cursor-pointer">
-            <Image
-              src="https://s3-ed-inventory.s3.eu-north-1.amazonaws.com/profile.jpg"
-              alt="Profile"
-              width={50}
-              height={50}
-              className="rounded-full h-full object-cover"
-            /> *
-            <span className="font-semibold">User Name</span>
-          </div>
-        </div>
-        <Link href="/settings">
-          <Settings className="cursor-pointer text-gray-500" size={24} />
-        </Link>
+        <hr className="h-6 border-l border-gray-300 dark:border-gray-600" />
+
+        {/* Logout Button */}
         <Link href="/api/auth/signout">
-          <LogOut className="cursor-pointer text-gray-500" size={24} />
+          <LogOut
+            className="cursor-pointer text-green-600 hover:text-green-500 transition-colors duration-300 transform hover:scale-105"
+            size={24}
+          />
         </Link>
       </div>
     </div>

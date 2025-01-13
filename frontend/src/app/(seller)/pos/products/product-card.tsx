@@ -117,7 +117,7 @@ const ProductCard = (propsData: ProductsCard) => {
       <div className="mt-4">
         <button
           onClick={handleAddToCart}
-          className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700 transition-colors duration-200"
+          className="w-full bg-green-600  text-white py-2 rounded-lg hover:bg-green-700 transition-colors duration-200"
         >
           Select Item
         </button>
