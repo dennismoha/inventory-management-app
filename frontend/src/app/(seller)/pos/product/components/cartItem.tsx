@@ -1,7 +1,6 @@
 'use client'
 
 
-
 import { changeQuantity, cartProducts  } from '@/app/redux/state/cart';
 import { useAppDispatch, useAppSelector } from '@/app/redux/redux';
 import Image from 'next/image';
