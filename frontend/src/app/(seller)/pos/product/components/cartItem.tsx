@@ -1,7 +1,7 @@
 'use client'
-import React, {useState, useEffect} from 'react' 
+// import React, {useState, useEffect} from 'react' 
 // import { products } from '../products';
-import { CheckoutProducts } from '../interface';
+// import { CheckoutProducts } from '../interface';
 
 
 import { changeQuantity, cartProducts  } from '@/app/redux/state/cart';
