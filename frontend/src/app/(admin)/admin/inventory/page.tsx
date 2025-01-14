@@ -20,21 +20,21 @@ import {
 } from "@/app/redux/api/inventory-api";
 // import { Unit } from "@/app/units/interface/units-interface";
 import { InventoryItem } from "@/app/(admin)/admin/inventory/interfaces/inventory-interface";
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+// import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 const InventoryManagement = () => {
   const {
     data: InventoryItemsData,
     isLoading,
-    isError,
+    // isError,
   } = useGetInventoryItemsQuery();
   
-  const isFetchBaseQueryError = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    error: any
-  ): error is FetchBaseQueryError => {
-    return error?.status !== undefined && error?.data !== undefined;
-  };
+  // const isFetchBaseQueryError = (
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   error: any
+  // ): error is FetchBaseQueryError => {
+  //   return error?.status !== undefined && error?.data !== undefined;
+  // };
 
   const { data: UnitsData, isLoading: unitDataLoading } = useGetUnitsQuery(); // Fetch units data
 
@@ -51,7 +51,7 @@ const InventoryManagement = () => {
  
 
   // Redux Mutation Hooks for Create, Update, Delete
-  const [createInventoryItem, {isError: inventoryMutationError}] = useCreateInventoryItemMutation();
+  const [createInventoryItem] = useCreateInventoryItemMutation();
   const [updateInventoryItem,{isError: updatingIsInventoryError, error: updatingInventoryError}] = useUpdateInventoryItemMutation();
   const [deleteInventoryItem] = useDeleteInventoryItemMutation();
 

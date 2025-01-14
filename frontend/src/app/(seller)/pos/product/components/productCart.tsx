@@ -8,8 +8,8 @@ import { addToCheckout } from "@/app/redux/state/cart";
 import Link from "next/link";
 // import { CheckoutProducts } from "../interface";
 import { InventoryItem } from "@/app/(admin)/admin/inventory/interfaces/inventory-interface";
-import Image from "next/image";
-import imageProduct8 from '../assets/images/8.png' 
+// import Image from "next/image";
+// import imageProduct8 from '../assets/images/8.png' 
 
 type inputData = {
   data: InventoryItem;
