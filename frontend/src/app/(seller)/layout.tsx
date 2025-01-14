@@ -7,6 +7,7 @@ import PosWrapper from "./pos/pos-wrapper";
 // import Dashboardwrapper from "@/app/dashboardwrapper";
 import AuthProvider from "@/app/context/authProvider";
 import Head from 'next/head';
+import ToastProvider from "../utils/notifications/toastify";
 
 // import Home from "./page";
 
@@ -29,7 +30,9 @@ export default function SellerLayout({
       </Head>
       <body>
         <AuthProvider>
+          <ToastProvider>
           <PosWrapper>{children}</PosWrapper>
+          </ToastProvider>
           {/* <Home> {children} </Home>  */}
           {/* <Dashboardwrapper>{children}</Dashboardwrapper> */}
           {/* <SellersHomePage>{children}</SellersHomePage> */}
