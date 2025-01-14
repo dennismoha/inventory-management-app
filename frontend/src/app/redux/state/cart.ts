@@ -41,6 +41,7 @@ const checkoutSlice = createSlice({
             const indexProductId = state.cartProducts.findIndex(item => item.inventoryId === inventoryId);
             
             if (indexProductId >= 0) {
+                console.log('the state index product is ', state.cartProducts[indexProductId])
                 // If the product is found, update its quantity
                 state.cartProducts[indexProductId].quantity += quantity
             } else {

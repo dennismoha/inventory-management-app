@@ -1,13 +1,12 @@
 'use client'
-// import React, {useState, useEffect} from 'react' 
-// import { products } from '../products';
-// import { CheckoutProducts } from '../interface';
+
 
 
 import { changeQuantity, cartProducts  } from '@/app/redux/state/cart';
-import { useAppDispatch } from '@/app/redux/redux';
+import { useAppDispatch, useAppSelector } from '@/app/redux/redux';
 import Image from 'next/image';
 import imageProduct8 from '../assets/images/8.png' 
+import {  selectProductByInventoryId } from "@/app/redux/state/selectors/cart-selector";
 
 type data = {
     data: cartProducts
@@ -15,6 +14,7 @@ type data = {
 
 
 const CartItem: React.FC<data> = (props) => {
+
     const {
         inventoryId,
         // supplier_products_id,
@@ -26,13 +26,19 @@ const CartItem: React.FC<data> = (props) => {
         // created_at,
         // updated_at,
         // softDelete,
-        status,
+        // status,
         // supplierProduct,
         // unit,
         quantity,
         productName,
         price,
       } = props.data;
+            // Use the selector to get the product index by inventoryId
+  const productIndex = useAppSelector((state) =>
+    selectProductByInventoryId(inventoryId)(state)
+  );
+      console.log('===============product index is ', productIndex)
+
     // const [detail, setDetail] = useState<CheckoutProducts>();
     const dispatch = useAppDispatch();
     // useEffect(() => {
@@ -46,6 +52,10 @@ const CartItem: React.FC<data> = (props) => {
         }));
     }
     const handlePlusQuantity = () => {
+        if(productIndex!.quantity + 1 > stock_quantity) {
+            alert ('items cannot be greater than stock')
+            return
+        }
         dispatch(changeQuantity({
             inventoryId: inventoryId,
             quantity: quantity + 1

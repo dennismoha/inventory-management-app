@@ -1,12 +1,7 @@
 "use client";
 
-import CartItem from "@/app/(seller)/pos/product/components/cartItem";
-import { toggleStatusTab } from "@/app/redux/state/cart";
-import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
-import CustomersList from "@/app/(seller)/pos/product/components/customers";
-import { useCallback } from "react";
-import { useCreateTransactionMutation } from "@/app/redux/api/inventory-api";
-import { useGetInventoryItemsQuery } from "@/app/redux/api/inventory-api";
+import { useAppDispatch } from "@/app/redux/redux";
+
 import { InventoryItem } from "@/app/(admin)/admin/inventory/interfaces/inventory-interface";
 import { addToCheckout } from "@/app/redux/state/cart";
 
@@ -31,8 +26,8 @@ interface ProductsCard {
 // const ProductCard = ({ imgUrl, productName, productPrice }: { productName: string, productPrice: number, imgUrl?: string}) => {
 const ProductCard = (propsData: ProductsCard) => {
   // const { productName } = propsData;
-  let imgUrl = undefined;
-  let productPrice = propsData.price;
+  const imgUrl = undefined;
+  const productPrice = propsData.price;
   const dispatch = useAppDispatch();
 
   const {
@@ -40,7 +35,7 @@ const ProductCard = (propsData: ProductsCard) => {
     inventoryId,
     status,
     stock_quantity,
-    quantity, // Default value if not provided
+    //quantity, // Default value if not provided
     productName,
     price,
     VAT,
@@ -53,11 +48,19 @@ const ProductCard = (propsData: ProductsCard) => {
     "inventory id ",
     inventoryId
   );
+
   const handleAddToCart = () => {
-    if(!price) {
-      alert ('cannot select unpriced product');
-      return
+    if (!price) {
+      alert("cannot select unpriced product");
+      return;
     }
+    console.log("the stock quantity is ", stock_quantity);
+
+    if (stock_quantity == 0) {
+      alert("items out of stock");
+      return;
+    }
+
     dispatch(
       addToCheckout({
         supplier_products_id,
@@ -77,8 +80,6 @@ const ProductCard = (propsData: ProductsCard) => {
 
   return (
     <div className="bg-white p-4 mb-4 rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 ease-in-out">
-   
-
       <div className="flex justify-around items-center mb-4">
         {/* Product Image */}
         <div className="w-1/3 h-32 bg-gray-200 rounded-lg overflow-hidden">
