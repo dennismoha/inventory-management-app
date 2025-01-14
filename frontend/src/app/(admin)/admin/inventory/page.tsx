@@ -51,6 +51,12 @@ const InventoryManagement = () => {
     { isError: updatingIsInventoryError, error: updatingInventoryError, isSuccess: updatedInventorySuccessMessage },
   ] = useUpdateInventoryItemMutation();
 
+    // Redux Mutation Hooks for Create, Update, Delete
+    const [createInventoryItem, { isError: inventoryCreationMutationError, error: inventoryCreationMutationErrorMessage }] =
+    useCreateInventoryItemMutation();
+
+  const [deleteInventoryItem] = useDeleteInventoryItemMutation();
+
   useEffect(()=>{
 
     if(InventoryItemsSuccessMessage) {
@@ -67,17 +73,19 @@ const InventoryManagement = () => {
 
   },[InventoryItemsSuccessMessage , updatingIsInventoryError, updatedInventorySuccessMessage])
 
+  useEffect(()=>{
+      if(inventoryCreationMutationError) {
+        toast.error(JSON.stringify(inventoryCreationMutationErrorMessage.data))
+      }
+  },[inventoryCreationMutationError])
+
 
   const inventoryItemsData = InventoryItemsData?.data || [];
   const unitsData = UnitsData?.data || [];
 
   const supplierProductsData = SupplierProductsData?.data || [];
 
-  // Redux Mutation Hooks for Create, Update, Delete
-  const [createInventoryItem, { isError: inventoryMutationError }] =
-    useCreateInventoryItemMutation();
 
-  const [deleteInventoryItem] = useDeleteInventoryItemMutation();
 
   const columns = useMemo<MRT_ColumnDef<InventoryItem>[]>(
     () => [
