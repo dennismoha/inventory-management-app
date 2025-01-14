@@ -4,6 +4,7 @@ import "./globals.css";
 // import Dashboardwrapper from "@/app/dashboardwrapper";
 import AuthProvider from "@/app/context/authProvider";
 import AppWrapper from "./admin-dashboard/appWrapper";
+import ToastProvider from "@/app/utils/notifications/toastify";
 
 // import Home from "./page";
 
@@ -34,9 +35,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          {/* <Home> {children} </Home>  */}
-          {/* <Dashboardwrapper>{children}</Dashboardwrapper> */}
-          <AppWrapper>{children}</AppWrapper>
+          <ToastProvider>
+            {/* <Home> {children} </Home>  */}
+            {/* <Dashboardwrapper>{children}</Dashboardwrapper> */}
+            <AppWrapper>{children}</AppWrapper>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

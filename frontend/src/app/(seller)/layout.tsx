@@ -6,8 +6,8 @@ import "./globals.css";
 import PosWrapper from "./pos/pos-wrapper";
 // import Dashboardwrapper from "@/app/dashboardwrapper";
 import AuthProvider from "@/app/context/authProvider";
-import Head from 'next/head';
-import ToastProvider from "../utils/notifications/toastify";
+import Head from "next/head";
+import ToastProvider from "@/app/utils/notifications/toastify";
 
 // import Home from "./page";
 
@@ -23,7 +23,7 @@ export default function SellerLayout({
 }>) {
   return (
     <html lang="en">
-       <Head>
+      <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {/* You can also add other meta tags, title, etc. */}
         <title>Your App Title</title>
@@ -31,7 +31,7 @@ export default function SellerLayout({
       <body>
         <AuthProvider>
           <ToastProvider>
-          <PosWrapper>{children}</PosWrapper>
+            <PosWrapper>{children}</PosWrapper>
           </ToastProvider>
           {/* <Home> {children} </Home>  */}
           {/* <Dashboardwrapper>{children}</Dashboardwrapper> */}

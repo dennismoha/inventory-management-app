@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import CartItem from "@/app/(seller)/pos/product/components/cartItem";
 import { clearCart, toggleStatusTab } from "@/app/redux/state/cart";
@@ -9,14 +9,8 @@ import { useCreateTransactionMutation } from "@/app/redux/api/inventory-api";
 import { useGetInventoryItemsQuery } from "@/app/redux/api/inventory-api";
 import ProductList from "@/app/(seller)/pos/products/product-card";
 
-
-
-
-
-
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 
 const SellersProducts = () => {
   const [
@@ -26,29 +20,27 @@ const SellersProducts = () => {
       isLoading: transactionLoading,
       isError: transactionError,
       isSuccess: transactionSuccess,
+      error: TransactionErrorMessage,
     },
   ] = useCreateTransactionMutation();
 
   const cartProducts = useAppSelector((state) => state.cart);
-  const {
-    data: InventoryItemsData,
-  } = useGetInventoryItemsQuery();
+  const { data: InventoryItemsData } = useGetInventoryItemsQuery();
 
   useEffect(() => {
     if (transactionSuccess) {
       dispatch(clearCart()); // Clear cart
       reset(); // Reset API state
-      toast.success(" successfull transaction!");  // Success toast after clearing cart
+      toast.success(" successfull transaction!"); // Success toast after clearing cart
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactionSuccess,reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionSuccess, reset]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (transactionError) {
-      toast.error("There is a very big error");  // Trigger toast only when error occurs
+      toast.error(JSON.stringify(TransactionErrorMessage.data.message)); // Trigger toast only when error occurs
     }
-  }, [transactionError]);  // Dependency on transactionError
-
+  }, [transactionError]); // Dependency on transactionError
 
   const handleCheckoutHandler = () => {
     console.log("here we are", cartProducts);
@@ -85,13 +77,19 @@ const SellersProducts = () => {
     <>
       <div
         className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-all duration-500 ${
-          cartProducts.cartProducts.length === 0 ? "lg:grid-cols-1" : "lg:grid-cols-3"
+          cartProducts.cartProducts.length === 0
+            ? "lg:grid-cols-1"
+            : "lg:grid-cols-3"
         }`}
       >
         {/* Products Section */}
         <div
-          className={`col-span-1 sm:col-span-1 lg:col-span-${cartProducts.cartProducts.length === 0 ? "3" : "2"} bg-gray-100 overflow-y-auto transform transition-all duration-500 ${
-            cartProducts.cartProducts.length === 0 ? 'scale-100 opacity-100' : 'scale-95 opacity-100'
+          className={`col-span-1 sm:col-span-1 lg:col-span-${
+            cartProducts.cartProducts.length === 0 ? "3" : "2"
+          } bg-gray-100 overflow-y-auto transform transition-all duration-500 ${
+            cartProducts.cartProducts.length === 0
+              ? "scale-100 opacity-100"
+              : "scale-95 opacity-100"
           }`}
         >
           <h2 className="text-xl sm:text-1xl font-semibold mt-4 text-center">
@@ -99,7 +97,13 @@ const SellersProducts = () => {
           </h2>
 
           {/* <div className={`grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 ${ cartProducts.cartProducts.length === 0 ? 'xl:grid-cols-8': 'xl:grid-cols-4'}`}> */}
-          <div className={`grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 ${ cartProducts.cartProducts.length === 0  ? ' md:grid-cols-2 xl:grid-cols-8' : ' md:grid-cols-3 xl:grid-cols-4'}`}>
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 ${
+              cartProducts.cartProducts.length === 0
+                ? " md:grid-cols-2 xl:grid-cols-8"
+                : " md:grid-cols-3 xl:grid-cols-4"
+            }`}
+          >
             {inventoryItemsData.map((product, key) => (
               <ProductList key={key} data={product} />
             ))}
@@ -168,7 +172,7 @@ const SellersProducts = () => {
               >
                 CLOSE
               </button>
-           
+
               <button
                 onClick={handleCheckoutHandler}
                 className="bg-green-600 text-white"
