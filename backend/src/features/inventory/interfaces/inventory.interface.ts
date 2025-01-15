@@ -46,7 +46,6 @@ export interface ProductPricing {
 //     updated_at: Date;
 //   }
 
-
 export interface InventorystockQuantityVsReorderLevel {
   inventoryId: number;
   stock_quantity: Decimal;
