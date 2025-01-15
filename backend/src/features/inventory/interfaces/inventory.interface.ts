@@ -45,3 +45,11 @@ export interface ProductPricing {
 //     created_at: Date;
 //     updated_at: Date;
 //   }
+
+
+export interface InventorystockQuantityVsReorderLevel {
+  inventoryId: number;
+  stock_quantity: Decimal;
+  reorder_level: number;
+  // Add other fields from your Inventory model if needed
+}

@@ -296,8 +296,8 @@ const InventoryManagement = () => {
       delete values.last_restocked;
       delete values.status;
       delete values.created_at;
-      delete values.updated_at;
-      // delete values.updated_at
+      // delete values.updated_at;
+      delete values.updated_at
 
       await updateInventoryItem(values);
       table.setEditingRow(null);

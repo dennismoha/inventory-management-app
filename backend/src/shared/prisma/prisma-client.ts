@@ -5,6 +5,7 @@ import Logger from 'bunyan';
 import { BadRequestError } from '@src/shared/globals/helpers/error-handler';
 
 const logger: Logger = config.createLogger('prisma');
+export const DecimalZero = new Prisma.Decimal(0);
 
 // Create a single instance of Prisma Client
 const prismaClient = new PrismaClient({

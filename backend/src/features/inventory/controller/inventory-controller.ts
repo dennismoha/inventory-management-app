@@ -4,9 +4,10 @@ import { inventorySchema } from '@src/features/inventory/schema/inventory-schema
 import { StatusCodes } from 'http-status-codes'; // HTTP status codes
 import { joiValidation } from '@src/shared/globals/decorators/joi-validation-decorators'; // Joi validation decorator
 import GetSuccessMessage from '@src/shared/globals/helpers/success-messages'; // Helper function for success response
-import { Inventory } from '@src/features/inventory/interfaces/inventory.interface'; // Inventory interface
-import { BadRequestError, NotFoundError } from '@src/shared/globals/helpers/error-handler';
-import { convertToBaseUnit, getUnitCategory } from '@src/shared/globals/helpers/utils';
+import { Inventory, InventorystockQuantityVsReorderLevel } from '@src/features/inventory/interfaces/inventory.interface'; // Inventory interface
+import { BadRequestError, ConflictError, NotFoundError } from '@src/shared/globals/helpers/error-handler';
+import { convertToBaseUnit, getUnitCategory, utilMessage } from '@src/shared/globals/helpers/utils';
+
 
 export class InventoryController {
   /**
@@ -106,18 +107,19 @@ export class InventoryController {
     let { supplier_products_id, stock_quantity, reorder_level, unit_id } = req.body;
 
     // 1) Validate Unique Product Identifiers (SKU or product code)
-    // const existingProduct = await prisma.inventory.findFirst({
-    //   where: {
-    //     OR: [
-    //       { sku }, // Check if SKU already exists
-    //       { productName } // Check if productName already exists
-    //     ]
-    //   }
-    // });
+    const existingProduct = await prisma.inventory.findFirst({
+      where: {
 
-    // if (existingProduct) {
-    //   throw new ConflictError(utilMessage.duplicateMessage('Product with the same SKU or product name already exists.'));
-    // }
+
+        supplier_products_id
+      } // Check if that suppliers product already exists
+
+
+    });
+
+    if (existingProduct) {
+      throw new ConflictError(utilMessage.duplicateMessage('Product with the same  product name already exists.'));
+    }
 
     // 2) Validate Quantity and Stock Level
     if (stock_quantity <= 0) {
@@ -138,19 +140,27 @@ export class InventoryController {
       throw new NotFoundError('Invalid unit ID provided');
     }
 
+    let product_weight;
+
+    
+    
     // get unit category
-    const unitCategory = await getUnitCategory(unitDetails.short_name);
+    if(unitDetails.short_name !== 'bag' && unitDetails.short_name !== 'chicks') {
+      const unitCategory = await getUnitCategory(unitDetails.short_name);
 
-    // If the user inputs 5 kg, the stock quantity will be converted to 5000 grams (g)
-    const { convertedValue, baseUnit } = await convertToBaseUnit(stock_quantity, unitDetails.short_name, unitCategory, false);
-    const product_weight = convertedValue;
-
-    const newUnitId = await prisma.units.findUnique({
-      where: { short_name: baseUnit }
-    });
-
-    unit_id = newUnitId?.unit_id;
+      // If the user inputs 5 kg, the stock quantity will be converted to 5000 grams (g)
+      const { convertedValue, baseUnit } = await convertToBaseUnit(stock_quantity, unitDetails.short_name, unitCategory, false);
+      product_weight = convertedValue;
+  
+      const newUnitId = await prisma.units.findUnique({
+        where: { short_name: baseUnit }
+      });
+  
+      unit_id = newUnitId?.unit_id;
+    }
+ 
     reorder_level = Number(reorder_level);
+    product_weight = stock_quantity;
 
     // ) Create New Inventory Item
     const newInventory: Inventory = await prisma.inventory.create({
@@ -197,13 +207,31 @@ export class InventoryController {
   @joiValidation(inventorySchema)
   public async updateInventory(req: Request, res: Response): Promise<void> {
     const { inventoryId } = req.params;
-    const { stock_quantity, reorder_level, last_restocked, unit_id, status } = req.body;
+    // eslint-disable-next-line prefer-const
+    let { stock_quantity, reorder_level, last_restocked, unit_id, status } = req.body;
+
+
+    // Fetch the current stock_quantity from the database
+    const currentInventory = await prisma.inventory.findUnique({
+      where: { inventoryId },
+      select: { stock_quantity: true }
+    });
+
+    // If the inventory item is not found, handle the error
+    if (!currentInventory) {
+      throw new BadRequestError('item not found');
+    }
+
+    // Calculate the new stock quantity
+    const updatedStockQuantity = Number(currentInventory.stock_quantity || 0) + Number(stock_quantity || 0);
+    console.log('updated Stock Quantity is ', updatedStockQuantity);
+   reorder_level =  Number(reorder_level);
 
     // Attempt to update the inventory item in the database
     const updatedInventory: Inventory = await prisma.inventory.update({
       where: { inventoryId },
       data: {
-        stock_quantity,
+        stock_quantity: updatedStockQuantity,
         reorder_level,
         last_restocked,
         unit_id,
@@ -248,4 +276,43 @@ export class InventoryController {
     // Send a 204 (No Content) response indicating successful soft delete
     res.status(StatusCodes.NO_CONTENT).send(); // 204 No Content
   }
+
+
+    /**
+   * Fetches all inventory items from the database where reorder level is greater than stock quantity.
+   *
+   * This method retrieves a list of inventory items where reorder level is greater than the stock quantity.
+   * It sends a successful response with the list of low stock items and an HTTP status of 200.
+   *
+   * @async
+   * @function
+   * @param {Request} req - The Express request object, which does not need to contain any body or params for this endpoint.
+   * @param {Response} res - The Express response object, which will contain a JSON payload with the low stock items.
+   *
+   * @returns {Promise<void>} A promise that resolves to the response object containing the fetched low stock inventory.
+   */
+    public async fetchLowStockItems(req: Request, res: Response): Promise<void> {
+   
+        // Fetch inventory items where reorder_level > stock_quantity
+    
+      const lowStockItems = await prisma.$queryRaw<InventorystockQuantityVsReorderLevel[]>`
+      SELECT "inventoryId", "stock_quantity", "reorder_level"
+      FROM "Inventory" 
+      WHERE "reorder_level" > "stock_quantity"
+    `;
+
+    // Check if any low stock items were found
+    if (lowStockItems.length === 0) {
+      res.status(StatusCodes.NOT_FOUND).send({ message: 'No low stock items found.' });
+      return;
+    }
+  
+  
+        // Send success message with the fetched low stock items
+        res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, lowStockItems, 'Low stock items retrieved successfully'));
+     
+    }
+  
+
+
 }

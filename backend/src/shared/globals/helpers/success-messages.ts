@@ -4,7 +4,7 @@ import { ProductUnit } from '@src/features/products/interfaces/product.interface
 import { Unit } from '@src/features/units/interfaces/units.interface';
 import { Supplier, SupplierPricing, SupplierProduct } from '@src/features/suppliers/interfaces/supplier.interface';
 import { Order, OrderProducts } from '@src/features/orders/interfaces/order.interface';
-import { Inventory, ProductPricing } from '@src/features/inventory/interfaces/inventory.interface';
+import { Inventory, ProductPricing, InventorystockQuantityVsReorderLevel } from '@src/features/inventory/interfaces/inventory.interface';
 import { Miscellaneous } from '@src/features/miscellaneous/interfaces/miscellaneous.interface';
 import { Customer } from '@src/features/customers/interfaces/customer.interface';
 import { Transaction } from '@src/features/transactions/interfaces/transaction.interface';
@@ -29,6 +29,7 @@ type success_data =
   | WithArray<ProductPricing>
   | WithArray<Customer>
   | WithArray<Transaction>
+  | WithArray<InventorystockQuantityVsReorderLevel>
   | null;
 
 // GetSuccessMessage function
