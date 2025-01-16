@@ -75,7 +75,7 @@ const InventoryManagement = () => {
 
   useEffect(()=>{
       if(inventoryCreationMutationError) {
-        toast.error(JSON.stringify(inventoryCreationMutationErrorMessage.data))
+        toast.error(JSON.stringify(inventoryCreationMutationErrorMessage))
       }
   },[inventoryCreationMutationError])
 

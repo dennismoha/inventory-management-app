@@ -38,7 +38,7 @@ const SellersProducts = () => {
 
   useEffect(() => {
     if (transactionError) {
-      toast.error(JSON.stringify(TransactionErrorMessage.data.message)); // Trigger toast only when error occurs
+      toast.error(JSON.stringify(TransactionErrorMessage)); // Trigger toast only when error occurs
     }
   }, [transactionError]); // Dependency on transactionError
 
