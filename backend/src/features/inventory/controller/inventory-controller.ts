@@ -8,7 +8,6 @@ import { Inventory, InventorystockQuantityVsReorderLevel } from '@src/features/i
 import { BadRequestError, ConflictError, NotFoundError } from '@src/shared/globals/helpers/error-handler';
 import { convertToBaseUnit, getUnitCategory, utilMessage } from '@src/shared/globals/helpers/utils';
 
-
 export class InventoryController {
   /**
    * Fetches all inventory items from the database.
@@ -109,12 +108,8 @@ export class InventoryController {
     // 1) Validate Unique Product Identifiers (SKU or product code)
     const existingProduct = await prisma.inventory.findFirst({
       where: {
-
-
         supplier_products_id
       } // Check if that suppliers product already exists
-
-
     });
 
     if (existingProduct) {
@@ -142,23 +137,21 @@ export class InventoryController {
 
     let product_weight;
 
-    
-    
     // get unit category
-    if(unitDetails.short_name !== 'bag' && unitDetails.short_name !== 'chicks') {
+    if (unitDetails.short_name !== 'bag' && unitDetails.short_name !== 'chicks') {
       const unitCategory = await getUnitCategory(unitDetails.short_name);
 
       // If the user inputs 5 kg, the stock quantity will be converted to 5000 grams (g)
       const { convertedValue, baseUnit } = await convertToBaseUnit(stock_quantity, unitDetails.short_name, unitCategory, false);
       product_weight = convertedValue;
-  
+
       const newUnitId = await prisma.units.findUnique({
         where: { short_name: baseUnit }
       });
-  
+
       unit_id = newUnitId?.unit_id;
     }
- 
+
     reorder_level = Number(reorder_level);
     product_weight = stock_quantity;
 
@@ -210,7 +203,6 @@ export class InventoryController {
     // eslint-disable-next-line prefer-const
     let { stock_quantity, reorder_level, last_restocked, unit_id, status } = req.body;
 
-
     // Fetch the current stock_quantity from the database
     const currentInventory = await prisma.inventory.findUnique({
       where: { inventoryId },
@@ -225,7 +217,7 @@ export class InventoryController {
     // Calculate the new stock quantity
     const updatedStockQuantity = Number(currentInventory.stock_quantity || 0) + Number(stock_quantity || 0);
     console.log('updated Stock Quantity is ', updatedStockQuantity);
-   reorder_level =  Number(reorder_level);
+    reorder_level = Number(reorder_level);
 
     // Attempt to update the inventory item in the database
     const updatedInventory: Inventory = await prisma.inventory.update({
@@ -277,8 +269,7 @@ export class InventoryController {
     res.status(StatusCodes.NO_CONTENT).send(); // 204 No Content
   }
 
-
-    /**
+  /**
    * Fetches all inventory items from the database where reorder level is greater than stock quantity.
    *
    * This method retrieves a list of inventory items where reorder level is greater than the stock quantity.
@@ -291,11 +282,10 @@ export class InventoryController {
    *
    * @returns {Promise<void>} A promise that resolves to the response object containing the fetched low stock inventory.
    */
-    public async fetchLowStockItems(req: Request, res: Response): Promise<void> {
-   
-        // Fetch inventory items where reorder_level > stock_quantity
-    
-      const lowStockItems = await prisma.$queryRaw<InventorystockQuantityVsReorderLevel[]>`
+  public async fetchLowStockItems(req: Request, res: Response): Promise<void> {
+    // Fetch inventory items where reorder_level > stock_quantity
+
+    const lowStockItems = await prisma.$queryRaw<InventorystockQuantityVsReorderLevel[]>`
       SELECT "inventoryId", "stock_quantity", "reorder_level"
       FROM "Inventory" 
       WHERE "reorder_level" > "stock_quantity"
@@ -306,13 +296,8 @@ export class InventoryController {
       res.status(StatusCodes.NOT_FOUND).send({ message: 'No low stock items found.' });
       return;
     }
-  
-  
-        // Send success message with the fetched low stock items
-        res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, lowStockItems, 'Low stock items retrieved successfully'));
-     
-    }
-  
 
-
+    // Send success message with the fetched low stock items
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, lowStockItems, 'Low stock items retrieved successfully'));
+  }
 }

@@ -14,7 +14,7 @@ class InventoryRoutes {
     this.router.post('/inventory', InventoryController.prototype.createInventory);
     this.router.put('/inventory/:inventoryId', InventoryController.prototype.updateInventory);
     this.router.delete('/inventory/:inventoryId', InventoryController.prototype.deleteInventory);
-    this.router.get('/inventory/low-stock',InventoryController.prototype.fetchLowStockItems );
+    this.router.get('/inventory/low-stock', InventoryController.prototype.fetchLowStockItems);
 
     return this.router;
   }
