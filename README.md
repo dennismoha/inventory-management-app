@@ -63,3 +63,5 @@ The deployment is managed using GitHub Actions.
 - The frontend deployment is managed by the `frontend.yml` workflow.
 - The workflow file can be found in the **workflows** folder of the repository.
 
+
+
