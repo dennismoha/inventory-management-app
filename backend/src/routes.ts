@@ -17,6 +17,7 @@ import { productPricingRoutes } from '@src/features/inventory/routes/product-pri
 import { authRoutes } from '@src/features/auth/routes/auth-routes';
 import { transactionRoutes } from '@src/features/transactions/routes/transaction-routes';
 import { customerRoutes } from '@src/features/customers/routes/customers-routes';
+import { salesRoutes } from '@src/features/analysis/routes/analysis-routes';
 // import { authMiddleware } from './shared/globals/helpers/auth-middleware';
 
 export default (app: Application) => {
@@ -41,6 +42,7 @@ export default (app: Application) => {
     app.use(BASE_PATH, transactionRoutes.routes());
     app.use(BASE_PATH, customerRoutes.routes());
     app.use(BASE_PATH, unitsRoutes.routes());
+    app.use(BASE_PATH, salesRoutes.routes());
   };
 
   routes();

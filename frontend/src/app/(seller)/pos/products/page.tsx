@@ -76,7 +76,7 @@ const SellersProducts = () => {
   return (
     <>
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-all duration-500 ${
+        className={`grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-500 ${
           cartProducts.cartProducts.length === 0
             ? "lg:grid-cols-1"
             : "lg:grid-cols-3"

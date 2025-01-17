@@ -356,6 +356,7 @@ model TransactionProduct {
   productSubTotalCost Float
   productTotalCost Float
   transactionId     String
+  createdAt              DateTime @default(now()) // Date when the customer was added
   InventoryItemID   Inventory? @relation(fields: [inventoryId], references: [inventoryId])
   supplierProduct SupplierProducts @relation(fields: [supplier_products_id], references: [supplier_products_id]) // Link to supplier product
   transaction       Transaction @relation(fields: [transactionId], references: [transactionId])
