@@ -60,7 +60,7 @@ export interface Product {
   // SupplierProducts?: SupplierProduct[]; // Array of supplier products (not detailed in your schema)
 }
 
-import { SalesResponse, CustomerSalesResponse, ProductSalesResponse, ProfitResponse, InventorySalesDifferenceResponse } from '@/app/global/interfaces/sales'; // Define types for response structure
+import { SalesResponse, CustomerSalesResponse, ProductSalesResponse, ProfitResponse, InventorySalesDifferenceResponse, TransactionProductsBetweenDates } from '@/app/global/interfaces/sales'; // Define types for response structure
 
 export interface Products {
   productId: string;
@@ -170,7 +170,8 @@ export const InventoryApi = createApi({
     "CustomerSales",
     "CustomerSalesByDateRange",
     "InventorySalesDifference",
-    "ProfitCalculation"
+    "ProfitCalculation",
+    "salesBetweenproductsdates"
 
   ],
   endpoints: (build) => ({
@@ -986,14 +987,26 @@ const SalesApi = InventoryApi.injectEndpoints({
     }),
 
 
-    getSalesBetweenDates: build.query<SalesResponse, { startDate: string; endDate: string }>({
+    // returns total cost of  sales between dates. 
+    getSalesBetweenDates: build.query<ApiResponse<SalesResponse>, { startDate: string; endDate: string }>({
       query: ({ startDate, endDate }) => ({
-        url: "/sales/date-range",
+        url: "/sales-between-dates",
         params: { startDate, endDate }, // Send start and end date as query params
       }),
       providesTags: ["SalesByDateRange"],
       keepUnusedDataFor: 300000,
     }),
+
+    // returns total cost of products between dates plus the respetive products
+    getSalesProductsBetweenDates: build.query<ApiResponse<TransactionProductsBetweenDates>, { startDate: string; endDate: string }>({
+      query: ({ startDate, endDate }) => ({
+        url: "/get-sales-products-between-dates",
+        params: { startDate, endDate }, // Send start and end date as query params
+      }),
+      providesTags: ["salesBetweenproductsdates"],
+      keepUnusedDataFor: 300000,
+    }),
+
 
     getTotalSalesForProduct: build.query<ProductSalesResponse, string>({
       query: (productId) => `/sales/product/${productId}`, // Fetch total sales for a specific product
@@ -1043,8 +1056,9 @@ const SalesApi = InventoryApi.injectEndpoints({
 });
 
 export const {
-  useGetTotalSalesQuery,
-  useGetSalesBetweenDatesQuery,
+  useGetTotalSalesQuery, // returns the total sales
+  useGetSalesBetweenDatesQuery, // returns total cost between dates query
+  useGetSalesProductsBetweenDatesQuery, // returns total cost between dates plus the products involved
   useGetTotalSalesForProductQuery,
   useGetTotalSalesForProductInRangeQuery,
   useGetTotalSalesForEachCustomerQuery,

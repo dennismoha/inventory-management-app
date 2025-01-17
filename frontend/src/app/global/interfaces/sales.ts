@@ -1,3 +1,5 @@
+import { Transaction } from "@/app/(seller)/pos/transactions/interfaces/transactions-interface";
+
 // SalesResponse
 export type SalesResponse = number;    
 
@@ -46,5 +48,10 @@ export type SalesResponse = number;
       };
     };
     message: string;
+  }
+  
+  export interface TransactionProductsBetweenDates {
+    totalSales: number;
+    transactions: Transaction[];
   }
   

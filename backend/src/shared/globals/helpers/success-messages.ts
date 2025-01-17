@@ -8,7 +8,7 @@ import { Inventory, ProductPricing, InventorystockQuantityVsReorderLevel } from 
 import { Miscellaneous } from '@src/features/miscellaneous/interfaces/miscellaneous.interface';
 import { Customer } from '@src/features/customers/interfaces/customer.interface';
 import { Transaction } from '@src/features/transactions/interfaces/transaction.interface';
-import { TotalSalesResponse } from '@src/features/analysis/interfaces/analysis.interface';
+import { TotalSalesResponse, TransactionProductsBetweenDates } from '@src/features/analysis/interfaces/analysis.interface';
 
 // Utility type to handle both singular and array types
 type WithArray<T> = T | T[];
@@ -32,6 +32,7 @@ type success_data =
   | WithArray<Transaction>
   | WithArray<InventorystockQuantityVsReorderLevel>
   | WithArray<TotalSalesResponse>
+  | WithArray<TransactionProductsBetweenDates>
   | null;
 
 // GetSuccessMessage function

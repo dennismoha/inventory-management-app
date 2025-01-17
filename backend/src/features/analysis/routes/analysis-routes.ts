@@ -17,6 +17,7 @@ class SalesRoutes {
     this.router.get('/sales-per-customer-in-range', SalesController.prototype.getTotalSalesForEachCustomerInRange); // Route to get sales for each customer in date range
     this.router.get('/inventory-sales-difference', SalesController.prototype.getInventorySalesDifference); // Route to get inventory sales difference
     this.router.get('/calculate-profit', SalesController.prototype.calculateProfit); // Route to calculate profit
+    this.router.get('/get-sales-products-between-dates', SalesController.prototype.getSalesProductsBetweenDates);
 
     return this.router;
   }

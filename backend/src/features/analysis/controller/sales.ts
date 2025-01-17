@@ -22,7 +22,12 @@ import { StatusCodes } from 'http-status-codes'; // HTTP status codes
 import GetSuccessMessage from '@src/shared/globals/helpers/success-messages'; // Helper function for success response
 import { BadRequestError } from '@src/shared/globals/helpers/error-handler'; // Error helpers
 import { utilMessage } from '@src/shared/globals/helpers/utils';
-import { CustomerSales, PrismaTransactionProductAggregate, SupplierSales } from '@src/features/analysis/interfaces/analysis.interface';
+import {
+  CustomerSales,
+  PrismaTransactionProductAggregate,
+  SupplierSales,
+  TransactionProductsBetweenDates
+} from '@src/features/analysis/interfaces/analysis.interface';
 
 function isValidDate(dateString: string): boolean {
   const date = new Date(dateString);
@@ -70,7 +75,7 @@ export class SalesController {
       throw new BadRequestError('invalid dates');
     }
 
-    const salesInRange = await prisma.transactionProduct.aggregate({
+    const salesInRange: PrismaTransactionProductAggregate = await prisma.transactionProduct.aggregate({
       where: {
         createdAt: {
           gte: new Date(startDate as string),
@@ -81,10 +86,72 @@ export class SalesController {
         productTotalCost: true
       }
     });
+    const TotalSales = salesInRange._sum.productTotalCost ?? 0;
 
-    res.status(StatusCodes.OK).send({ salesInRange, message: `Sales between ${startDate} and ${endDate} fetched successfully` });
-
+    //res.status(StatusCodes.OK).send({ salesInRange, message: `Sales between ${startDate} and ${endDate} fetched successfully` });
+    const message = utilMessage.fetchedMessage('total sales');
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, TotalSales, message));
     // res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, salesInRange, `Sales between ${startDate} and ${endDate} fetched successfully`));
+  }
+
+  public async getSalesProductsBetweenDates(req: Request, res: Response): Promise<void> {
+    const { startDate, endDate } = req.query;
+
+    // Validate that the dates are provided
+    if (!startDate || !endDate) {
+      throw new BadRequestError('Please provide both start and end date.');
+    }
+
+    // Validate the dates
+    const date1 = isValidDate(startDate as string);
+    const date2 = isValidDate(endDate as string);
+
+    // If any of the dates are invalid, throw an error
+    if (!date1 || !date2) {
+      throw new BadRequestError('Invalid date format.');
+    }
+
+    if (endDate < startDate) {
+      throw new BadRequestError('end date cannot be greater than start date');
+    }
+
+    // Aggregate the total cost for all TransactionProducts within the given date range
+    const aggregatedData = await prisma.transactionProduct.aggregate({
+      _sum: {
+        productTotalCost: true // Sum of the productTotalCost
+      },
+      where: {
+        transaction: {
+          transactionDateCreated: {
+            gte: new Date(startDate as string), // Filter by start date
+            lte: new Date(endDate as string) // Filter by end date
+          }
+        }
+      }
+    });
+
+    // Fetch the transactions and related transaction products within the date range
+    const transactions = await prisma.transaction.findMany({
+      where: {
+        transactionDateCreated: {
+          gte: new Date(startDate as string), // Filter by start date
+          lte: new Date(endDate as string) // Filter by end date
+        }
+      },
+      include: {
+        TransactionProduct: true // Include associated TransactionProducts
+      }
+    });
+
+    // Calculate the total sales
+    const totalSales = aggregatedData._sum.productTotalCost ?? 0;
+
+    const totalProductsResponse: TransactionProductsBetweenDates = { totalSales, transactions };
+
+    // Create a success message and send the response
+    const message = utilMessage.fetchedMessage('total sales');
+    //res.status(StatusCodes.OK).json({totalSales,transactions});
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, totalProductsResponse, message));
   }
 
   /**

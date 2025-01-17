@@ -1,3 +1,5 @@
+import { Transaction } from '@src/features/transactions/interfaces/transaction.interface';
+
 export type TotalSalesResponse = number;
 export interface PrismaTransactionProductAggregate {
   _sum: {
@@ -23,4 +25,8 @@ export interface CustomerSales {
   firstName: string;
   lastName: string;
   totalSales: SupplierSales[];
+}
+export interface TransactionProductsBetweenDates {
+  totalSales: number;
+  transactions: Transaction[];
 }

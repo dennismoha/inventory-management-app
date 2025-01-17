@@ -14,6 +14,7 @@ export interface Transaction {
   productTotalCost?: number,
   // Relationships
   customer?: Customer | null;
+  transactionDateCreated?: Date;
 
   TransactionProduct?: TransactionProduct[]
   // List of related transaction products
