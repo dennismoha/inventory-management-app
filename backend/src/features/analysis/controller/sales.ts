@@ -24,7 +24,6 @@ import { BadRequestError } from '@src/shared/globals/helpers/error-handler'; // 
 import { utilMessage } from '@src/shared/globals/helpers/utils';
 import { CustomerSales, PrismaTransactionProductAggregate, SupplierSales } from '@src/features/analysis/interfaces/analysis.interface';
 
-
 function isValidDate(dateString: string): boolean {
   const date = new Date(dateString);
 
@@ -32,24 +31,22 @@ function isValidDate(dateString: string): boolean {
   return date instanceof Date && !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateString;
 }
 
-
-
 export class SalesController {
   /**
    * Fetches the total sales from all transactions in the system.
    */
   public async getTotalSales(req: Request, res: Response): Promise<void> {
-    const totalSales: PrismaTransactionProductAggregate  = await prisma.transactionProduct.aggregate({
+    const totalSales: PrismaTransactionProductAggregate = await prisma.transactionProduct.aggregate({
       _sum: {
         productTotalCost: true
       }
     });
 
-    const TotalSales = totalSales._sum.productTotalCost ?? 0;    
+    const TotalSales = totalSales._sum.productTotalCost ?? 0;
 
     //res.status(StatusCodes.OK).send({ TotalSales, message: 'Total sales fetched successfully' });
-       const message = utilMessage.fetchedMessage('total sales');
-     res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, TotalSales,message ));
+    const message = utilMessage.fetchedMessage('total sales');
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, TotalSales, message));
   }
 
   /**
