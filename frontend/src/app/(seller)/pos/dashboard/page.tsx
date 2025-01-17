@@ -1,45 +1,29 @@
-// import React, { ReactNode } from "react";
-// import Link from 'next/link'
+"use client";
 
-// interface SellersHomePageProps {
-//   children: ReactNode;
-// }
-
-// const SellersHomePage: React.FC<SellersHomePageProps>  = ({ children }) => {
-//   console.log('SellersHomePage Rendered');
-//   return (
-//     <>
-//      <div> this is the SellersHomePage Navbar   <Link href={`/seller/pos/`}>pos</Link></div>
-    
-    
-//         <div>{children}</div>
-//         <div>footer</div>
-//     </>
-   
-    
-//   )
-// }
-
-// export default SellersHomePage
-'use client'
-
-import Link from 'next/link';
-
-// Component with implicit children typing (Next.js handles it)
-// components/SellersHomePage.tsx
+import Link from "next/link";
 
 import React, { ReactNode } from "react";
+import TotalSales from "./components/sales";
 
-
-// app/seller/pos/dashboard/page.tsx
-
-
-
-const Page = ({ params, searchParams }: { params: { [key: string]: string }; searchParams: { [key: string]: string } }) => {
-  console.log("Page Rendered with params:", params, "and searchParams:", searchParams);
+const Page = ({
+  params,
+  searchParams,
+}: {
+  params: { [key: string]: string };
+  searchParams: { [key: string]: string };
+}) => {
+  console.log(
+    "Page Rendered with params:",
+    params,
+    "and searchParams:",
+    searchParams
+  );
   return (
     <SellersHomePage>
-      <div>This is the content inside the Sellers Home Page!</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xl:overflow-auto gap-10 pb-4 custom-grid-rows">
+        <div>This is the content inside the Sellers Home Page!</div>
+        <TotalSales />
+      </div>
     </SellersHomePage>
   );
 };
@@ -65,4 +49,3 @@ const SellersHomePage = ({ children }: SellersHomePageProps) => {
 };
 
 // export default SellersHomePage;
-

@@ -19,25 +19,11 @@
 import { Request, Response } from 'express';
 import prisma from '@src/shared/prisma/prisma-client'; // Prisma client
 import { StatusCodes } from 'http-status-codes'; // HTTP status codes
-//import GetSuccessMessage from '@src/shared/globals/helpers/success-messages'; // Helper function for success response
+import GetSuccessMessage from '@src/shared/globals/helpers/success-messages'; // Helper function for success response
 import { BadRequestError } from '@src/shared/globals/helpers/error-handler'; // Error helpers
-// import { SupplierProduct } from '@src/features/suppliers/interfaces/supplier.interface';
-// import { Inventory } from '@src/features/inventory/interfaces/inventory.interface'; // Inventory interface
-// import { TransactionProduct, Transaction } from '@src/features/inventory/interfaces/inventory.interface'; // Interfaces
+import { utilMessage } from '@src/shared/globals/helpers/utils';
+import { CustomerSales, PrismaTransactionProductAggregate, SupplierSales } from '@src/features/analysis/interfaces/analysis.interface';
 
-interface SupplierSales {
-  supplier_products_id: string;
-  supplierProduct: string;
-  products: string;
-  totalSales: number;
-}
-
-interface CustomerSales {
-  customerId: string;
-  firstName: string;
-  lastName: string;
-  totalSales: SupplierSales[];
-}
 
 function isValidDate(dateString: string): boolean {
   const date = new Date(dateString);
@@ -46,20 +32,24 @@ function isValidDate(dateString: string): boolean {
   return date instanceof Date && !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateString;
 }
 
+
+
 export class SalesController {
   /**
    * Fetches the total sales from all transactions in the system.
    */
   public async getTotalSales(req: Request, res: Response): Promise<void> {
-    const totalSales = await prisma.transactionProduct.aggregate({
+    const totalSales: PrismaTransactionProductAggregate  = await prisma.transactionProduct.aggregate({
       _sum: {
         productTotalCost: true
       }
     });
 
-    res.status(StatusCodes.OK).send({ totalSales, message: 'Total sales fetched successfully' });
+    const TotalSales = totalSales._sum.productTotalCost ?? 0;    
 
-    // res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, totalSales, 'Total sales fetched successfully'));
+    //res.status(StatusCodes.OK).send({ TotalSales, message: 'Total sales fetched successfully' });
+       const message = utilMessage.fetchedMessage('total sales');
+     res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, TotalSales,message ));
   }
 
   /**

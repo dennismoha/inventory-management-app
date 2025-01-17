@@ -60,6 +60,8 @@ export interface Product {
   // SupplierProducts?: SupplierProduct[]; // Array of supplier products (not detailed in your schema)
 }
 
+import { SalesResponse, CustomerSalesResponse, ProductSalesResponse, ProfitResponse, InventorySalesDifferenceResponse } from '@/app/global/interfaces/sales'; // Define types for response structure
+
 export interface Products {
   productId: string;
   name: string;
@@ -160,7 +162,16 @@ export const InventoryApi = createApi({
     "InventoryItems",
     "ProductPricing",
     "Transactions",
-    "Customers"
+    "Customers",
+    "TotalSales",
+    "SalesByDateRange",
+    "ProductSales",
+    "ProductSalesByDateRange",
+    "CustomerSales",
+    "CustomerSalesByDateRange",
+    "InventorySalesDifference",
+    "ProfitCalculation"
+
   ],
   endpoints: (build) => ({
     getDashboardMetrics: build.query<DashboardMetrics, void>({
@@ -937,7 +948,7 @@ const TransactionApi = InventoryApi.injectEndpoints({
         method: 'POST',
         body: newTransaction,
       }),
-      invalidatesTags: ['Transactions','InventoryItems'],
+      invalidatesTags: ['Transactions','InventoryItems','TotalSales'],
     }),
 
     // Update an existing transaction
@@ -961,6 +972,88 @@ const TransactionApi = InventoryApi.injectEndpoints({
   }),
   overrideExisting: false,
 });
+
+
+
+
+
+const SalesApi = InventoryApi.injectEndpoints({
+  endpoints: (build) => ({
+    getTotalSales: build.query<ApiResponse<SalesResponse>, void>({
+      query: () => "/total-sales",
+      providesTags: ["TotalSales"], 
+      keepUnusedDataFor: 300000, // Keep unused data for 5 minutes
+    }),
+
+
+    getSalesBetweenDates: build.query<SalesResponse, { startDate: string; endDate: string }>({
+      query: ({ startDate, endDate }) => ({
+        url: "/sales/date-range",
+        params: { startDate, endDate }, // Send start and end date as query params
+      }),
+      providesTags: ["SalesByDateRange"],
+      keepUnusedDataFor: 300000,
+    }),
+
+    getTotalSalesForProduct: build.query<ProductSalesResponse, string>({
+      query: (productId) => `/sales/product/${productId}`, // Fetch total sales for a specific product
+      providesTags: ["ProductSales"],
+      keepUnusedDataFor: 300000,
+    }),
+
+    getTotalSalesForProductInRange: build.query<ProductSalesResponse, { productId: string; startDate: string; endDate: string }>({
+      query: ({ productId, startDate, endDate }) => ({
+        url: `/sales/product/${productId}/range`,
+        params: { startDate, endDate },
+      }),
+      providesTags: ["ProductSalesByDateRange"],
+      keepUnusedDataFor: 300000,
+    }),
+
+    getTotalSalesForEachCustomer: build.query<CustomerSalesResponse[], void>({
+      query: () => "/sales/customers", // Fetch total sales for each customer
+      providesTags: ["CustomerSales"],
+      keepUnusedDataFor: 300000,
+    }),
+
+    getTotalSalesForEachCustomerInRange: build.query<CustomerSalesResponse[], { startDate: string; endDate: string }>({
+      query: ({ startDate, endDate }) => ({
+        url: "/sales/customers/range",
+        params: { startDate, endDate },
+      }),
+      providesTags: ["CustomerSalesByDateRange"],
+      keepUnusedDataFor: 300000,
+    }),
+
+    getInventorySalesDifference: build.query<InventorySalesDifferenceResponse, string>({
+      query: (date) => `/sales/inventory-difference?date=${date}`, // Fetch difference between stock and sales for a given date
+      providesTags: ["InventorySalesDifference"],
+      keepUnusedDataFor: 300000,
+    }),
+
+    calculateProfit: build.query<ProfitResponse, { startDate: string; endDate: string }>({
+      query: ({ startDate, endDate }) => ({
+        url: "/sales/profit",
+        params: { startDate, endDate }, // Send date range for profit calculation
+      }),
+      providesTags: ["ProfitCalculation"],
+      keepUnusedDataFor: 300000,
+    }),
+  }),
+});
+
+export const {
+  useGetTotalSalesQuery,
+  useGetSalesBetweenDatesQuery,
+  useGetTotalSalesForProductQuery,
+  useGetTotalSalesForProductInRangeQuery,
+  useGetTotalSalesForEachCustomerQuery,
+  useGetTotalSalesForEachCustomerInRangeQuery,
+  useGetInventorySalesDifferenceQuery,
+  useCalculateProfitQuery,
+} = SalesApi;
+
+
 
 export const {
   useGetTransactionsQuery,
