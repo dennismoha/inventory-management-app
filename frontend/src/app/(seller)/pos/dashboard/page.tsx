@@ -9,6 +9,8 @@ import SalesProductsBetweenDates from "./components/sales-products-between-dates
 
 
 
+
+
 const Page = ({
   params,
   searchParams,
@@ -28,6 +30,8 @@ const Page = ({
        <SalesByDateRange />
         <TotalSales />
         <SalesProductsBetweenDates />
+      
+      
       </div>
     </SellersHomePage>
   );

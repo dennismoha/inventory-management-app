@@ -40,8 +40,14 @@ import {
   ProductPricing,
 } from "@/app/(admin)/admin/inventory/interfaces/inventory-interface";
 import { ApiResponse } from "@/app/utils/interfaces/util-interface";
-import { Customer, NewCustomerPayload } from "@/app/(seller)/pos/customers/interface/customer-interface";
-import { NewTransactionPayload, Transaction } from "@/app/(seller)/pos/transactions/interfaces/transactions-interface";
+import {
+  Customer,
+  NewCustomerPayload,
+} from "@/app/(seller)/pos/customers/interface/customer-interface";
+import {
+  NewTransactionPayload,
+  Transaction,
+} from "@/app/(seller)/pos/transactions/interfaces/transactions-interface";
 import { ProductItems } from "../state/cart";
 export interface Product {
   product_id: string; // UUID
@@ -60,7 +66,12 @@ export interface Product {
   // SupplierProducts?: SupplierProduct[]; // Array of supplier products (not detailed in your schema)
 }
 
-import { SalesResponse, CustomerSalesResponse, ProductSalesResponse, ProfitResponse, InventorySalesDifferenceResponse, TransactionProductsBetweenDates } from '@/app/global/interfaces/sales'; // Define types for response structure
+import {
+  SalesResponse,
+  CustomerSalesResponse,
+  //  ProductSalesResponse, ProfitResponse, InventorySalesDifferenceResponse,
+  TransactionProductsBetweenDates,
+} from "@/app/global/interfaces/sales"; // Define types for response structure
 
 export interface Products {
   productId: string;
@@ -140,8 +151,7 @@ export interface Miscellaneous {
 export const InventoryApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-      
-  
+
     // credentials: "include"
   }),
   reducerPath: "inventoryApi",
@@ -171,8 +181,7 @@ export const InventoryApi = createApi({
     "CustomerSalesByDateRange",
     "InventorySalesDifference",
     "ProfitCalculation",
-    "salesBetweenproductsdates"
-
+    "salesBetweenproductsdates",
   ],
   endpoints: (build) => ({
     getDashboardMetrics: build.query<DashboardMetrics, void>({
@@ -769,7 +778,6 @@ const MiscellaneousApi = InventoryApi.injectEndpoints({
   overrideExisting: true,
 });
 
-
 // inventory
 const ProductsInventoryApi = InventoryApi.injectEndpoints({
   endpoints: (build) => ({
@@ -795,7 +803,8 @@ const ProductsInventoryApi = InventoryApi.injectEndpoints({
 
     // Update an existing inventory item
     updateInventoryItem: build.mutation<
-      InventoryItem, Pick<InventoryItem, 'inventoryId'>
+      InventoryItem,
+      Pick<InventoryItem, "inventoryId">
     >({
       query: ({ inventoryId, ...patch }) => ({
         url: `/inventory/${inventoryId}`,
@@ -803,7 +812,6 @@ const ProductsInventoryApi = InventoryApi.injectEndpoints({
         body: patch,
       }),
       invalidatesTags: ["InventoryItems"],
-      
     }),
 
     // Delete an inventory item
@@ -844,8 +852,7 @@ const ProductPricingApi = InventoryApi.injectEndpoints({
     // Update an existing product pricing
     updateProductPricing: build.mutation<
       ProductPricing,
-      Pick<ProductPricing, 'product_pricing_id'>
-     
+      Pick<ProductPricing, "product_pricing_id">
     >({
       query: ({ product_pricing_id, ...patch }) => ({
         url: `/product-pricing/${product_pricing_id}`,
@@ -874,8 +881,8 @@ const CustomerApi = InventoryApi.injectEndpoints({
   endpoints: (build) => ({
     // Fetch all customers
     getCustomers: build.query<NewCustomerPayload, void>({
-      query: () => '/customers',
-      providesTags: ['Customers'],
+      query: () => "/customers",
+      providesTags: ["Customers"],
     }),
 
     // Fetch a specific customer by ID
@@ -888,32 +895,32 @@ const CustomerApi = InventoryApi.injectEndpoints({
     // }),
 
     // Create a new customer
-    createCustomer: build.mutation<NewCustomerPayload,Customer>({
+    createCustomer: build.mutation<NewCustomerPayload, Customer>({
       query: (newCustomer) => ({
-        url: '/customers',
-        method: 'POST',
+        url: "/customers",
+        method: "POST",
         body: newCustomer,
       }),
-      invalidatesTags: ['Customers'],
+      invalidatesTags: ["Customers"],
     }),
 
     // Update an existing customer
-    updateCustomer: build.mutation<Customer, Pick<Customer, 'customerId'>>({
+    updateCustomer: build.mutation<Customer, Pick<Customer, "customerId">>({
       query: ({ customerId, ...patch }) => ({
         url: `/customers/${customerId}`,
-        method: 'PUT',
+        method: "PUT",
         body: patch,
       }),
-      invalidatesTags: ['Customers'],
+      invalidatesTags: ["Customers"],
     }),
 
     // Delete a customer
-    deleteCustomer: build.mutation<void,  Pick<Customer, 'customerId'>>({
+    deleteCustomer: build.mutation<void, Pick<Customer, "customerId">>({
       query: ({ customerId }) => ({
         url: `/customers/${customerId}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['Customers'],
+      invalidatesTags: ["Customers"],
     }),
   }),
   overrideExisting: false,
@@ -925,9 +932,9 @@ const CustomerApi = InventoryApi.injectEndpoints({
 const TransactionApi = InventoryApi.injectEndpoints({
   endpoints: (build) => ({
     // Fetch all transactions
-    getTransactions: build.query<ApiResponse<Transaction>, void>({
-      query: () => '/transactions',
-      providesTags: ['Transactions'],
+    getTransactions: build.query<ApiResponse<Transaction[]>, void>({
+      query: () => "/transactions",
+      providesTags: ["Transactions"],
     }),
 
     // // Fetch transactions by customer ID
@@ -943,13 +950,13 @@ const TransactionApi = InventoryApi.injectEndpoints({
     // }),
 
     // Create a new transaction
-    createTransaction: build.mutation<NewTransactionPayload,ProductItems>({
+    createTransaction: build.mutation<NewTransactionPayload, ProductItems>({
       query: (newTransaction) => ({
-        url: '/transactions',
-        method: 'POST',
+        url: "/transactions",
+        method: "POST",
         body: newTransaction,
       }),
-      invalidatesTags: ['Transactions','InventoryItems','TotalSales'],
+      invalidatesTags: ["Transactions", "InventoryItems", "TotalSales","CustomerSales"],
     }),
 
     // Update an existing transaction
@@ -974,21 +981,19 @@ const TransactionApi = InventoryApi.injectEndpoints({
   overrideExisting: false,
 });
 
-
-
-
-
 const SalesApi = InventoryApi.injectEndpoints({
   endpoints: (build) => ({
     getTotalSales: build.query<ApiResponse<SalesResponse>, void>({
       query: () => "/total-sales",
-      providesTags: ["TotalSales"], 
+      providesTags: ["TotalSales"],
       keepUnusedDataFor: 300000, // Keep unused data for 5 minutes
     }),
 
-
-    // returns total cost of  sales between dates. 
-    getSalesBetweenDates: build.query<ApiResponse<SalesResponse>, { startDate: string; endDate: string }>({
+    // returns total cost of  sales between dates.
+    getSalesBetweenDates: build.query<
+      ApiResponse<SalesResponse>,
+      { startDate: string; endDate: string }
+    >({
       query: ({ startDate, endDate }) => ({
         url: "/sales-between-dates",
         params: { startDate, endDate }, // Send start and end date as query params
@@ -998,7 +1003,10 @@ const SalesApi = InventoryApi.injectEndpoints({
     }),
 
     // returns total cost of products between dates plus the respetive products
-    getSalesProductsBetweenDates: build.query<ApiResponse<TransactionProductsBetweenDates>, { startDate: string; endDate: string }>({
+    getSalesProductsBetweenDates: build.query<
+      ApiResponse<TransactionProductsBetweenDates>,
+      { startDate: string; endDate: string }
+    >({
       query: ({ startDate, endDate }) => ({
         url: "/get-sales-products-between-dates",
         params: { startDate, endDate }, // Send start and end date as query params
@@ -1007,51 +1015,50 @@ const SalesApi = InventoryApi.injectEndpoints({
       keepUnusedDataFor: 300000,
     }),
 
+    // getTotalSalesForProduct: build.query<ProductSalesResponse, string>({
+    //   query: (productId) => `/sales/product/${productId}`, // Fetch total sales for a specific product
+    //   providesTags: ["ProductSales"],
+    //   keepUnusedDataFor: 300000,
+    // }),
 
-    getTotalSalesForProduct: build.query<ProductSalesResponse, string>({
-      query: (productId) => `/sales/product/${productId}`, // Fetch total sales for a specific product
-      providesTags: ["ProductSales"],
-      keepUnusedDataFor: 300000,
-    }),
+    // getTotalSalesForProductInRange: build.query<ProductSalesResponse, { productId: string; startDate: string; endDate: string }>({
+    //   query: ({ productId, startDate, endDate }) => ({
+    //     url: `/sales/product/${productId}/range`,
+    //     params: { startDate, endDate },
+    //   }),
+    //   providesTags: ["ProductSalesByDateRange"],
+    //   keepUnusedDataFor: 300000,
+    // }),
 
-    getTotalSalesForProductInRange: build.query<ProductSalesResponse, { productId: string; startDate: string; endDate: string }>({
-      query: ({ productId, startDate, endDate }) => ({
-        url: `/sales/product/${productId}/range`,
-        params: { startDate, endDate },
-      }),
-      providesTags: ["ProductSalesByDateRange"],
-      keepUnusedDataFor: 300000,
-    }),
-
-    getTotalSalesForEachCustomer: build.query<CustomerSalesResponse[], void>({
-      query: () => "/sales/customers", // Fetch total sales for each customer
+    getTotalSalesForEachCustomer: build.query<ApiResponse<CustomerSalesResponse[]>, void>({
+      query: () => "/sales-per-customer", // Fetch total sales for each customer
       providesTags: ["CustomerSales"],
       keepUnusedDataFor: 300000,
     }),
 
-    getTotalSalesForEachCustomerInRange: build.query<CustomerSalesResponse[], { startDate: string; endDate: string }>({
-      query: ({ startDate, endDate }) => ({
-        url: "/sales/customers/range",
-        params: { startDate, endDate },
-      }),
-      providesTags: ["CustomerSalesByDateRange"],
-      keepUnusedDataFor: 300000,
-    }),
+    // getTotalSalesForEachCustomerInRange: build.query<CustomerSalesResponse[], { startDate: string; endDate: string }>({
+    //   query: ({ startDate, endDate }) => ({
+    //     url: "/sales/customers/range",
+    //     params: { startDate, endDate },
+    //   }),
+    //   providesTags: ["CustomerSalesByDateRange"],
+    //   keepUnusedDataFor: 300000,
+    // }),
 
-    getInventorySalesDifference: build.query<InventorySalesDifferenceResponse, string>({
-      query: (date) => `/sales/inventory-difference?date=${date}`, // Fetch difference between stock and sales for a given date
-      providesTags: ["InventorySalesDifference"],
-      keepUnusedDataFor: 300000,
-    }),
+    // getInventorySalesDifference: build.query<InventorySalesDifferenceResponse, string>({
+    //   query: (date) => `/sales/inventory-difference?date=${date}`, // Fetch difference between stock and sales for a given date
+    //   providesTags: ["InventorySalesDifference"],
+    //   keepUnusedDataFor: 300000,
+    // }),
 
-    calculateProfit: build.query<ProfitResponse, { startDate: string; endDate: string }>({
-      query: ({ startDate, endDate }) => ({
-        url: "/sales/profit",
-        params: { startDate, endDate }, // Send date range for profit calculation
-      }),
-      providesTags: ["ProfitCalculation"],
-      keepUnusedDataFor: 300000,
-    }),
+    // calculateProfit: build.query<ProfitResponse, { startDate: string; endDate: string }>({
+    //   query: ({ startDate, endDate }) => ({
+    //     url: "/sales/profit",
+    //     params: { startDate, endDate }, // Send date range for profit calculation
+    //   }),
+    //   providesTags: ["ProfitCalculation"],
+    //   keepUnusedDataFor: 300000,
+    // }),
   }),
 });
 
@@ -1059,15 +1066,13 @@ export const {
   useGetTotalSalesQuery, // returns the total sales
   useGetSalesBetweenDatesQuery, // returns total cost between dates query
   useGetSalesProductsBetweenDatesQuery, // returns total cost between dates plus the products involved
-  useGetTotalSalesForProductQuery,
-  useGetTotalSalesForProductInRangeQuery,
+  // useGetTotalSalesForProductQuery,
+  // useGetTotalSalesForProductInRangeQuery,
   useGetTotalSalesForEachCustomerQuery,
-  useGetTotalSalesForEachCustomerInRangeQuery,
-  useGetInventorySalesDifferenceQuery,
-  useCalculateProfitQuery,
+  // useGetTotalSalesForEachCustomerInRangeQuery,
+  // useGetInventorySalesDifferenceQuery,
+  // useCalculateProfitQuery,
 } = SalesApi;
-
-
 
 export const {
   useGetTransactionsQuery,
@@ -1078,7 +1083,6 @@ export const {
   // useDeleteTransactionMutation,
 } = TransactionApi;
 
-
 export const {
   useGetCustomersQuery,
   // useGetCustomerQuery,
@@ -1086,7 +1090,6 @@ export const {
   useUpdateCustomerMutation,
   useDeleteCustomerMutation,
 } = CustomerApi;
-
 
 // Export hooks to be used in components
 export const {

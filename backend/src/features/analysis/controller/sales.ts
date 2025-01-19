@@ -238,11 +238,19 @@ export class SalesController {
             select: {
               transactionId: true,
               transactionDateCreated: true,
+              totalCost: true,
+              subtotal: true,
+              paymentMethod: true,
               TransactionProduct: {
                 select: {
                   supplier_products_id: true,
                   productName: true,
                   productTotalCost: true,
+                  productSubTotalCost: true,
+                  VAT: true,
+                  price: true,
+                  discount: true,
+                  quantity: true,
                   supplierProduct: {
                     // Include SupplierProduct data
                     select: {
@@ -267,6 +275,11 @@ export class SalesController {
             supplier_products_id: product.supplier_products_id,
             supplierProduct: product.supplierProduct.supplier.name,
             products: product.productName,
+            quantity: product.quantity,
+            VAT: product.VAT,
+            price: product.price,
+            discount: product.discount,
+            productSubtotal: product.productSubTotalCost,
             productTotalCost: product.productTotalCost
           }))
         );
@@ -292,9 +305,10 @@ export class SalesController {
       });
     };
     const salesPerCustomer = await getSalesPerCustomer();
-    res.status(StatusCodes.OK).send(salesPerCustomer);
 
-    // res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, salesPerCustomer, 'Total sales per customer fetched successfully'));
+    // res.status(StatusCodes.OK).send(salesPerCustomer);
+
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, salesPerCustomer, 'Total sales per customer fetched successfully'));
   }
 
   /**

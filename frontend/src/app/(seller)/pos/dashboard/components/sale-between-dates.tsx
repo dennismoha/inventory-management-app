@@ -1,5 +1,7 @@
 import { SalesResponse } from '@/app/global/interfaces/sales';
 import { useGetSalesBetweenDatesQuery } from '@/app/redux/api/inventory-api';
+
+
 import React, { useState } from 'react';
 
 
@@ -83,6 +85,8 @@ const SalesByDateRange = () => {
           </div>
         </div>
       </div>
+   
+    
     </div>
   );
 };

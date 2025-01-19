@@ -1,3 +1,4 @@
+import { Transaction } from "../../transactions/interfaces/transactions-interface";
 
 export interface Customer {
     customerId: string;
@@ -18,6 +19,7 @@ export interface Customer {
     preferredPaymentMethod: string | null; // Optional: Preferred payment method (e.g., Credit card, PayPal)
 }
 
+// used in the customer insights
 
 
 export interface NewCustomerPayload {
@@ -25,3 +27,13 @@ export interface NewCustomerPayload {
     data: Customer[]
     status: string;
 }
+
+
+ export interface CustomerTotalSalesInterface {
+    supplier_products_id: string;
+    supplierProduct: string;
+    products: string;
+    totalSales: number;
+  }
+
+  export type GetTransactionDateData = Transaction

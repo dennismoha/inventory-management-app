@@ -19,7 +19,7 @@ export type SalesResponse = number;
     lastName: string; 
     email?: string; 
     totalSales: CustomerProductSales[]; 
-    transactionDate: string;
+    transactionDate: Transaction[];
   }
   
   export interface CustomerProductSales {

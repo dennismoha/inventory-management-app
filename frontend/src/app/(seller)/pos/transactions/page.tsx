@@ -92,6 +92,7 @@ const TransactionTable = () => {
     []
   );
 
+
   // Create the Material React Table using the columns and data
   const table = useMaterialReactTable({
     columns,
@@ -148,6 +149,13 @@ const TransactionTable = () => {
     },
   });
 
+  if(isError) {
+    return <p>error fetching transactions. {JSON.stringify(error)}</p>
+  }
+
+  if(isLoading) {
+    <p> fetching transactions....</p>
+  }
   return <MaterialReactTable table={table} />;
 };
 

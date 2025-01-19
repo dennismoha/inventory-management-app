@@ -110,15 +110,21 @@ const Sidebar = () => {
       <div className="flex-grow mt-8">
         {session && session.user.role === 'user' ?    (<>
           <SidebarLink
+          href="/pos/dashboard"
+          icon={Layout}
+          label="Dashboard"
+          isCollapsed={isSidebarCollapsed}
+        /> 
+          <SidebarLink
           href="/pos/products"
           icon={Layout}
-          label="Products test"
+          label="POS"
           isCollapsed={isSidebarCollapsed}
         /> 
         <SidebarLink
           href="/pos/product"
           icon={  HardDrive}
-          label="Pos"
+          label="Pos test"
           isCollapsed={isSidebarCollapsed}
         /> 
         
@@ -132,6 +138,12 @@ const Sidebar = () => {
           href="/pos/customers"
           icon={Users}
           label="customers"
+          isCollapsed={isSidebarCollapsed}
+        /> 
+        <SidebarLink
+          href="/pos/customers/customer-insights"
+          icon={Users}
+          label="customers-insights"
           isCollapsed={isSidebarCollapsed}
         /> 
         </>):(<>
