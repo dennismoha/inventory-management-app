@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "ProductPricing" ALTER COLUMN "VAT" DROP NOT NULL,
-ALTER COLUMN "discount" DROP NOT NULL;

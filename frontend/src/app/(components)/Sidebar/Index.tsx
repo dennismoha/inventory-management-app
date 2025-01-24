@@ -134,6 +134,13 @@ const Sidebar = () => {
           label="transactions"
           isCollapsed={isSidebarCollapsed}
         /> 
+        <SidebarLink 
+         href="/pos/transactions/transaction-insights"
+         icon={ ScanBarcode}
+         label="transaction-insights"
+         isCollapsed={isSidebarCollapsed}
+         
+        />
           <SidebarLink
           href="/pos/customers"
           icon={Users}
@@ -148,7 +155,7 @@ const Sidebar = () => {
         /> 
         </>):(<>
           <SidebarLink
-          href="/dashboard"
+          href="/admin/dashboard"
           icon={Layout}
           label="Dashboard"
           isCollapsed={isSidebarCollapsed}

@@ -52,3 +52,37 @@ export interface InventorystockQuantityVsReorderLevel {
   reorder_level: number;
   // Add other fields from your Inventory model if needed
 }
+
+export interface InventoryRestock {
+  inventoryRestockId: string;
+  inventory_Id: string; // UUID for the inventory item (primary key)
+  new_stock_quantity: Decimal; // The new stock quantity after restocking (Decimal type)
+  old_stock_quantity: Decimal; // The stock quantity before restocking (Decimal type)
+  reorder_level: number; // Reorder level indicating when to reorder stock
+  restock_date: Date; // The date when the restocking occurred (DateTime)
+  softDelete: boolean; // Flag indicating whether the record is soft deleted (boolean)
+  InventoryItemID?: Inventory; //  Inventory relation (InventoryItemID is a reference to `inventoryId`)
+}
+
+/**
+ * Represents a single entry in the Inventory Sales Tracking table.
+ */
+export interface InventorySalesTracking {
+  inventorysalesTrackingId: string;
+  inventoryId: string;
+  new_stock_quantity: Decimal;
+  /**
+   * The quantity of stock that existed before the restock.
+   */
+  old_stock_quantity: Decimal;
+  /**
+   * The level at which the item needs to be reordered.
+   */
+  reorder_level: number;
+  /**
+   * The date when the item was restocked.
+   */
+  restock_date: Date;
+  softDelete: boolean;
+  InventoryItemID?: Inventory; // Assuming Inventory model is defined elsewhere
+}

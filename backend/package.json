@@ -13,8 +13,10 @@
     "generate-docs": "jsdoc -c jsdoc.json",
     "seed": "ts-node src/seed.ts",
     "seed-user": "ts-node src/seed-user.ts",
+    "trigger-inventory": "ts-node src/inventory-trigger.ts",
     "migrate:dev": "cross-env ENV=dev && npx prisma migrate dev --name",
-    "migrate:prod": "cross-env ENV=prod && npx prisma migrate deploy"
+    "migrate:prod": "cross-env ENV=prod && npx prisma migrate deploy",
+    "db:status":"cross-env ENV=dev &&  npx prisma migrate status"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +33,7 @@
     "@types/hpp": "^0.2.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.10.1",
+    "@types/pg": "^8.11.10",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.7",
     "@types/yamljs": "^0.2.34",
@@ -72,6 +75,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "nodemon": "^3.1.9",
+    "pg": "^8.13.1",
     "prisma": "^5.22.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",

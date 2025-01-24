@@ -47,3 +47,14 @@ export interface InventoryItem {
   
 
   export type NewInventoryItemPayload  = Pick<InventoryItem , 'supplier_products_id' | 'stock_quantity' |'reorder_level' | 'unit_id' | 'last_restocked' >
+
+  export interface InventoryRestock {
+    inventoryId: string; // UUID for the inventory item 
+    new_stock_quantity: number; // The new stock quantity after restocking (number type)
+    old_stock_quantity: number; // The stock quantity before restocking (number type)
+    reorder_level: number; // Reorder level indicating when to reorder stock
+    restock_date: Date; // The date when the restocking occurred (DateTime)
+    softDelete: boolean; // Flag indicating whether the record is soft deleted (boolean)
+    InventoryItemID?:  InventoryItem ; //  Inventory relation (InventoryItemID is a reference to `inventoryId`)
+  }
+  

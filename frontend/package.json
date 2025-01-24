@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@heroicons/react": "^1.0.6",
     "@material-tailwind/react": "^2.1.10",
     "@mui/icons-material": "^6.1.7",
     "@mui/material": "^6.1.7",
@@ -20,16 +21,20 @@
     "@mui/x-date-pickers": "^7.22.2",
     "@reduxjs/toolkit": "^2.2.6",
     "axios": "^1.7.9",
+    "chart.js": "^4.4.7",
     "cookie": "^1.0.2",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
+    "jspdf": "^2.5.2",
     "lucide-react": "^0.407.0",
     "material-react-table": "^3.0.1",
     "next": "14.2.15",
     "next-auth": "^4.24.11",
     "numeral": "^2.0.6",
     "react": "^18",
+    "react-chartjs-2": "^5.3.0",
+    "react-datepicker": "^7.6.0",
     "react-dom": "^18",
     "react-icons": "^5.4.0",
     "react-loading-skeleton": "^3.5.0",
@@ -38,7 +43,8 @@
     "recharts": "^2.12.7",
     "redux-persist": "^6.0.0",
     "sharp": "^0.33.5",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^20",

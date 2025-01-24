@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "UserRoles" AS ENUM ('admin', 'user');
+
+-- CreateEnum
 CREATE TYPE "PaymentStatus" AS ENUM ('paid', 'unpaid', 'partially_paid');
 
 -- CreateEnum
@@ -196,13 +199,28 @@ CREATE TABLE "Inventory" (
 );
 
 -- CreateTable
+CREATE TABLE "InventoryRestock" (
+    "inventoryRestockId" TEXT NOT NULL,
+    "inventory_Id" TEXT NOT NULL,
+    "new_stock_quantity" DECIMAL(8,2) NOT NULL,
+    "old_stock_quantity" DECIMAL(8,2) NOT NULL,
+    "reorder_level" INTEGER NOT NULL,
+    "restock_date" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "softDelete" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "InventoryRestock_pkey" PRIMARY KEY ("inventoryRestockId")
+);
+
+-- CreateTable
 CREATE TABLE "ProductPricing" (
     "product_pricing_id" TEXT NOT NULL,
     "supplier_products_id" UUID NOT NULL,
     "Quantity" DECIMAL(8,2) NOT NULL,
     "unit_id" UUID NOT NULL,
     "price" DECIMAL(8,2) NOT NULL,
-    "effective_date" DATE NOT NULL,
+    "VAT" DECIMAL(8,2),
+    "discount" DECIMAL(8,2),
+    "effective_date" TIMESTAMP(6) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) NOT NULL,
 
@@ -219,6 +237,70 @@ CREATE TABLE "InventoryTracking" (
     "notes" TEXT,
 
     CONSTRAINT "InventoryTracking_pkey" PRIMARY KEY ("inventoryTrackingId")
+);
+
+-- CreateTable
+CREATE TABLE "Customer" (
+    "customerId" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "phoneNumber" TEXT NOT NULL,
+    "address" TEXT,
+    "country" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "status" TEXT NOT NULL,
+    "loyaltyPoints" INTEGER NOT NULL DEFAULT 0,
+    "totalSpent" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "deleted" BOOLEAN NOT NULL DEFAULT false,
+    "notes" TEXT,
+    "preferredPaymentMethod" TEXT,
+
+    CONSTRAINT "Customer_pkey" PRIMARY KEY ("customerId")
+);
+
+-- CreateTable
+CREATE TABLE "Transaction" (
+    "Id" SERIAL NOT NULL,
+    "transactionId" TEXT NOT NULL,
+    "customerId" TEXT,
+    "transactionDateCreated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "totalCost" DOUBLE PRECISION NOT NULL,
+    "paymentMethod" "PaymentMethod" NOT NULL,
+    "subtotal" DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT "Transaction_pkey" PRIMARY KEY ("Id")
+);
+
+-- CreateTable
+CREATE TABLE "TransactionProduct" (
+    "TransactionProductId" TEXT NOT NULL,
+    "supplier_products_id" UUID NOT NULL,
+    "inventoryId" TEXT NOT NULL,
+    "stock_quantity" DECIMAL(65,30) NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "productName" TEXT NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "discount" DOUBLE PRECISION NOT NULL,
+    "VAT" DOUBLE PRECISION NOT NULL,
+    "productSubTotalCost" DOUBLE PRECISION NOT NULL,
+    "productTotalCost" DOUBLE PRECISION NOT NULL,
+    "transactionId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "TransactionProduct_pkey" PRIMARY KEY ("TransactionProductId")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "user_id" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "UserRoles" NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("user_id")
 );
 
 -- CreateIndex
@@ -259,6 +341,24 @@ CREATE UNIQUE INDEX "Inventory_supplier_products_id_key" ON "Inventory"("supplie
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ProductPricing_supplier_products_id_key" ON "ProductPricing"("supplier_products_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Customer_email_key" ON "Customer"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Customer_phoneNumber_key" ON "Customer"("phoneNumber");
+
+-- CreateIndex
+CREATE INDEX "customer_email_idx" ON "Customer"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Transaction_transactionId_key" ON "Transaction"("transactionId");
+
+-- CreateIndex
+CREATE INDEX "Transaction_customerId_idx" ON "Transaction"("customerId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "CategorySubCategory" ADD CONSTRAINT "CategorySubCategory_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "Categories"("categoryId") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -315,6 +415,9 @@ ALTER TABLE "Inventory" ADD CONSTRAINT "Inventory_supplier_products_id_fkey" FOR
 ALTER TABLE "Inventory" ADD CONSTRAINT "Inventory_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "Units"("unit_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "InventoryRestock" ADD CONSTRAINT "InventoryRestock_inventory_Id_fkey" FOREIGN KEY ("inventory_Id") REFERENCES "Inventory"("inventoryId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "ProductPricing" ADD CONSTRAINT "ProductPricing_supplier_products_id_fkey" FOREIGN KEY ("supplier_products_id") REFERENCES "SupplierProducts"("supplier_products_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -322,3 +425,15 @@ ALTER TABLE "ProductPricing" ADD CONSTRAINT "ProductPricing_unit_id_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "InventoryTracking" ADD CONSTRAINT "InventoryTracking_orderProductId_fkey" FOREIGN KEY ("orderProductId") REFERENCES "OrderProducts"("orderProductsId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("customerId") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionProduct" ADD CONSTRAINT "TransactionProduct_inventoryId_fkey" FOREIGN KEY ("inventoryId") REFERENCES "Inventory"("inventoryId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionProduct" ADD CONSTRAINT "TransactionProduct_supplier_products_id_fkey" FOREIGN KEY ("supplier_products_id") REFERENCES "SupplierProducts"("supplier_products_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionProduct" ADD CONSTRAINT "TransactionProduct_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction"("transactionId") ON DELETE RESTRICT ON UPDATE CASCADE;

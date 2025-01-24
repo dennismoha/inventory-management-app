@@ -35,6 +35,7 @@ import {
 import {
   InventoryItem,
   InventoryItemsApiResponse,
+  InventoryRestock,
   NewInventoryItemPayload,
   NewProductPricingPayload,
   ProductPricing,
@@ -182,6 +183,8 @@ export const InventoryApi = createApi({
     "InventorySalesDifference",
     "ProfitCalculation",
     "salesBetweenproductsdates",
+    "InventoryItemsInsight",
+    "Transactions-insights"
   ],
   endpoints: (build) => ({
     getDashboardMetrics: build.query<DashboardMetrics, void>({
@@ -812,7 +815,30 @@ const ProductsInventoryApi = InventoryApi.injectEndpoints({
         body: patch,
       }),
       invalidatesTags: ["InventoryItems"],
+    }), 
+
+    // fetch inventory insights
+
+    getInventoryItemsInsight: build.query<InventoryItemsApiResponse, void>({
+      query: () => ({
+        url: "/sales/inventory/inventory-insights",
+      }),
+      providesTags: ["InventoryItemsInsight"],
     }),
+
+    // Endpoint to restock inventory
+    // restockInventory: build.mutation<
+    //   ApiResponse<Inventory>,
+    //   { inventoryId: string; stock_quantity: number }
+    // >({
+    //   query: ({ inventoryId, stock_quantity }) => ({
+    //     url: `/inventory/restock/${inventoryId}`,
+    //     method: "PUT",
+    //     body: { stock_quantity },
+    //   }),
+    //   // Tags for invalidating or updating the cache
+    //   invalidatesTags: [{ type: "Inventory", id: "LIST" }],
+    // }),
 
     // Delete an inventory item
     deleteInventoryItem: build.mutation<void, { inventory_item_id: string }>({
@@ -822,6 +848,19 @@ const ProductsInventoryApi = InventoryApi.injectEndpoints({
       }),
       invalidatesTags: ["InventoryItems"],
     }),
+
+    restockInventoryItem: build.mutation<
+    ApiResponse<InventoryRestock[]>,
+    Pick<InventoryItem, "inventoryId">
+  >({
+    query: ({ inventoryId, ...data }) => ({
+      url: `/inventory/restock/${inventoryId}`,
+      method: "PUT",
+      body: data,
+    }),
+    // Tags for invalidating or updating the cache
+    invalidatesTags: ["InventoryItems"], // Invalidates inventory cache
+  }),
   }),
   overrideExisting: true,
 });
@@ -956,8 +995,26 @@ const TransactionApi = InventoryApi.injectEndpoints({
         method: "POST",
         body: newTransaction,
       }),
-      invalidatesTags: ["Transactions", "InventoryItems", "TotalSales","CustomerSales"],
+      invalidatesTags: [
+        "Transactions",
+        "InventoryItems",
+        "TotalSales",
+        "CustomerSales",
+        "salesBetweenproductsdates"
+      ],
     }),
+
+  getTransactionsInsights: build.query<
+    ApiResponse<TransactionProductsBetweenDates>,
+    { startDate: string; endDate: string }
+  >({
+    query: ({ startDate, endDate }) => ({
+      url: "/get-sales-products-between-dates",
+      params: { startDate, endDate }, // Send start and end date as query params
+    }),
+    providesTags: ["salesBetweenproductsdates"],
+    keepUnusedDataFor: 300000,
+  }),
 
     // Update an existing transaction
     // updateTransaction: build.mutation<Transaction, { transactionId: string; patch: Partial<Transaction> }>({
@@ -1030,7 +1087,10 @@ const SalesApi = InventoryApi.injectEndpoints({
     //   keepUnusedDataFor: 300000,
     // }),
 
-    getTotalSalesForEachCustomer: build.query<ApiResponse<CustomerSalesResponse[]>, void>({
+    getTotalSalesForEachCustomer: build.query<
+      ApiResponse<CustomerSalesResponse[]>,
+      void
+    >({
       query: () => "/sales-per-customer", // Fetch total sales for each customer
       providesTags: ["CustomerSales"],
       keepUnusedDataFor: 300000,
@@ -1079,6 +1139,7 @@ export const {
   // useGetTransactionsByCustomerQuery,
   // useGetTransactionQuery,
   useCreateTransactionMutation,
+  useGetTransactionsInsightsQuery
   // useUpdateTransactionMutation,
   // useDeleteTransactionMutation,
 } = TransactionApi;
@@ -1104,6 +1165,8 @@ export const {
   useCreateInventoryItemMutation,
   useUpdateInventoryItemMutation,
   useDeleteInventoryItemMutation,
+  useRestockInventoryItemMutation,
+  useGetInventoryItemsInsightQuery
 } = ProductsInventoryApi;
 
 export const {

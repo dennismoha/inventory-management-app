@@ -100,7 +100,7 @@ export default function ProductPricingList() {
         accessorKey: "unit_id",
         header: "Unit",
         size: 100,
-        enableEditing:false,
+        enableEditing:true,
         muiEditTextFieldProps: {
           select: true,
           children: unitsData.map((unit) => (

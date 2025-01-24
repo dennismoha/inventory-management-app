@@ -7,7 +7,7 @@ import TransactionList from "./sales/transactionlist";
 
 const CardComponent = () => {
   const [startDate, setStartDate] = useState("2024-12-01");
-  const [endDate, setEndDate] = useState("2024-12-31");
+  const [endDate, setEndDate] = useState("2025-12-31");
 
   // Fetching transactions from API using RTK Query
   const {
@@ -27,6 +27,7 @@ const CardComponent = () => {
   };
 
   const data: TransactionProductsBetweenDates = response?.data ?? defaultData;
+  console.log('data is :::::::::::::::: ', data)
   console.log("sales product data is", data.totalSales);
 
   const handleStartDateChange = (e: {

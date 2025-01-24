@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
 import prisma from '@src/shared/prisma/prisma-client'; // Prisma client
-import { inventorySchema } from '@src/features/inventory/schema/inventory-schema'; // Joi validation schema
+import { inventoryRestockSchema, inventorySchema } from '@src/features/inventory/schema/inventory-schema'; // Joi validation schema
 import { StatusCodes } from 'http-status-codes'; // HTTP status codes
 import { joiValidation } from '@src/shared/globals/decorators/joi-validation-decorators'; // Joi validation decorator
 import GetSuccessMessage from '@src/shared/globals/helpers/success-messages'; // Helper function for success response
-import { Inventory, InventorystockQuantityVsReorderLevel } from '@src/features/inventory/interfaces/inventory.interface'; // Inventory interface
+import {
+  Inventory,
+  InventoryRestock,
+  InventorySalesTracking,
+  InventorystockQuantityVsReorderLevel
+} from '@src/features/inventory/interfaces/inventory.interface'; // Inventory interface
 import { BadRequestError, ConflictError, NotFoundError } from '@src/shared/globals/helpers/error-handler';
 import { convertToBaseUnit, getUnitCategory, utilMessage } from '@src/shared/globals/helpers/utils';
 
@@ -29,6 +34,9 @@ export class InventoryController {
         softDelete: false // Optional: Only return non-deleted records
       },
       include: {
+        InventorySalesTracking: true,
+        InventoryRestock: true,
+        TransactionProduct: true,
         supplierProduct: {
           include: {
             product: true,
@@ -201,7 +209,7 @@ export class InventoryController {
   public async updateInventory(req: Request, res: Response): Promise<void> {
     const { inventoryId } = req.params;
     // eslint-disable-next-line prefer-const
-    let { stock_quantity, reorder_level, last_restocked, unit_id, status } = req.body;
+    let { reorder_level, last_restocked, unit_id, status } = req.body;
 
     // Fetch the current stock_quantity from the database
     const currentInventory = await prisma.inventory.findUnique({
@@ -214,16 +222,12 @@ export class InventoryController {
       throw new BadRequestError('item not found');
     }
 
-    // Calculate the new stock quantity
-    const updatedStockQuantity = Number(currentInventory.stock_quantity || 0) + Number(stock_quantity || 0);
-    console.log('updated Stock Quantity is ', updatedStockQuantity);
     reorder_level = Number(reorder_level);
 
     // Attempt to update the inventory item in the database
     const updatedInventory: Inventory = await prisma.inventory.update({
       where: { inventoryId },
       data: {
-        stock_quantity: updatedStockQuantity,
         reorder_level,
         last_restocked,
         unit_id,
@@ -235,6 +239,111 @@ export class InventoryController {
     // Send success response with the updated inventory item
     res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, updatedInventory, 'Inventory updated successfully'));
   }
+
+  /**
+   *
+   * Restock inventory
+   *
+   */
+
+  @joiValidation(inventoryRestockSchema)
+  public async restockInventory(req: Request, res: Response): Promise<void> {
+    const { inventoryId } = req.params; // inventoryId as a string from request params
+    const { stock_quantity }: { stock_quantity: number } = req.body; // stock_quantity is expected to be a number
+
+    // Fetch the current inventory data
+    const currentInventory: Pick<Inventory, 'stock_quantity' | 'reorder_level'> | null = await prisma.inventory.findUnique({
+      where: { inventoryId },
+      select: { stock_quantity: true, reorder_level: true } // Select relevant fields for restocking
+    });
+
+    // If the inventory item is not found, return an error
+    if (!currentInventory) {
+      throw new BadRequestError('Item not found');
+    }
+
+    // Calculate the updated stock quantity
+    const updatedStockQuantity: number = Number(currentInventory.stock_quantity || 0) + Number(stock_quantity || 0);
+    console.log('Updated Stock Quantity is ', updatedStockQuantity);
+
+    // Update the inventory record with the new stock quantity and timestamps
+    const updatedInventory: Inventory = await prisma.inventory.update({
+      where: { inventoryId },
+      data: {
+        stock_quantity: updatedStockQuantity,
+        last_restocked: new Date(), // Timestamp when stock was last restocked
+        updated_at: new Date() // Timestamp when inventory was updated
+      }
+    });
+
+    // Store restock information in the InventoryRestock table
+    await prisma.inventoryRestock.create({
+      data: {
+        inventory_Id: inventoryId, // Foreign key reference to the inventory item
+        new_stock_quantity: updatedStockQuantity, // The stock after restock
+        old_stock_quantity: currentInventory.stock_quantity, // The previous stock before restock
+        reorder_level: currentInventory.reorder_level, // Reorder level from the inventory
+        restock_date: new Date(), // The current date when restock occurred
+        softDelete: false // Mark as not soft deleted (default is false)
+      }
+    });
+
+    // Send a success response with the updated inventory details
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, updatedInventory, 'Inventory updated successfully'));
+  }
+
+  /**
+   *
+   * fetch the restockItems db
+   *
+   */
+
+  public async getAllRestocks(req: Request, res: Response): Promise<void> {
+    // Fetch all restock records from the InventoryRestock table
+    const restockRecords: InventoryRestock[] = await prisma.inventoryRestock.findMany({
+      orderBy: {
+        restock_date: 'desc'
+      }
+    });
+    // Send a success response with all the restock records
+    res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, restockRecords, 'Restock records fetched successfully'));
+  }
+
+  // public async restockInventory(req: Request, res: Response): Promise<void> {
+  //   const { inventoryId } = req.params;
+  //   // eslint-disable-next-line prefer-const
+  //   let { stock_quantity } = req.body;
+
+  //   // Fetch the current stock_quantity from the database
+  //   const currentInventory = await prisma.inventory.findUnique({
+  //     where: { inventoryId },
+  //     select: { stock_quantity: true }
+  //   });
+
+  //   // If the inventory item is not found, handle the error
+  //   if (!currentInventory) {
+  //     throw new BadRequestError('item not found');
+  //   }
+
+  //   // Calculate the new stock quantity
+  //   const updatedStockQuantity = Number(currentInventory.stock_quantity || 0) + Number(stock_quantity || 0);
+  //   console.log('updated Stock Quantity is ', updatedStockQuantity);
+
+  //   // Attempt to update the inventory item in the database
+  //   const updatedInventory: Inventory = await prisma.inventory.update({
+  //     where: { inventoryId },
+  //     data: {
+  //       stock_quantity: updatedStockQuantity,
+  //       last_restocked: new Date(),
+  //       updated_at: new Date()
+  //     }
+  //   });
+
+  //   // store in the restock table
+
+  //   // Send success response with the updated inventory item
+  //   res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, updatedInventory, 'Inventory updated successfully'));
+  // }
 
   /**
    * Soft deletes an inventory item from the database.
@@ -299,5 +408,98 @@ export class InventoryController {
 
     // Send success message with the fetched low stock items
     res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, lowStockItems, 'Low stock items retrieved successfully'));
+  }
+
+  /**
+   * Fetches all inventory sales tracking records.
+   * This method retrieves all sales tracking records that have not been marked as soft deleted, ordered by restock date in descending order.
+   *
+   * @returns {Promise<void>} - Sends a response with a status of 200 and a success message containing the fetched sales tracking records.
+   */
+  public async getAllSalesTracking(req: Request, res: Response): Promise<void> {
+    // Fetch all sales tracking records from the database
+    const salesTrackingRecords: InventorySalesTracking[] = await prisma.inventorySalesTracking.findMany({
+      where: {
+        softDelete: false // Only include records that are not soft-deleted
+      },
+      orderBy: {
+        restock_date: 'desc' // Order records by restock_date in descending order
+      },
+      include: {
+        InventoryItemID: true // Include related inventory item details
+      }
+    });
+    res.json(salesTrackingRecords);
+    // Send a success response with the fetched records
+    // res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, salesTrackingRecords, 'Sales tracking records fetched successfully'));
+  }
+
+  /**
+   * Fetches inventory sales tracking records where `new_stock_quantity` is greater than `old_stock_quantity` or vice versa.
+   * This method retrieves sales tracking records where stock quantities are either increasing or decreasing.
+   *
+   * @returns {Promise<void>} - Sends a response with a status of 200 and a success message containing the filtered sales tracking records.
+   */
+  public async getSalesTrackingByStockComparison(req: Request, res: Response): Promise<void> {
+    // Fetch sales tracking records based on stock comparison
+    const salesTrackingRecords: InventorySalesTracking[] = await prisma.inventorySalesTracking.findMany({
+      where: {
+        softDelete: false,
+        OR: [
+          {
+            new_stock_quantity: {
+              gt: 0 // Include records where new_stock_quantity is greater than 0
+            }
+          },
+          {
+            old_stock_quantity: {
+              gt: 0 // Include records where old_stock_quantity is greater than 0
+            }
+          }
+        ]
+      },
+      orderBy: {
+        restock_date: 'desc' // Order records by restock_date in descending order
+      },
+      include: {
+        InventoryItemID: true // Include related inventory item details
+      }
+    });
+    res.json(salesTrackingRecords);
+    // Send a success response with the filtered records
+    //res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, salesTrackingRecords, 'Sales tracking records with stock comparison fetched successfully'));
+  }
+
+  /**
+   * Fetches inventory sales tracking records where `new_stock_quantity` or `old_stock_quantity` is zero.
+   * This method retrieves sales tracking records where either new or old stock quantities are zero, typically indicating stockouts or no movement.
+   *
+   * @returns {Promise<void>} - Sends a response with a status of 200 and a success message containing the filtered sales tracking records.
+   */
+  public async getSalesTrackingByZeroStock(req: Request, res: Response): Promise<void> {
+    // Fetch sales tracking records with zero stock quantity
+    const salesTrackingRecords: InventorySalesTracking[] = await prisma.inventorySalesTracking.findMany({
+      where: {
+        softDelete: false,
+        OR: [
+          {
+            new_stock_quantity: 0 // Include records where new_stock_quantity is 0
+          },
+          {
+            old_stock_quantity: 0 // Include records where old_stock_quantity is 0
+          }
+        ]
+      },
+      orderBy: {
+        restock_date: 'desc' // Order records by restock_date in descending order
+      },
+      include: {
+        InventoryItemID: true // Include related inventory item details
+      }
+    });
+
+    // Send a success response with the filtered records
+    res.json(salesTrackingRecords);
+    //res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, salesTrackingRecords, 'Sales tracking records with zero stock fetched successfully'));
   }
 }

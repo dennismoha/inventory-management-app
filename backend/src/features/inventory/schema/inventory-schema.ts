@@ -11,6 +11,10 @@ export const inventorySchema = Joi.object({
   // status: Joi.string().valid('ACTIVE', 'INACTIVE', 'DISCONTINUED').required(),
 });
 
+export const inventoryRestockSchema = Joi.object({
+  stock_quantity: Joi.number().min(0).required()
+});
+
 export const productPricingSchema = Joi.object({
   supplier_products_id: Joi.string().uuid().required(),
   Quantity: Joi.number().precision(2).min(0).required(), // Validates Decimal

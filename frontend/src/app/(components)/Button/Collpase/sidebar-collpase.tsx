@@ -287,10 +287,20 @@ const sidebarMenuLinks: SidebarMenuLink[] = [
         label: "inventory",
       },
       {
+        href: "/admin/inventory/restock-inventory",
+        icon: Circle,
+        label: "restock inventory",
+      },
+      {
         href: "/admin/inventory/product-pricing",
         icon: Circle,
         label: "product-pricing",
       },
+      {
+        href:"/admin/inventory/inventory-insights",
+        icon: Circle,
+        label: "inventory-insights",
+      }
     ],
   },
   {

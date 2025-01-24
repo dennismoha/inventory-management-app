@@ -94,6 +94,7 @@ export class SalesController {
     // res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, salesInRange, `Sales between ${startDate} and ${endDate} fetched successfully`));
   }
 
+  // returns all products and all total sales and transactions between those dates
   public async getSalesProductsBetweenDates(req: Request, res: Response): Promise<void> {
     const { startDate, endDate } = req.query;
 
@@ -138,8 +139,21 @@ export class SalesController {
           lte: new Date(endDate as string) // Filter by end date
         }
       },
+      // include: {
+      //   TransactionProduct: true, // Include associated TransactionProducts
+      //
+      // }
       include: {
-        TransactionProduct: true // Include associated TransactionProducts
+        TransactionProduct: {
+          include: {
+            supplierProduct: {
+              include: {
+                supplier: true
+              }
+            }
+          }
+        },
+        customer: true
       }
     });
 
@@ -209,25 +223,6 @@ export class SalesController {
    * Fetches the total sales for each customer.
    */
   public async getTotalSalesForEachCustomer(req: Request, res: Response): Promise<void> {
-    //     const salesPerCustomer = await prisma.$queryRaw`
-    //     SELECT
-    //     c."customerId",
-    //     c."firstName",
-    //     c."lastName",
-    //     tp."supplier_products_id",
-    //     SUM(tp."productTotalCost") AS "totalSales"
-    // FROM
-    //     "Customer" c
-    // JOIN
-    //     "Transaction" t ON c."customerId" = t."customerId"
-    // JOIN
-    //     "TransactionProduct" tp ON t."transactionId" = tp."transactionId"
-    // GROUP BY
-    //     c."customerId",
-    //     c."firstName",
-    //     c."lastName",
-    //     tp."supplier_products_id";
-    //   `;
     const getSalesPerCustomer = async (): Promise<CustomerSales[]> => {
       const salesPerCustomer = await prisma.customer.findMany({
         select: {

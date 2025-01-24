@@ -242,7 +242,7 @@ model OrderProducts {
 }
 
 model Inventory {
-  inventoryId          String           @id @default(uuid())
+  inventoryId          String           @id @default(uuid()) 
   supplier_products_id String           @unique @db.Uuid
   // productName           String
   // sku                   String
@@ -260,7 +260,9 @@ model Inventory {
   // Relations
   supplierProduct      SupplierProducts @relation(fields: [supplier_products_id], references: [supplier_products_id])
   unit                 Units            @relation(fields: [unit_id], references: [unit_id])
-   TransactionProduct TransactionProduct[]
+  TransactionProduct TransactionProduct[]
+  InventoryRestock  InventoryRestock[]
+  InventorySalesTracking InventorySalesTracking[]
   // `last_restocked` is the timestamp when new stock was last added to the inventory. 
   // It is updated whenever stock_quantity is restocked, e.g., when new products are received from the supplier.
 
@@ -268,6 +270,23 @@ model Inventory {
   // This field will be updated on any modification of the inventory item, 
   // including when stock levels are adjusted (due to sales, stock adjustments, etc.), 
   // price updates, or status changes.
+}
+
+model InventoryRestock {
+  inventoryRestockId   String   @id @default(uuid())
+  inventory_Id         String 
+  
+ 
+  new_stock_quantity       Decimal          @db.Decimal(8, 2)
+  old_stock_quantity       Decimal          @db.Decimal(8, 2)
+  reorder_level        Int
+
+  restock_date           DateTime         @default(now()) @db.Timestamp(6) // it's the day it's restocked
+ 
+  softDelete           Boolean          @default(false)
+ 
+  // Relations
+   InventoryItemID   Inventory? @relation(fields: [inventory_Id], references: [inventoryId])
 }
 
 model ProductPricing {
@@ -284,6 +303,24 @@ model ProductPricing {
   supplierProduct      SupplierProducts @relation(fields: [supplier_products_id], references: [supplier_products_id])
   unit                 Units            @relation(fields: [unit_id], references: [unit_id])
 }
+
+model InventorySalesTracking { 
+  inventorysalesTrackingId String   @id @default(uuid())
+  inventoryId  String 
+  new_stock_quantity       Decimal          @db.Decimal(8, 2)
+  old_stock_quantity       Decimal          @db.Decimal(8, 2)
+  reorder_level        Int
+
+  restock_date           DateTime         @default(now()) @db.Timestamp(6) // it's the day it's restocked
+ 
+  softDelete           Boolean          @default(false)
+ 
+  // Relations
+   InventoryItemID   Inventory @relation(fields: [inventoryId], references: [inventoryId])
+
+
+}
+
 
 model InventoryTracking {
   inventoryTrackingId String   @id @default(uuid())

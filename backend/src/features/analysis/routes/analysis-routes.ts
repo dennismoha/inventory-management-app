@@ -1,5 +1,7 @@
 import express, { Router } from 'express';
 import { SalesController } from '@src/features/analysis/controller/sales'; // Import the SalesController
+import { InventoryController } from '@src/features/analysis/controller/inventory';
+import { TransactionsController } from '@src/features/analysis/controller/transactions';
 
 class SalesRoutes {
   private router: Router;
@@ -18,7 +20,10 @@ class SalesRoutes {
     this.router.get('/inventory-sales-difference', SalesController.prototype.getInventorySalesDifference); // Route to get inventory sales difference
     this.router.get('/calculate-profit', SalesController.prototype.calculateProfit); // Route to calculate profit
     this.router.get('/get-sales-products-between-dates', SalesController.prototype.getSalesProductsBetweenDates);
+    this.router.get('/sales/inventory/inventory-insights', InventoryController.prototype.fetchInventorInsights);
 
+    /** transactins */
+    this.router.get('/sales/transactions-insights', TransactionsController.prototype.fetchTransactions);
     return this.router;
   }
 }

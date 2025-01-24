@@ -10,13 +10,13 @@ export interface Transaction {
   totalCost: number; // Total cost after applying discounts and VAT
   paymentMethod: string; // Payment method (e.g., card, PayPal, cash)
   subtotal: number; // Subtotal (price * quantity). total before taxes and others are added
-  productSubTotalCost?: number,
+  productSubTotalCost: number,
   productTotalCost?: number,
   // Relationships
-  customer?: Customer | null;
-  transactionDateCreated?: Date;
+  customer: Customer | null;
+  transactionDateCreated: Date;
 
-  TransactionProduct?: TransactionProduct[]
+  TransactionProduct: TransactionProduct[]
   // List of related transaction products
 }
 
@@ -28,7 +28,7 @@ export type TransactionProduct = Pick<InventoryItem, 'inventoryId' | 'stock_quan
   VAT: number,
   discount: number
   transactionId: string
-  SupplierProduct?: SupplierProduct
+  supplierProduct?: SupplierProduct
   productSubTotalCost?: number,
   productTotalCost?: number,
 
