@@ -292,8 +292,16 @@ const CategoryApi = InventoryApi.injectEndpoints({
         method: 'POST',
         body: Category
       }),
-      // Invalidates all queries related to subcategories (trigger refetch)
       invalidatesTags: [{ type: 'categories' }]
+    }),
+
+    updateCategory: build.mutation<CategoryResponse, Pick<Category, 'categoryId'>>({
+      query: ({ categoryId, ...patch }) => ({
+        url: `/categories/${categoryId}`,
+        method: 'PUT',
+        body: patch
+      }),
+      invalidatesTags: ['SubCategory', 'categories']
     }),
     deleteCategory: build.mutation<void, string>({
       query: (categoryId) => ({
@@ -1138,6 +1146,7 @@ export const { useGetProductsQuery, useUpdateProductMutation, useDeleteProductMu
 
 export const {
   useGetCategoriesQuery,
+  useUpdateCategoryMutation,
   useCreateCategoryMutation,
   useGetSubCategoriesQuery,
   useGetSubCategoryByIdQuery,

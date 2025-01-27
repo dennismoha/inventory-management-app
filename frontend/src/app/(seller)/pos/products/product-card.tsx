@@ -4,7 +4,7 @@ import { useAppDispatch } from '@/app/redux/redux';
 
 import { InventoryItem } from '@/app/(admin)/admin/inventory/interfaces/inventory-interface';
 import { addToCheckout } from '@/app/redux/state/cart';
-import Image from 'next/image';
+// import Image from 'next/image';
 import React from 'react';
 
 type inputData = {
@@ -28,7 +28,7 @@ interface ProductsCard {
 // const ProductCard = ({ imgUrl, productName, productPrice }: { productName: string, productPrice: number, imgUrl?: string}) => {
 const ProductCard = (propsData: ProductsCard) => {
   // const { productName } = propsData;
-  const imgUrl = undefined;
+  // const imgUrl = undefined;
   const productPrice = propsData.price;
   const dispatch = useAppDispatch();
 
@@ -80,11 +80,13 @@ const ProductCard = (propsData: ProductsCard) => {
       <div className="flex justify-around items-center mb-4">
         {/* Product Image */}
         <div className="w-1/3 h-32 bg-gray-200 rounded-lg overflow-hidden">
-          <Image
+          {/* <Image
             src={imgUrl ? imgUrl : 'https://via.placeholder.com/150'} // Placeholder image if no image
             alt={productName}
             className="w-full h-full object-cover"
-          />
+            width={100}
+            height={100}
+          /> */}
         </div>
 
         {/* Stock Quantity */}

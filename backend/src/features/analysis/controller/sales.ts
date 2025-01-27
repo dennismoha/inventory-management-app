@@ -301,8 +301,6 @@ export class SalesController {
     };
     const salesPerCustomer = await getSalesPerCustomer();
 
-    // res.status(StatusCodes.OK).send(salesPerCustomer);
-
     res.status(StatusCodes.OK).send(GetSuccessMessage(StatusCodes.OK, salesPerCustomer, 'Total sales per customer fetched successfully'));
   }
 

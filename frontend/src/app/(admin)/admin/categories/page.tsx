@@ -15,7 +15,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Category } from '@/app/(admin)/admin/categories/interface/categories-interface';
-import { useGetCategoriesQuery, useCreateCategoryMutation, useDeleteCategoryMutation } from '@/app/redux/api/inventory-api';
+import {
+  useGetCategoriesQuery,
+  useCreateCategoryMutation,
+  useDeleteCategoryMutation,
+  useUpdateCategoryMutation
+} from '@/app/redux/api/inventory-api';
 import { toast } from 'react-toastify';
 
 const CategoryProductTable = () => {
@@ -25,7 +30,10 @@ const CategoryProductTable = () => {
   const [createCategory, { isLoading: categoryIsLoading, isError: categoryError }] = useCreateCategoryMutation();
   const [deleteCategory, { isLoading: deleting, isError: errorDeleting, isSuccess: deletedSuccessfully, error: deleteError }] =
     useDeleteCategoryMutation();
+  const [updateCategory, { isLoading: updating, isError: updateError, error: updatecategoryError, isSuccess: updatedSuccessfully }] =
+    useUpdateCategoryMutation();
   useEffect(() => {
+    toast.dismiss();
     if (isLoading) {
       toast.info('fetching categories ....');
     }
@@ -44,6 +52,24 @@ const CategoryProductTable = () => {
   }, [isLoading, isError, categoryIsLoading, categoryError]);
 
   useEffect(() => {
+    toast.dismiss();
+    if (updateError && updatecategoryError) {
+      if ('data' in updatecategoryError) {
+        //@ts-expect-error data.message is of type unknown
+        toast.error(`${updatecategoryError.data.message}`);
+      }
+
+      if ('message' in updatecategoryError) {
+        //@ts-expect-error message does not exist in fetchbasequery
+        toast.error(`error updating categry , ${updateCategory.message}`);
+      }
+
+      toast.error('error in updating category');
+    }
+
+    if (updatedSuccessfully) {
+      toast.success('category updated successfully');
+    }
     if (deleting) {
       toast.info('deleting category');
     }
@@ -55,7 +81,8 @@ const CategoryProductTable = () => {
     if (deletedSuccessfully) {
       toast.info('category successfully deleted');
     }
-  }, [deleting, errorDeleting, deletedSuccessfully, deleteError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleting, errorDeleting, deletedSuccessfully, deleteError, updating, updateError, updatedSuccessfully, updatecategoryError]);
 
   const Categories: Category[] = categories ? categories.data : [];
   // Columns for category table
@@ -142,7 +169,11 @@ const CategoryProductTable = () => {
     }
     setValidationErrors({});
     // Integrate with your API to update the category (mock API call)
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+    values = { ...values };
+
+    delete values.created_at;
+    delete values.updated_at;
+    updateCategory(values);
     table.setEditingRow(null); // Close row editing
   };
 
