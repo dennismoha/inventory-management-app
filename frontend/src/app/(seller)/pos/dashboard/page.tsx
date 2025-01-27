@@ -1,37 +1,20 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import React, { ReactNode } from "react";
-import TotalSales from "./components/sales";
-import SalesByDateRange from "./components/sale-between-dates";
-import SalesProductsBetweenDates from "./components/sales-products-between-dates";
+import { ReactNode } from 'react';
+import TotalSales from './components/sales';
+import SalesByDateRange from './components/sale-between-dates';
+import SalesProductsBetweenDates from './components/sales-products-between-dates';
 
-
-
-
-
-const Page = ({
-  params,
-  searchParams,
-}: {
-  params: { [key: string]: string };
-  searchParams: { [key: string]: string };
-}) => {
-  console.log(
-    "Page Rendered with params:",
-    params,
-    "and searchParams:",
-    searchParams
-  );
+const Page = ({ params, searchParams }: { params: { [key: string]: string }; searchParams: { [key: string]: string } }) => {
+  console.log('Page Rendered with params:', params, 'and searchParams:', searchParams);
   return (
     <SellersHomePage>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xl:overflow-auto gap-10 pb-4 custom-grid-rows">
-       <SalesByDateRange />
+        <SalesByDateRange />
         <TotalSales />
         <SalesProductsBetweenDates />
-      
-      
       </div>
     </SellersHomePage>
   );
@@ -44,7 +27,7 @@ interface SellersHomePageProps {
 }
 
 const SellersHomePage = ({ children }: SellersHomePageProps) => {
-  console.log("SellersHomePage Rendered");
+  console.log('SellersHomePage Rendered');
   return (
     <>
       <div>

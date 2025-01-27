@@ -1,13 +1,11 @@
-'use client'
-import React from 'react'
+'use client';
+import React from 'react';
 
 const page = () => {
-  return (
-    <div>page</div>
-  )
-}
+  return <div>page</div>;
+};
 
-export default page
+export default page;
 
 // import React, { useMemo, useState } from "react";
 // import { useParams } from 'next/navigation';
@@ -33,7 +31,7 @@ export default page
 //   useDeleteOrderProductMutation,
 // } from "@/app/redux/api/inventory-api"; // Adjusted API hooks
 
-// const OrderProductssTable = () => { 
+// const OrderProductssTable = () => {
 //   const params = useParams()
 //   const { data: orderProductsData, isLoading, isError } = useGetOrderProductByOrderIdQuery(params.orderId); // Adjusted to fetch order products
 //   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
@@ -213,7 +211,6 @@ export default page
 // ============ end of new components ========
 // ==== start of old component========
 
-
 // const OrderProductss: React.FC = () => {
 //   const router = useParams();
 
@@ -234,7 +231,7 @@ export default page
 //         })
 //       }
 //      data {JSON.stringify(data)}
-    
+
 //       <div>query is  {JSON.stringify(router.orderProducts)}</div>
 //     </div>
 //   )

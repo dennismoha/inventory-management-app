@@ -1,24 +1,25 @@
 import { SalesResponse } from '@/app/global/interfaces/sales';
 import { useGetSalesBetweenDatesQuery } from '@/app/redux/api/inventory-api';
 
-
 import React, { useState } from 'react';
-
 
 const SalesByDateRange = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-  
+
   // Trigger the RTK query hook for fetching sales data
-  const { data: response, error, isLoading } =  useGetSalesBetweenDatesQuery(
+  const {
+    data: response,
+    error,
+    isLoading
+  } = useGetSalesBetweenDatesQuery(
     { startDate, endDate },
     {
-      skip: !startDate || !endDate, // Skip the query if either date is not provided
+      skip: !startDate || !endDate // Skip the query if either date is not provided
     }
   );
 
-    const salesData: SalesResponse = response?.data ?? 0;
-
+  const salesData: SalesResponse = response?.data ?? 0;
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(e.target.value);
@@ -28,11 +29,11 @@ const SalesByDateRange = () => {
     setEndDate(e.target.value);
   };
 
-//   const handleFetchSales = () => {
-//     if (!startDate || !endDate) {
-//       alert('Please provide both start and end dates.');
-//     }
-//   };
+  //   const handleFetchSales = () => {
+  //     if (!startDate || !endDate) {
+  //       alert('Please provide both start and end dates.');
+  //     }
+  //   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -40,7 +41,7 @@ const SalesByDateRange = () => {
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="px-6 py-4">
           <h1 className="text-2xl font-semibold text-gray-900">Sales Between Dates</h1>
-          
+
           {/* Date Range Inputs */}
           <div className="mt-4">
             <div className="flex space-x-4">
@@ -50,12 +51,7 @@ const SalesByDateRange = () => {
                 onChange={handleStartDateChange}
                 className="px-4 py-2 border border-gray-300 rounded-md"
               />
-              <input
-                type="date"
-                value={endDate}
-                onChange={handleEndDateChange}
-                className="px-4 py-2 border border-gray-300 rounded-md"
-              />
+              <input type="date" value={endDate} onChange={handleEndDateChange} className="px-4 py-2 border border-gray-300 rounded-md" />
               {/* <button
                 onClick={handleFetchSales}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none"
@@ -75,31 +71,20 @@ const SalesByDateRange = () => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 <p className="text-red-500">{(error as any)?.message}</p>
               ) : (
-                <p>Total Sales:  
-                  <span className="font-bold text-green-500">
-                    {salesData ? `kes ${salesData.toLocaleString()}` : '0.00'}
-                  </span>
+                <p>
+                  Total Sales:
+                  <span className="font-bold text-green-500">{salesData ? `kes ${salesData.toLocaleString()}` : '0.00'}</span>
                 </p>
               )}
             </div>
           </div>
         </div>
       </div>
-   
-    
     </div>
   );
 };
 
 export default SalesByDateRange;
-
-
-
-
-
-
-
-
 
 // import React, { useState } from 'react';
 
@@ -154,7 +139,7 @@ export default SalesByDateRange;
 //       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
 //         <div className="px-6 py-4">
 //           <h1 className="text-2xl font-semibold text-gray-900">Sales Between Dates</h1>
-          
+
 //           {/* Date Range Inputs */}
 //           <div className="mt-4">
 //             <div className="flex space-x-4">
@@ -188,7 +173,7 @@ export default SalesByDateRange;
 //               ) : error ? (
 //                 <p className="text-red-500">{error}</p>
 //               ) : (
-//                 <p>Total Sales: 
+//                 <p>Total Sales:
 //                   <span className="font-bold text-green-500">
 //                     {salesData ? `$${salesData.toFixed(2)}` : '0.00'}
 //                   </span>

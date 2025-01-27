@@ -26,20 +26,22 @@ import React from 'react';
 const TotalSales = () => {
   const { data: response, error, isLoading } = useGetTotalSalesQuery();
   const salesData: SalesResponse = response?.data ?? 0;
-  
+
   console.log('data is ', salesData);
 
-  if (isLoading) return (
-    <div className="flex justify-center items-center h-full">
-      <div className="text-xl font-semibold text-gray-700">Loading...</div>
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-full">
+        <div className="text-xl font-semibold text-gray-700">Loading...</div>
+      </div>
+    );
 
-  if (error) return (
-    <div className="flex justify-center items-center h-full">
-      <div className="text-xl font-semibold text-red-500">Error: {JSON.stringify(error)}</div>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-full">
+        <div className="text-xl font-semibold text-red-500">Error: {JSON.stringify(error)}</div>
+      </div>
+    );
 
   return (
     <div className="max-w-4xl mx-auto p-6">

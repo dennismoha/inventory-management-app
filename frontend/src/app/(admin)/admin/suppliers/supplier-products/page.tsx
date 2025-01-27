@@ -1,20 +1,36 @@
-"use client";
-import ProductForm from "./create-supplier-product-form";
-import SupplierProductsTable from "./supplier-products-table";
-import { useGetSuppliersQuery } from "@/app/redux/api/inventory-api";
-import { Supplier } from "@/app/(admin)/admin/suppliers/interface/supplier-interface";
+'use client';
+import ProductForm from './create-supplier-product-form';
+import SupplierProductsTable from './supplier-products-table';
+import { useGetSuppliersQuery } from '@/app/redux/api/inventory-api';
+import { Supplier } from '@/app/(admin)/admin/suppliers/interface/supplier-interface';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const SupplierProducts: React.FC = () => {
+  // const { data: SuppliersData, isLoading: getSuppliersLoading, isError: getSuppliersError } = useGetSuppliersQuery();
+
   const {
     data: SuppliersData,
     isLoading: getSuppliersLoading,
     isError: getSuppliersError,
+    error: getSuppliersErrorData
   } = useGetSuppliersQuery();
+
+  useEffect(() => {
+    // Handling fetch state for suppliers data
+    if (getSuppliersLoading) {
+      toast.info('Fetching suppliers...');
+    }
+
+    if (getSuppliersError) {
+      toast.error(`Error fetching suppliers: ${JSON.stringify(getSuppliersErrorData)}`);
+    }
+  }, [getSuppliersLoading, getSuppliersError, getSuppliersErrorData]);
 
   let suppliersData: Supplier[] = SuppliersData?.data || [];
 
   if (suppliersData === undefined) {
-    console.log("supplier is undefined");
+    console.log('supplier is undefined');
     suppliersData = [];
   }
 

@@ -1,60 +1,83 @@
-import { SupplierProduct } from "@/app/(admin)/admin/suppliers/interface/supplier-interface";
-import { Unit } from "@/app/(admin)/admin/units/interface/units-interface";
+import { SupplierProduct } from '@/app/(admin)/admin/suppliers/interface/supplier-interface';
+import { Unit } from '@/app/(admin)/admin/units/interface/units-interface';
+import { TransactionProduct } from '@/app/(seller)/pos/transactions/interfaces/transactions-interface';
 
 export interface InventoryItem {
-    inventoryId: string;                  // Unique identifier for the inventory
-    supplier_products_id: string;         // Reference to the supplier's product
-    product_weight: number;
-    stock_quantity: number;              // Quantity of the product in stock
-    reorder_level: number;                // The level at which new stock should be ordered
-    last_restocked: Date;                 // Date when the item was last restocked
-    unit_id: string;                      // Unit of measure (e.g., kg, g, etc.)
-    created_at: Date;                     // Timestamp of when the record was created
-    updated_at: Date;                     // Timestamp of the last update to the record
-    softDelete: boolean;                  // Flag indicating if the item is logically deleted
-    status: 'ACTIVE' | 'INACTIVE' | 'DISCONTINUED';              // Status of the item (ACTIVE, INACTIVE, DISCONTINUED)
-    
-    // Relations
-    supplierProduct?: SupplierProduct;    // Reference to the supplier product record
-    unit?: Unit;                          // Reference to the unit of measurement
-  }
+  inventoryId: string; // Unique identifier for the inventory
+  supplier_products_id: string; // Reference to the supplier's product
+  product_weight: number;
+  stock_quantity: number; // Quantity of the product in stock
+  reorder_level: number; // The level at which new stock should be ordered
+  last_restocked: Date; // Date when the item was last restocked
+  unit_id: string; // Unit of measure (e.g., kg, g, etc.)
+  created_at: Date; // Timestamp of when the record was created
+  updated_at: Date; // Timestamp of the last update to the record
+  softDelete: boolean; // Flag indicating if the item is logically deleted
+  status: 'ACTIVE' | 'INACTIVE' | 'DISCONTINUED'; // Status of the item (ACTIVE, INACTIVE, DISCONTINUED)
 
+  // Relations
+  TransactionProduct: TransactionProduct[];
+  supplierProduct: SupplierProduct; // Reference to the supplier product record
+  InventoryRestock?: InventoryRestock[];
+  InventorySalesTracking?: InventorySalesTracking[];
+  unit: Unit; // Reference to the unit of measurement
+}
 
-  export interface InventoryItemsApiResponse  {
-    statusCode: number;
-    data: InventoryItem[]
-    status: string;
-  }
+export interface InventoryItemsApiResponse {
+  statusCode: number;
+  data: InventoryItem[];
+  status: string;
+}
 
-  export interface ProductPricing {
-    product_pricing_id: string;
-    supplier_products_id: string;
-    Quantity: number;
-    unit_id: string;
-    discount:number;
-    VAT: number;
-    price: number;
-    effective_date: Date;
-    created_at: Date;
-    updated_at: Date;
-    supplierProduct?: SupplierProduct; // Relation to SupplierProducts model
-    unit?: Unit; // Relation to Units model
-  }
+export interface ProductPricing {
+  product_pricing_id: string;
+  supplier_products_id: string;
+  Quantity: number;
+  unit_id: string;
+  discount: number;
+  VAT: number;
+  price: number;
+  effective_date: Date;
+  created_at: Date;
+  updated_at: Date;
+  supplierProduct?: SupplierProduct; // Relation to SupplierProducts model
+  unit?: Unit; // Relation to Units model
+}
 
-  export type NewProductPricingPayload = Pick<ProductPricing,'supplier_products_id' | 'Quantity' |'unit_id'| 'price' | 'effective_date' >
+export type NewProductPricingPayload = Pick<ProductPricing, 'supplier_products_id' | 'Quantity' | 'unit_id' | 'price' | 'effective_date'>;
 
+export type NewInventoryItemPayload = Pick<
+  InventoryItem,
+  'supplier_products_id' | 'stock_quantity' | 'reorder_level' | 'unit_id' | 'last_restocked'
+>;
 
-  
+export interface InventoryRestock {
+  inventoryRestockId: string;
+  inventoryId: string; // UUID for the inventory item
+  new_stock_quantity: number; // The new stock quantity after restocking (number type)
+  old_stock_quantity: number; // The stock quantity before restocking (number type)
+  reorder_level: number; // Reorder level indicating when to reorder stock
+  restock_date: Date; // The date when the restocking occurred (DateTime)
+  softDelete: boolean; // Flag indicating whether the record is soft deleted (boolean)
+  InventoryItemID?: InventoryItem; //  Inventory relation (InventoryItemID is a reference to `inventoryId`)
+}
 
-  export type NewInventoryItemPayload  = Pick<InventoryItem , 'supplier_products_id' | 'stock_quantity' |'reorder_level' | 'unit_id' | 'last_restocked' >
-
-  export interface InventoryRestock {
-    inventoryId: string; // UUID for the inventory item 
-    new_stock_quantity: number; // The new stock quantity after restocking (number type)
-    old_stock_quantity: number; // The stock quantity before restocking (number type)
-    reorder_level: number; // Reorder level indicating when to reorder stock
-    restock_date: Date; // The date when the restocking occurred (DateTime)
-    softDelete: boolean; // Flag indicating whether the record is soft deleted (boolean)
-    InventoryItemID?:  InventoryItem ; //  Inventory relation (InventoryItemID is a reference to `inventoryId`)
-  }
-  
+export interface InventorySalesTracking {
+  inventorysalesTrackingId: string;
+  inventoryId: string;
+  new_stock_quantity: number;
+  /**
+   * The quantity of stock that existed before the restock.
+   */
+  old_stock_quantity: number;
+  /**
+   * The level at which the item needs to be reordered.
+   */
+  reorder_level: number;
+  /**
+   * The date when the item was restocked.
+   */
+  restock_date: Date;
+  softDelete: boolean;
+  InventoryItemID?: InventoryItem; // Assuming Inventory model is defined elsewhere
+}

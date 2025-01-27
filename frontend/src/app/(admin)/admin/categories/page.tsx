@@ -1,5 +1,5 @@
-'use client'
-import React, { useMemo, useState } from 'react';
+'use client';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   LiteralUnion,
@@ -7,7 +7,7 @@ import {
   MRT_Row,
   MRT_TableOptions,
   useMaterialReactTable,
-  type MRT_ColumnDef,
+  type MRT_ColumnDef
 } from 'material-react-table';
 //import { getDefaultMRTOptions } from '@/app/(components)/material-table/index'; //your default options
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
@@ -15,17 +15,49 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Category } from '@/app/(admin)/admin/categories/interface/categories-interface';
-import { useGetCategoriesQuery, useCreateCategoryMutation,  useDeleteCategoryMutation } from "@/app/redux/api/inventory-api";
-
-
+import { useGetCategoriesQuery, useCreateCategoryMutation, useDeleteCategoryMutation } from '@/app/redux/api/inventory-api';
+import { toast } from 'react-toastify';
 
 const CategoryProductTable = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
 
   const { data: categories, isLoading, isError } = useGetCategoriesQuery();
-  const [createCategory,{isLoading: categoryIsLoading }] = useCreateCategoryMutation()
-  const [ deleteCategory] =  useDeleteCategoryMutation()
-  let Categories: Category[] = categories ? categories.data : []
+  const [createCategory, { isLoading: categoryIsLoading, isError: categoryError }] = useCreateCategoryMutation();
+  const [deleteCategory, { isLoading: deleting, isError: errorDeleting, isSuccess: deletedSuccessfully, error: deleteError }] =
+    useDeleteCategoryMutation();
+  useEffect(() => {
+    if (isLoading) {
+      toast.info('fetching categories ....');
+    }
+
+    if (isError) {
+      toast.error('error fetching categoris');
+    }
+
+    if (categoryIsLoading) {
+      toast.info('creating categoy....');
+    }
+
+    if (categoryError) {
+      toast.info('error creating categories');
+    }
+  }, [isLoading, isError, categoryIsLoading, categoryError]);
+
+  useEffect(() => {
+    if (deleting) {
+      toast.info('deleting category');
+    }
+
+    if (errorDeleting) {
+      toast.error(`error deleting category ${JSON.stringify(deleteError)}`);
+    }
+
+    if (deletedSuccessfully) {
+      toast.info('category successfully deleted');
+    }
+  }, [deleting, errorDeleting, deletedSuccessfully, deleteError]);
+
+  const Categories: Category[] = categories ? categories.data : [];
   // Columns for category table
   const columns = useMemo<MRT_ColumnDef<Category>[]>(
     () => [
@@ -33,7 +65,7 @@ const CategoryProductTable = () => {
         accessorKey: 'categoryId', // Unique category identifier
         header: 'Category ID',
         enableEditing: false, // Disable editing for ID
-        size: 160,
+        size: 160
       },
       {
         accessorKey: 'category_slug',
@@ -42,8 +74,8 @@ const CategoryProductTable = () => {
           required: true,
           error: !!validationErrors?.category_slug,
           helperText: validationErrors?.category_slug,
-          onFocus: () => setValidationErrors({ ...validationErrors, category_slug: undefined }),
-        },
+          onFocus: () => setValidationErrors({ ...validationErrors, category_slug: undefined })
+        }
       },
       {
         accessorKey: 'category_name',
@@ -52,8 +84,8 @@ const CategoryProductTable = () => {
           required: true,
           error: !!validationErrors?.category_name,
           helperText: validationErrors?.category_name,
-          onFocus: () => setValidationErrors({ ...validationErrors, category_name: undefined }),
-        },
+          onFocus: () => setValidationErrors({ ...validationErrors, category_name: undefined })
+        }
       },
       {
         accessorKey: 'description',
@@ -62,27 +94,27 @@ const CategoryProductTable = () => {
           required: true,
           error: !!validationErrors?.description,
           helperText: validationErrors?.description,
-          onFocus: () => setValidationErrors({ ...validationErrors, description: undefined }),
-        },
+          onFocus: () => setValidationErrors({ ...validationErrors, description: undefined })
+        }
       },
       {
         accessorKey: 'created_at',
         header: 'Created At',
         enableEditing: false, // Disable editing for created_at
-        size: 180,
+        size: 180
       },
       {
         accessorKey: 'updated_at',
         header: 'Updated At',
         enableEditing: false, // Disable editing for updated_at
-        size: 180,
-      },  
+        size: 180
+      }
     ],
-    [validationErrors],
+    [validationErrors]
   );
 
   // Handle creating a category (mock function, integrate your own API call here)
-  const handleCreateCategory: MRT_TableOptions<Category>["onCreatingRowSave"] = async ({ values, table }) => {
+  const handleCreateCategory: MRT_TableOptions<Category>['onCreatingRowSave'] = async ({ values, table }) => {
     // Validation logic (similar to your user validation)
     const newValidationErrors = validateCategory(values);
     if (Object.values(newValidationErrors).some((error) => error)) {
@@ -91,17 +123,17 @@ const CategoryProductTable = () => {
     }
     setValidationErrors({});
     // call category create mutation
-    values = {...values}
+    values = { ...values };
     delete values.categoryId;
     delete values.created_at;
     delete values.updated_at;
     await createCategory(values);
-   
+
     table.setCreatingRow(null); // Close row creation
   };
 
   // Handle updating a category (mock function, integrate your own API call here)
-  const handleSaveCategory:MRT_TableOptions<Category>["onEditingRowSave"]  = async ({ values, table }) => {
+  const handleSaveCategory: MRT_TableOptions<Category>['onEditingRowSave'] = async ({ values, table }) => {
     // Validation logic (similar to your user validation)
     const newValidationErrors = validateCategory(values);
     if (Object.values(newValidationErrors).some((error) => error)) {
@@ -119,11 +151,10 @@ const CategoryProductTable = () => {
     if (window.confirm('Are you sure you want to delete this category?')) {
       // Integrate with your API to delete the category (mock API call)
       console.log('Deleting category:', row.original.categoryId);
-      let categoryId = row.original.categoryId
-      deleteCategory(categoryId)
+      const categoryId = row.original.categoryId;
+      deleteCategory(categoryId);
     }
   };
-
 
   const table = useMaterialReactTable({
     columns,
@@ -164,19 +195,66 @@ const CategoryProductTable = () => {
       isLoading: false, // Handle loading state (integrate with your state)
       isSaving: false, // Handle saving state (integrate with your state)
       showAlertBanner: false,
-      showProgressBars: false,
-    },
+      showProgressBars: false
+    }
   });
 
   return <MaterialReactTable table={table} />;
 };
 
-// Validation function for category (you can extend this)
-const validateCategory = (category: Record<LiteralUnion<"Products" | "description" | "created_at" | "updated_at" | "categoryId" | "category_slug" | "category_name" | "Products.subcategory_id" | "Products.description" | "Products.created_at" | "Products.updated_at" | "Products.category" | "Products.product_id" | "Products.name" | "Products.category_id" | "Products.image_url" | "Products.sku" | "Products.subcategory" | "Products.category.Products" | "Products.category.description" | "Products.category.created_at" | "Products.category.updated_at" | "Products.category.categoryId" | "Products.category.category_slug" | "Products.category.category_name" | "Products.subcategory.Products" | "Products.subcategory.subcategory_id" | "Products.subcategory.subcategory_name" | "Products.subcategory.description" | "Products.subcategory.created_at" | "Products.subcategory.updated_at" | "Products.subcategory.category" | "Products.subcategory.category.Products" | "Products.subcategory.category.description" | "Products.subcategory.category.created_at" | "Products.subcategory.category.updated_at" | "Products.subcategory.category.categoryId" | "Products.subcategory.category.category_slug" | "Products.subcategory.category.category_name", string>, any>) => {
+// Validation function for category
+const validateCategory = (
+  category: Record<
+    LiteralUnion<
+      | 'Products'
+      | 'description'
+      | 'created_at'
+      | 'updated_at'
+      | 'categoryId'
+      | 'category_slug'
+      | 'category_name'
+      | 'Products.subcategory_id'
+      | 'Products.description'
+      | 'Products.created_at'
+      | 'Products.updated_at'
+      | 'Products.category'
+      | 'Products.product_id'
+      | 'Products.name'
+      | 'Products.category_id'
+      | 'Products.image_url'
+      | 'Products.sku'
+      | 'Products.subcategory'
+      | 'Products.category.Products'
+      | 'Products.category.description'
+      | 'Products.category.created_at'
+      | 'Products.category.updated_at'
+      | 'Products.category.categoryId'
+      | 'Products.category.category_slug'
+      | 'Products.category.category_name'
+      | 'Products.subcategory.Products'
+      | 'Products.subcategory.subcategory_id'
+      | 'Products.subcategory.subcategory_name'
+      | 'Products.subcategory.description'
+      | 'Products.subcategory.created_at'
+      | 'Products.subcategory.updated_at'
+      | 'Products.subcategory.category'
+      | 'Products.subcategory.category.Products'
+      | 'Products.subcategory.category.description'
+      | 'Products.subcategory.category.created_at'
+      | 'Products.subcategory.category.updated_at'
+      | 'Products.subcategory.category.categoryId'
+      | 'Products.subcategory.category.category_slug'
+      | 'Products.subcategory.category.category_name',
+      string
+    >,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    any
+  >
+) => {
   return {
     category_name: !category.category_name ? 'Category Name is Required' : '',
     category_slug: !category.category_slug ? 'Category Slug is Required' : '',
-    description: !category.description ? 'Description is Required' : '',
+    description: !category.description ? 'Description is Required' : ''
   };
 };
 

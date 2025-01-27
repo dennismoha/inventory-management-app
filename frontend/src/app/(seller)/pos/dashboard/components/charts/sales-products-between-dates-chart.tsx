@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { BarChart, PieChart } from "@mui/x-charts";
-import { TransactionProductsBetweenDates } from "@/app/global/interfaces/sales";
+import React, { useState, useEffect } from 'react';
+import { BarChart, PieChart } from '@mui/x-charts';
+import { TransactionProductsBetweenDates } from '@/app/global/interfaces/sales';
 
 // Mock Data
 // const mockData = {
@@ -3153,48 +3153,31 @@ import { TransactionProductsBetweenDates } from "@/app/global/interfaces/sales";
 //   ],
 // };
 
-const CardComponent: React.FC< TransactionProductsBetweenDates> = (TransactionProductsBetweenDates) => {
-//   const [startDate, setStartDate] = useState("2024-10-01");
-//   const [endDate, setEndDate] = useState("2025-12-31");
+interface chartData {
+  id: string;
+  value: number;
+  label: string;
+}
+const CardComponent: React.FC<TransactionProductsBetweenDates> = (TransactionProductsBetweenDates) => {
+  //   const [startDate, setStartDate] = useState("2024-10-01");
+  //   const [endDate, setEndDate] = useState("2025-12-31");
 
-const mockData = TransactionProductsBetweenDates
+  const mockData = TransactionProductsBetweenDates;
 
+  console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData);
 
-
-
-console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
-
-  const [paymentMethodChartData, setPaymentMethodChartData] = useState([]);
-//   const [transactionDateChartData, setTransactionDateChartData] = useState([]);
-//   const [productSalesChartData, setProductSalesChartData] = useState([]);
-//   const [productSubTotalChartData, setProductSubTotalChartData] = useState();
+  const [paymentMethodChartData, setPaymentMethodChartData] = useState<chartData[]>([]);
+  //   const [transactionDateChartData, setTransactionDateChartData] = useState([]);
+  //   const [productSalesChartData, setProductSalesChartData] = useState([]);
+  //   const [productSubTotalChartData, setProductSubTotalChartData] = useState();
   const [productNames, setProductNames] = useState<string[]>([]); // Stores the product names for the x-axis
   const [productCosts, setProductCosts] = useState<number[]>([]); // Stores the total costs for the y-axis
 
   const [productQuantity, setProductQuantit] = useState<number[]>([]); // Stores the product names for the x-axis
   const [productQuantityName, setProductQuantityName] = useState<string[]>([]); // Stores the total costs for the y-axis
 
-  const [productTransactionDateTotal, setProductTransactionDateTotal] =
-    useState<number[]>([]); // Stores the product names for the x-axis
-  const [productTransactionDate, setProductTransactionDate] = useState<
-    string[]
-  >([]); // Stores the total costs for the y-axis
-
-  useEffect(()=>{
-    console.log('1111111111======================in the useEffect transactions', mockData.transactions)
-  },[])
-
-  useEffect(()=>{
-    console.log('2222222222======================in the useEffect transactions', mockData.transactions)
-  },[mockData])
-
-
-  useEffect(()=>{
-    console.log('33333333333======================in the useEffect transactions', mockData.transactions)
-  },[mockData.transactions])
-
-  
-  
+  const [productTransactionDateTotal, setProductTransactionDateTotal] = useState<number[]>([]); // Stores the product names for the x-axis
+  const [productTransactionDate, setProductTransactionDate] = useState<string[]>([]); // Stores the total costs for the y-axis
 
   // 1. Payment Methods Pie Chart
   useEffect(() => {
@@ -3210,19 +3193,17 @@ console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
     const chartData = Object.keys(paymentMethodData).map((method) => ({
       id: method,
       value: paymentMethodData[method],
-      label: method,
+      label: method
     }));
-    console.log("$$$$$$************chart Data is ", chartData);
+    console.log('$$$$$$************chart Data is ', chartData);
     setPaymentMethodChartData(chartData);
-  }, []);
+  }, [mockData.transactions]);
 
   // 2. Highest Number of Transactions by Date Bar Chart (Sum of totalCost)
   useEffect(() => {
     const transactionDateData = mockData.transactions.reduce(
       (acc, transaction) => {
-        const date = new Date(
-          transaction.transactionDateCreated!
-        ).toLocaleDateString();
+        const date = new Date(transaction.transactionDateCreated!).toLocaleDateString();
         if (!acc[date]) acc[date] = 0;
         acc[date] += transaction.totalCost;
         return acc;
@@ -3242,10 +3223,9 @@ console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
     // setTransactionDateChartData(chartData);
   }, [mockData.transactions]);
 
-
   // 3. Most Sold Product by Quantity
   useEffect(() => {
-    console.log('======================in the useEffect transactions', mockData.transactions)
+    console.log('======================in the useEffect transactions', mockData.transactions);
     const productSalesData = mockData.transactions.reduce(
       (acc, transaction) => {
         if (transaction.TransactionProduct) {
@@ -3287,7 +3267,7 @@ console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
       {} as Record<string, number>
     );
 
-    console.log("========>>> products Subtotal data is ", productSubTotalData);
+    console.log('========>>> products Subtotal data is ', productSubTotalData);
 
     const productNames: string[] = Object.keys(productSubTotalData); // ['Mwonga-Goat & Sheep Feed', 'Product B', 'Product C']
     const productCosts: number[] = Object.values(productSubTotalData); // [4800, 2200, 1300]
@@ -3309,9 +3289,7 @@ console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
         {/* 1. Payment Method Pie Chart */}
         <div className="flex justify-center items-center">
           <div className="w-full max-w-sm">
-            <h3 className="text-center text-lg mb-4">
-              Payment Method Distribution
-            </h3>
+            <h3 className="text-center text-lg mb-4">Payment Method Distribution</h3>
             {/* <PieChart
               data={paymentMethodChartData}
               valueFormatter={(value) => `${value} transactions`}
@@ -3322,8 +3300,8 @@ console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
             <PieChart
               series={[
                 {
-                  data: paymentMethodChartData,
-                },
+                  data: paymentMethodChartData
+                }
               ]}
               width={400}
               height={200}
@@ -3338,7 +3316,7 @@ console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
             <h3 className="text-center text-lg mb-4">Total Sales by Date</h3>
 
             <BarChart
-              xAxis={[{ scaleType: "band", data: productTransactionDate }]}
+              xAxis={[{ scaleType: 'band', data: productTransactionDate }]}
               series={[{ data: productTransactionDateTotal }]}
               width={500}
               height={300}
@@ -3350,11 +3328,9 @@ console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
         {/* 3. Most Sold Product by Quantity Bar Chart */}
         <div className="flex justify-center items-center pr-11 mr-11">
           <div className="w-full max-w-sm">
-            <h3 className="text-center text-lg mb-4">
-              Most Sold Products by Quantity
-            </h3>
+            <h3 className="text-center text-lg mb-4">Most Sold Products by Quantity</h3>
             <BarChart
-              xAxis={[{ scaleType: "band", data: productQuantityName }]}
+              xAxis={[{ scaleType: 'band', data: productQuantityName }]}
               series={[{ data: productQuantity }]}
               width={500}
               height={300}
@@ -3366,16 +3342,8 @@ console.log('@@@@@@@@@@@@@@2 mock data in sales prod', mockData)
         {/* 4. Highest Subtotal Products Bar Chart */}
         <div className="flex justify-center items-center">
           <div className="w-full max-w-sm">
-            <h3 className="text-center text-lg mb-4">
-              Products with Highest Subtotal Cost
-            </h3>
-            <BarChart
-              xAxis={[{ scaleType: "band", data: productNames }]}
-              series={[{ data: productCosts }]}
-              width={500}
-              height={300}
-            />
-     
+            <h3 className="text-center text-lg mb-4">Products with Highest Subtotal Cost</h3>
+            <BarChart xAxis={[{ scaleType: 'band', data: productNames }]} series={[{ data: productCosts }]} width={500} height={300} />
           </div>
         </div>
       </div>

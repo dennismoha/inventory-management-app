@@ -1,32 +1,19 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useRef } from "react";
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import {
-  TypedUseSelectorHook,
-  useDispatch,
-  useSelector,
-  Provider,
-} from "react-redux";
-import globalReducer from "@/app/redux/state";
-import CategoryReduce from "@/app/redux/state/categories"
-import { api } from "@/app/redux/state/api";
-import { setupListeners } from "@reduxjs/toolkit/query";
-import { InventoryApi } from "@/app/redux/api/inventory-api";
-import checkoutSlice from "@/app/redux/state/cart"
+import React, { useRef } from 'react';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector, Provider } from 'react-redux';
+import globalReducer from '@/app/redux/state';
+import CategoryReduce from '@/app/redux/state/categories';
+import { api } from '@/app/redux/state/api';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { InventoryApi } from '@/app/redux/api/inventory-api';
+import checkoutSlice from '@/app/redux/state/cart';
 
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
-import { PersistGate } from "redux-persist/integration/react";
-import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 
 /* REDUX PERSISTENCE */
 const createNoopStorage = () => {
@@ -39,19 +26,16 @@ const createNoopStorage = () => {
     },
     removeItem(_key: any) {
       return Promise.resolve();
-    },
+    }
   };
 };
 
-const storage =
-  typeof window === "undefined"
-    ? createNoopStorage()
-    : createWebStorage("local");
+const storage = typeof window === 'undefined' ? createNoopStorage() : createWebStorage('local');
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage,
-  whitelist: ["global", "categories"],
+  whitelist: ['global', 'categories']
 };
 const rootReducer = combineReducers({
   global: globalReducer,
@@ -69,27 +53,22 @@ export const makeStore = () => {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+        }
       }).concat(api.middleware, InventoryApi.middleware),
-      devTools: true
+    devTools: true
   });
 };
 
 /* REDUX TYPES */
 export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore["getState"]>;
-export type AppDispatch = AppStore["dispatch"];
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-
 /* PROVIDER */
-export default function StoreProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function StoreProvider({ children }: { children: React.ReactNode }) {
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = makeStore();

@@ -1,3 +1,18 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript", "eslint:recommended",
+  "plugin:react/recommended",
+  "plugin:prettier/recommended"],
+  "rules": {
+        "prettier/prettier": [
+            "error",
+            {
+                "singleQuote": true,
+                "semi": true
+            }
+        ],
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off"
+     
+    }
+  
 }

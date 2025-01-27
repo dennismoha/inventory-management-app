@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useGetUsersQuery } from "../../../redux/state/api";
-import Header from "@/app/(components)/Header";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useGetUsersQuery } from '../../../redux/state/api';
+import Header from '@/app/(components)/Header';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
-  { field: "userId", headerName: "ID", width: 90 },
-  { field: "name", headerName: "Name", width: 200 },
-  { field: "email", headerName: "Email", width: 200 },
+  { field: 'userId', headerName: 'ID', width: 90 },
+  { field: 'name', headerName: 'Name', width: 200 },
+  { field: 'email', headerName: 'Email', width: 200 }
 ];
 
 const Users = () => {
@@ -18,9 +18,7 @@ const Users = () => {
   }
 
   if (isError || !users) {
-    return (
-      <div className="text-center text-red-500 py-4">Failed to fetch users</div>
-    );
+    return <div className="text-center text-red-500 py-4">Failed to fetch users</div>;
   }
 
   return (

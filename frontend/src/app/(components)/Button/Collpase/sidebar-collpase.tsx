@@ -1,4 +1,3 @@
-
 // import React from "react";
 // import CollapseDefault from ".";
 // import { SidebarMenuLink } from "@/app/(components)/Button/Interfaces/index";
@@ -47,7 +46,7 @@
 //       //   icon:  CreditCard,  // Icon for 'product list'
 //       //   label: "inventory-pricing-overview",
 //       // },
-    
+
 //     ],
 //   },
 //   {
@@ -59,7 +58,7 @@
 //         href: "/admin/units",
 //         icon: BoxIcon,
 //         label: "units",
-//       },      
+//       },
 //     ],
 //   },
 //   {
@@ -98,10 +97,10 @@
 //         href: "/admin/suppliers/supplier-products-pricing",
 //         icon: DollarSignIcon,
 //         label: "supplier pricing list",
-//       },     
-     
+//       },
+
 //     ],
-//   },  
+//   },
 //   {
 //     label: "orders",
 //     href: "/orders",
@@ -116,12 +115,11 @@
 //         href: "/admin/orders/order-products",
 //         icon: ShoppingCartIcon,
 //         label: "order products",
-//       },     
-     
-//     ],
-//   }, 
-// ];
+//       },
 
+//     ],
+//   },
+// ];
 
 // // const sidebarMenuLinks: SidebarMenuLink[] = [
 // //   {
@@ -223,7 +221,7 @@
 //               key={key}
 //             />
 //             </div>
-//           ))}        
+//           ))}
 //         </CollapseDefault>
 //       ))}
 //       </div>
@@ -233,144 +231,135 @@
 
 // export default SidebarCollpase;
 
-
 // ================= starting of the changes ==========================================
 
-import React from "react";
-import CollapseDefault from ".";
-import { SidebarMenuLink } from "@/app/(components)/Button/Interfaces/index";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useAppSelector } from "@/app/redux/redux";
+import React from 'react';
+import CollapseDefault from '.';
+import { SidebarMenuLink } from '@/app/(components)/Button/Interfaces/index';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useAppSelector } from '@/app/redux/redux';
 
-import {
-  LucideIcon,
-
-  Archive,
-  Package2Icon,
-
-  ShoppingBagIcon,
- 
-  UsersIcon,
-  TagIcon,
-
-  BoxIcon,
-  Circle,
-} from "lucide-react";
+import { LucideIcon, Archive, Package2Icon, ShoppingBagIcon, UsersIcon, TagIcon, BoxIcon, Circle } from 'lucide-react';
 
 const sidebarMenuLinks: SidebarMenuLink[] = [
   {
-    label: "products",
-    href: "/admin/products",
+    label: 'products',
+    href: '/admin/products',
     icon: Package2Icon,
     submenu: [
       {
-        href: "/admin/products",
+        href: '/admin/products',
         icon: Circle,
-        label: "products",
+        label: 'products'
       },
       {
-        href: "/admin/product-units",
+        href: '/admin/product-units',
         icon: Circle,
-        label: "product units list",
-      },
-    ],
+        label: 'product units list'
+      }
+    ]
   },
   {
-    label: "inventory",
-    href: "/admin/inventory",
+    label: 'inventory',
+    href: '/admin/inventory',
     icon: Archive,
     submenu: [
       {
-        href: "/admin/inventory",
+        href: '/admin/inventory',
         icon: Circle,
-        label: "inventory",
+        label: 'inventory'
       },
       {
-        href: "/admin/inventory/restock-inventory",
+        href: '/admin/inventory/restock-inventory',
         icon: Circle,
-        label: "restock inventory",
+        label: 'restock inventory'
       },
       {
-        href: "/admin/inventory/product-pricing",
+        href: '/admin/inventory/product-pricing',
         icon: Circle,
-        label: "product-pricing",
+        label: 'product-pricing'
       },
       {
-        href:"/admin/inventory/inventory-insights",
+        href: '/admin/inventory/inventory-insights',
         icon: Circle,
-        label: "inventory-insights",
+        label: 'inventory-insights'
+      },
+      {
+        href: '/admin/inventory/inventory-pricing-overview',
+        icon: Circle,
+        label: 'inventory-pricing-overview'
       }
-    ],
+    ]
   },
   {
-    label: "units",
-    href: "/admin/units",
+    label: 'units',
+    href: '/admin/units',
     icon: BoxIcon,
     submenu: [
       {
-        href: "/admin/units",
+        href: '/admin/units',
         icon: Circle,
-        label: "units",
-      },
-    ],
+        label: 'units'
+      }
+    ]
   },
   {
-    label: "categories",
-    href: "/admin/categories",
+    label: 'categories',
+    href: '/admin/categories',
     icon: TagIcon,
     submenu: [
       {
-        href: "/admin/categories",
+        href: '/admin/categories',
         icon: Circle,
-        label: "category list",
+        label: 'category list'
       },
       {
-        href: "/admin/categories/subcategories",
+        href: '/admin/categories/subcategories',
         icon: Circle,
-        label: "sub category",
-      },
-    ],
+        label: 'sub category'
+      }
+    ]
   },
   {
-    label: "suppliers",
-    href: "/admin/suppliers",
+    label: 'suppliers',
+    href: '/admin/suppliers',
     icon: UsersIcon,
     submenu: [
       {
-        href: "/admin/suppliers",
+        href: '/admin/suppliers',
         icon: Circle,
-        label: "suppliers",
+        label: 'suppliers'
       },
       {
-        href: "/admin/suppliers/supplier-products",
+        href: '/admin/suppliers/supplier-products',
         icon: Circle,
-        label: "supplier products",
+        label: 'supplier products'
       },
       {
-        href: "/admin/suppliers/supplier-products-pricing",
+        href: '/admin/suppliers/supplier-products-pricing',
         icon: Circle,
-        label: "supplier pricing list",
-      },
-    ],
+        label: 'supplier pricing list'
+      }
+    ]
   },
   {
-    label: "orders",
-    href: "/admin/orders",
+    label: 'orders',
+    href: '/admin/orders',
     icon: ShoppingBagIcon,
     submenu: [
       {
-        href: "/admin/orders",
+        href: '/admin/orders',
         icon: Circle,
-        label: "orders",
+        label: 'orders'
       },
       {
-        href: "/admin/orders/order-products",
+        href: '/admin/orders/order-products',
         icon: Circle,
-        label: "order products",
-      },
-    ],
-  },
+        label: 'order products'
+      }
+    ]
+  }
 ];
 
 interface SidebarLinkProps {
@@ -380,71 +369,39 @@ interface SidebarLinkProps {
   isCollapsed: boolean;
 }
 
-const SidebarLink = ({
-  href,
-  icon: Icon,
-  label,
-  isCollapsed,
-}: SidebarLinkProps) => {
+const SidebarLink = ({ href, icon: Icon, label, isCollapsed }: SidebarLinkProps) => {
   const pathname = usePathname();
-  const isActive =
-    pathname === href || (pathname === "/" && href === "/dashboard");
+  const isActive = pathname === href || (pathname === '/' && href === '/dashboard');
 
   return (
     <Link href={href}>
       <div
         className={`cursor-pointer flex items-center  ${
-          isCollapsed ? "justify-center py-4" : "justify-start px-14 py-4"
-        } hover:text-blue-600  gap-3 transition-all duration-200 transform hover:scale-105 ${
-          isActive ? " text-blue-200" : ""
-        }`}
+          isCollapsed ? 'justify-center py-4' : 'justify-start px-14 py-4'
+        } hover:text-blue-600  gap-3 transition-all duration-200 transform hover:scale-105 ${isActive ? ' text-blue-200' : ''}`}
       >
         {/* className="w-6 h-6 text-gray-700"  */}
         <Icon size={8} />
 
-        <span
-          className={`${
-            isCollapsed ? "hidden" : "block"
-          } font-medium hover:text-blue-300`}
-        >
-          {label}
-        </span>
+        <span className={`${isCollapsed ? 'hidden' : 'block'} font-medium hover:text-blue-300`}>{label}</span>
       </div>
     </Link>
   );
 };
 
 const SidebarCollpase: React.FC = () => {
-  const isSidebarCollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed
-  );
+  const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed);
 
   return (
-    <div className="py-4 space-y-2" > 
+    <div className="py-4 space-y-2">
       {sidebarMenuLinks.map((data, index) => (
-        <CollapseDefault
-          key={index}
-          label={data.label}
-          isCollapsed={isSidebarCollapsed}
-          href={data.href}
-          Icon={data.icon}
-        >
-          <div  className="bg-gray-50 rounded-sm  ">
-          {data.submenu.map((subMenu, key) => (
-            <div
-              className="px-2 py-1 bg-black  rounded-lg transition-all duration-200 transform hover:scale-105"
-              key={key}
-             
-            >
-              <SidebarLink
-                href={subMenu.href}
-                icon={subMenu.icon}
-                label={subMenu.label}
-                isCollapsed={isSidebarCollapsed}
-                key={key}
-              />
-            </div>
-          ))}
+        <CollapseDefault key={index} label={data.label} isCollapsed={isSidebarCollapsed} href={data.href} Icon={data.icon}>
+          <div className="bg-gray-50 rounded-sm  ">
+            {data.submenu.map((subMenu, key) => (
+              <div className="px-2 py-1 bg-black  rounded-lg transition-all duration-200 transform hover:scale-105" key={key}>
+                <SidebarLink href={subMenu.href} icon={subMenu.icon} label={subMenu.label} isCollapsed={isSidebarCollapsed} key={key} />
+              </div>
+            ))}
           </div>
         </CollapseDefault>
       ))}
@@ -454,16 +411,7 @@ const SidebarCollpase: React.FC = () => {
 
 export default SidebarCollpase;
 
-
-
-
-
-
-
-
-
 // =========================================begining of what we don't want=====================
-
 
 // import React from "react";
 // import CollapseDefault from ".";

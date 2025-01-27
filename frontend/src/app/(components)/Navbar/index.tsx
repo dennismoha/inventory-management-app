@@ -8,19 +8,17 @@
 // import { setIsDarkMode, setIsSidebarCollapsed } from "@/app/redux/state";
 // // import Image from "next/image";
 
-
-
 // const Navbar = () => {
 //     const dispatch = useAppDispatch();
 //     const isSidebarCollapsed = useAppSelector(
 //       (state) => state.global.isSidebarCollapsed
 //     );
 //     const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
-  
+
 //     const toggleSidebar = () => {
 //       dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
 //     };
-  
+
 //     const toggleDarkMode = () => {
 //       dispatch(setIsDarkMode(!isDarkMode));
 //     };
@@ -90,18 +88,16 @@
 
 // export default Navbar;
 
-"use client";
-import React from "react";
-import { Menu, Sun, Moon, LogOut } from "lucide-react";
-import Link from "next/link";
-import { useAppDispatch, useAppSelector } from "@/app/redux/redux";
-import { setIsDarkMode, setIsSidebarCollapsed } from "@/app/redux/state";
+'use client';
+import React from 'react';
+import { Menu, Sun, Moon, LogOut } from 'lucide-react';
+import Link from 'next/link';
+import { useAppDispatch, useAppSelector } from '@/app/redux/redux';
+import { setIsDarkMode, setIsSidebarCollapsed } from '@/app/redux/state';
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
-  const isSidebarCollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed
-  );
+  const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed);
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   const toggleSidebar = () => {
@@ -115,7 +111,7 @@ const Navbar = () => {
   return (
     <div
       className={`flex p-4 justify-between items-center w-full bg-white dark:bg-gray-800 border-b-2 sticky top-0 z-10 transition-all duration-300 ease-in-out transform ${
-        isDarkMode ? "border-gray-600" : "border-gray-200"
+        isDarkMode ? 'border-gray-600' : 'border-gray-200'
       }`}
     >
       {/* Left Side: Sidebar Toggle */}
@@ -136,15 +132,9 @@ const Navbar = () => {
           className="p-2 rounded-full hover:bg-green-100 dark:hover:bg-gray-700 transition-colors duration-300 transform hover:scale-105"
         >
           {isDarkMode ? (
-            <Sun
-              className="text-green-500 transition-all duration-300 transform"
-              size={24}
-            />
+            <Sun className="text-green-500 transition-all duration-300 transform" size={24} />
           ) : (
-            <Moon
-              className="text-green-500 transition-all duration-300 transform"
-              size={24}
-            />
+            <Moon className="text-green-500 transition-all duration-300 transform" size={24} />
           )}
         </button>
 

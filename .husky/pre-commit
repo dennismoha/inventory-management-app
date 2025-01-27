@@ -5,3 +5,4 @@
 
 # Run linting and prettier checks for backend
 npm --prefix ./backend run lint:check && npm --prefix ./backend run prettier:check
+npm --prefix ./frontend run lint && npm --prefix ./frontend run prettier:check

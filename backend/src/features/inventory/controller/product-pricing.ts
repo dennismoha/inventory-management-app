@@ -17,11 +17,7 @@ export class ProductPricingController {
    * This method retrieves all product pricing records that are not logically deleted (softDelete: false).
    * It returns a list of product pricing records with an HTTP status of 200.
    *
-   * @async
-   * @function
-   * @param {Request} req - The Express request object.
-   * @param {Response} res - The Express response object, which contains the list of product pricing.
-   *
+
    * @returns {Promise<void>} A promise that resolves to the response object containing the fetched product pricing.
    */
   public async fetchProductPricing(req: Request, res: Response): Promise<void> {
@@ -97,9 +93,7 @@ export class ProductPricingController {
    * This method accepts the `productPricingId` from the URL and the updated data from the request body.
    * It then updates the product pricing record in the database and returns the updated record with a successful response.
    *
-   * @async
-   * @function
-   * @param {Request} req - The Express request object, which should contain the following:
+
    *   - `productPricingId`: The ID of the product pricing record to update (in the URL params).
    *   - The body should contain the fields to be updated:
    *     - `supplier_products_id`: The updated supplier product ID.
@@ -141,23 +135,13 @@ export class ProductPricingController {
    * Instead of permanently removing the record, this method sets the `softDelete` flag to `true`,
    * marking the record as deleted without physically removing it from the database.
    *
-   * @async
-   * @function
-   * @param {Request} req - The Express request object, which contains the `productPricingId` parameter in the URL.
-   * @param {Response} res - The Express response object, which will send an empty 204 response (No Content) upon success.
-   *
-   * @returns {Promise<void>} A promise that resolves to the response object indicating successful soft delete.
    */
   public async deleteProductPricing(req: Request, res: Response): Promise<void> {
     const { productPricingId } = req.params;
 
     // Soft delete the product pricing record by setting softDelete flag to true
-    await prisma.productPricing.update({
-      where: { product_pricing_id: productPricingId },
-      data: {
-        // softDelete: true, // Mark the item as logically deleted
-        updated_at: new Date()
-      }
+    await prisma.productPricing.delete({
+      where: { product_pricing_id: productPricingId }
     });
 
     res.status(StatusCodes.NO_CONTENT).send(); // 204 No Content

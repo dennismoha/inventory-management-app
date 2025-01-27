@@ -1,44 +1,40 @@
-import { TransactionProductsBetweenDates } from "@/app/global/interfaces/sales";
-import { useGetSalesProductsBetweenDatesQuery } from "@/app/redux/api/inventory-api";
-import SalesProductsBetweenDatesChart from "./charts/sales-products-between-dates-chart";
+import { TransactionProductsBetweenDates } from '@/app/global/interfaces/sales';
+import { useGetSalesProductsBetweenDatesQuery } from '@/app/redux/api/inventory-api';
+import SalesProductsBetweenDatesChart from './charts/sales-products-between-dates-chart';
 
-import { SetStateAction, useState } from "react";
-import TransactionList from "./sales/transactionlist";
+import { SetStateAction, useState } from 'react';
+import TransactionList from './sales/transactionlist';
 
 const CardComponent = () => {
-  const [startDate, setStartDate] = useState("2024-12-01");
-  const [endDate, setEndDate] = useState("2025-12-31");
+  const [startDate, setStartDate] = useState('2024-12-01');
+  const [endDate, setEndDate] = useState('2025-12-31');
 
   // Fetching transactions from API using RTK Query
   const {
     data: response,
     error,
-    isLoading,
+    isLoading
   } = useGetSalesProductsBetweenDatesQuery(
     { startDate, endDate },
     {
-      skip: !startDate || !endDate, // Skip the query if either date is not provided
+      skip: !startDate || !endDate // Skip the query if either date is not provided
     }
   );
 
   const defaultData: TransactionProductsBetweenDates = {
     totalSales: 0,
-    transactions: [],
+    transactions: []
   };
 
   const data: TransactionProductsBetweenDates = response?.data ?? defaultData;
-  console.log('data is :::::::::::::::: ', data)
-  console.log("sales product data is", data.totalSales);
+  console.log('data is :::::::::::::::: ', data);
+  console.log('sales product data is', data.totalSales);
 
-  const handleStartDateChange = (e: {
-    target: { value: SetStateAction<string> };
-  }) => {
+  const handleStartDateChange = (e: { target: { value: SetStateAction<string> } }) => {
     setStartDate(e.target.value);
   };
 
-  const handleEndDateChange = (e: {
-    target: { value: SetStateAction<string> };
-  }) => {
+  const handleEndDateChange = (e: { target: { value: SetStateAction<string> } }) => {
     setEndDate(e.target.value);
   };
 
@@ -59,7 +55,7 @@ const CardComponent = () => {
         handleStartDateChange={handleStartDateChange}
         handleEndDateChange={handleEndDateChange}
       />
-    <SalesProductsBetweenDatesChart totalSales={totalSales} transactions={transactions} />
+      <SalesProductsBetweenDatesChart totalSales={totalSales} transactions={transactions} />
     </>
 
     // <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">

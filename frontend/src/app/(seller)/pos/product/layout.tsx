@@ -1,8 +1,8 @@
-'use client'
+'use client';
 import React, { ReactNode } from 'react';
 
-import { useAppSelector } from "@/app/redux/redux";
-import Header from "./components/header";
+import { useAppSelector } from '@/app/redux/redux';
+import Header from './components/header';
 import CartTab from './components/cartTab';
 // import Header from '../components/Header'; // Adjust import paths as needed
 // import CartTab from '../components/CartTab'; // Adjust import paths as needed
@@ -13,8 +13,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-   const statusTabCart = useAppSelector(state => state.cart.statusTab);
-
+  const statusTabCart = useAppSelector((state) => state.cart.statusTab);
 
   return (
     <div className="bg-zinc-200">
@@ -26,10 +25,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Header />
         {/* This is where the page content will be rendered */}
         {children}
-      </main> 
+      </main>
       <CartTab />
     </div>
   );
-}
+};
 
 export default Layout;

@@ -1,55 +1,117 @@
-"use client";
-import React, { useState, useMemo } from "react";
-import { Box, Button, IconButton, Tooltip, MenuItem, Alert } from "@mui/material";
-import {
-  LiteralUnion,
-  MaterialReactTable,
-  type MRT_ColumnDef,
-  MRT_TableOptions,
-  useMaterialReactTable,
-} from "material-react-table";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+'use client';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Box, Button, IconButton, Tooltip, MenuItem } from '@mui/material';
+import { LiteralUnion, MaterialReactTable, type MRT_ColumnDef, MRT_TableOptions, useMaterialReactTable } from 'material-react-table';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   useGetCustomersQuery,
   useCreateCustomerMutation,
   useUpdateCustomerMutation,
-  useDeleteCustomerMutation,
-} from "@/app/redux/api/inventory-api";
-import { Customer } from "./interface/customer-interface";
+  useDeleteCustomerMutation
+} from '@/app/redux/api/inventory-api';
+import { Customer } from './interface/customer-interface';
+import { toast } from 'react-toastify';
 
 const CustomersManagement = () => {
-  const {
-    data: CustomersData,
-    isLoading,
-    isError: getCustomersError,
-  } = useGetCustomersQuery();
+  // const { data: CustomersData, isLoading, isError: getCustomersError } = useGetCustomersQuery();
 
-  const [validationErrors, setValidationErrors] = useState<
-    Record<string, string | undefined>
-  >({});
+  // const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
 
+  // const customersData = CustomersData?.data || [];
+
+  // // Redux Mutation Hooks for Create, Update, Delete
+  // const [createCustomer, { isError: cusomerError, error: customerErrorCreating }] = useCreateCustomerMutation();
+
+  // const [updateCustomer] = useUpdateCustomerMutation();
+  // const [deleteCustomer] = useDeleteCustomerMutation();
+  const { data: CustomersData, isLoading, isError: getCustomersError, error: customersError } = useGetCustomersQuery();
+
+  // State for form validation errors
+  const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
+
+  // Mutation hooks for create, update, and delete customer
+  const [createCustomer, { isError: customerError, error: customerErrorCreating, isSuccess: customerCreated }] =
+    useCreateCustomerMutation();
+  const [updateCustomer, { isError: updatingCustomerError, error: updateCustomerError, isSuccess: customerUpdated }] =
+    useUpdateCustomerMutation();
+  const [deleteCustomer, { isError: deletingCustomerError, error: deleteCustomerError, isSuccess: customerDeleted }] =
+    useDeleteCustomerMutation();
   const customersData = CustomersData?.data || [];
 
-  // Redux Mutation Hooks for Create, Update, Delete
-  const [createCustomer,{isError: cusomerError, error: customerErrorCreating}] = useCreateCustomerMutation();
-  
-  const [updateCustomer] = useUpdateCustomerMutation();
-  const [deleteCustomer] = useDeleteCustomerMutation();
+  useEffect(() => {
+    toast.dismiss();
+    // Handling Get Customers Query state
+    if (isLoading) {
+      toast.info('Fetching customers...');
+    }
+
+    if (getCustomersError && customersError) {
+      if ('message' in customersError) {
+        toast.error(`Error fetching customers: ${customersError.message || ''}`);
+      }
+    }
+
+    // Handling Create Customer Mutation state
+    if (customerError && customerErrorCreating) {
+      if ('message' in customerErrorCreating) {
+        toast.error(`Error creating customer: ${customerErrorCreating.message || ''}`);
+      }
+    }
+
+    if (customerCreated) {
+      toast.success('Customer created successfully!');
+    }
+
+    // Handling Update Customer Mutation state
+    if (updatingCustomerError && updateCustomerError) {
+      if ('message' in updateCustomerError) {
+        toast.error(`Error updating customer: ${updateCustomerError.message || ''}`);
+      }
+    }
+
+    if (customerUpdated) {
+      toast.success('Customer updated successfully!');
+    }
+
+    // Handling Delete Customer Mutation state
+    if (deletingCustomerError && deleteCustomerError) {
+      if ('message' in deleteCustomerError) {
+        toast.error(`Error deleting customer: ${deleteCustomerError.message || ''}`);
+      }
+    }
+
+    if (customerDeleted) {
+      toast.success('Customer deleted successfully!');
+    }
+  }, [
+    isLoading,
+    getCustomersError,
+    customersError,
+    customerError,
+    customerErrorCreating,
+    customerCreated,
+    updatingCustomerError,
+    updateCustomerError,
+    customerUpdated,
+    deletingCustomerError,
+    deleteCustomerError,
+    customerDeleted
+  ]);
 
   const columns = useMemo<MRT_ColumnDef<Customer>[]>(
     () => [
       {
-        accessorKey: "customerId",
-        header: "Customer ID",
+        accessorKey: 'customerId',
+        header: 'Customer ID',
         size: 150,
         enableEditing: false,
-        muiTableHeadCellProps: { style: { color: "green" } }, // Custom props
-        visibleInShowHideMenu: true,
+        muiTableHeadCellProps: { style: { color: 'green' } }, // Custom props
+        visibleInShowHideMenu: true
       },
       {
-        accessorKey: "firstName",
-        header: "First Name",
+        accessorKey: 'firstName',
+        header: 'First Name',
         size: 150,
         muiEditTextFieldProps: {
           required: true,
@@ -58,13 +120,13 @@ const CustomersManagement = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              firstName: undefined,
-            }),
-        },
+              firstName: undefined
+            })
+        }
       },
       {
-        accessorKey: "lastName",
-        header: "Last Name",
+        accessorKey: 'lastName',
+        header: 'Last Name',
         size: 150,
         muiEditTextFieldProps: {
           required: true,
@@ -73,51 +135,51 @@ const CustomersManagement = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              lastName: undefined,
-            }),
-        },
+              lastName: undefined
+            })
+        }
       },
       {
-        accessorKey: "email",
-        header: "Email",
+        accessorKey: 'email',
+        header: 'Email',
         size: 200,
         muiEditTextFieldProps: {
           required: true,
-          type: "email",
+          type: 'email',
           error: !!validationErrors?.email,
           helperText: validationErrors?.email,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              email: undefined,
-            }),
-        },
+              email: undefined
+            })
+        }
       },
       {
-        accessorKey: "phoneNumber",
-        header: "Phone Number",
+        accessorKey: 'phoneNumber',
+        header: 'Phone Number',
         size: 150,
         muiEditTextFieldProps: {
           required: true,
-          type: "tel",
+          type: 'tel',
           error: !!validationErrors?.phoneNumber,
           helperText: validationErrors?.phoneNumber,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              phoneNumber: undefined,
-            }),
-        },
+              phoneNumber: undefined
+            })
+        }
       },
       {
-        accessorKey: "address",
-        header: "Address",
+        accessorKey: 'address',
+        header: 'Address',
         size: 250,
-        enableEditing: true,
+        enableEditing: true
       },
       {
-        accessorKey: "country",
-        header: "Country",
+        accessorKey: 'country',
+        header: 'Country',
         size: 150,
         muiEditTextFieldProps: {
           error: !!validationErrors?.country,
@@ -125,13 +187,13 @@ const CustomersManagement = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              country: undefined,
-            }),
-        },
+              country: undefined
+            })
+        }
       },
       {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: 'status',
+        header: 'Status',
         size: 100,
         muiEditTextFieldProps: {
           required: true,
@@ -142,102 +204,96 @@ const CustomersManagement = () => {
             </MenuItem>,
             <MenuItem key="inactive" value="inactive">
               Inactive
-            </MenuItem>,
+            </MenuItem>
           ],
           error: !!validationErrors?.status,
           helperText: validationErrors?.status,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              status: undefined,
-            }),
-        },
+              status: undefined
+            })
+        }
       },
       {
-        accessorKey: "loyaltyPoints",
-        header: "Loyalty Points",
+        accessorKey: 'loyaltyPoints',
+        header: 'Loyalty Points',
         size: 150,
-        enableEditing: true,
+        enableEditing: true
       },
-  
+
       {
-        accessorKey: "createdAt",
-        header: "Created At",
+        accessorKey: 'createdAt',
+        header: 'Created At',
         size: 200,
-        Cell: ({ cell }) =>
-          new Date(cell.getValue() as string).toLocaleDateString(),
-        enableEditing: false,
+        Cell: ({ cell }) => new Date(cell.getValue() as string).toLocaleDateString(),
+        enableEditing: false
       },
       {
-        accessorKey: "updatedAt",
-        header: "Updated At",
+        accessorKey: 'updatedAt',
+        header: 'Updated At',
         size: 200,
-        Cell: ({ cell }) =>
-          new Date(cell.getValue() as string).toLocaleDateString(),
-        enableEditing: false,
+        Cell: ({ cell }) => new Date(cell.getValue() as string).toLocaleDateString(),
+        enableEditing: false
       },
-      
+
       {
-        accessorKey: "notes",
-        header: "Notes",
+        accessorKey: 'notes',
+        header: 'Notes',
         size: 250,
-        enableEditing: true,
+        enableEditing: true
       },
       {
-        accessorKey: "preferredPaymentMethod",
-        header: "Preferred Payment Method",
+        accessorKey: 'preferredPaymentMethod',
+        header: 'Preferred Payment Method',
         size: 200,
-        enableEditing: true,
-      },
+        enableEditing: true
+      }
     ],
     [validationErrors]
   );
 
   // Handle creating a new customer
-  const handleCreateCustomer: MRT_TableOptions<Customer>["onCreatingRowSave"] =
-    async ({ values, table }) => {
-      const newValidationErrors = validateCustomer(values);
+  const handleCreateCustomer: MRT_TableOptions<Customer>['onCreatingRowSave'] = async ({ values, table }) => {
+    const newValidationErrors = validateCustomer(values);
 
-      if (Object.values(newValidationErrors).some((error) => error)) {
-        setValidationErrors(newValidationErrors);
-        return;
-      }
+    if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;
+    }
 
-      setValidationErrors({});
-      values = { ...values };
-      delete values.customerId;
-      delete values.createdAt;
-      delete values.updatedAt;     
-      values.loyaltyPoints = Number(values.loyaltyPoints)
-      await createCustomer(values);
-      table.setCreatingRow(null);
-    };
+    setValidationErrors({});
+    values = { ...values };
+    delete values.customerId;
+    delete values.createdAt;
+    delete values.updatedAt;
+    values.loyaltyPoints = Number(values.loyaltyPoints);
+    await createCustomer(values);
+    table.setCreatingRow(null);
+  };
 
   // Handle updating an existing customer
-  const handleSaveCustomer: MRT_TableOptions<Customer>["onEditingRowSave"] =
-    async ({ values, table }) => {
-      const newValidationErrors = validateCustomer(values);
+  const handleSaveCustomer: MRT_TableOptions<Customer>['onEditingRowSave'] = async ({ values, table }) => {
+    const newValidationErrors = validateCustomer(values);
 
-      if (Object.values(newValidationErrors).some((error) => error)) {
-        setValidationErrors(newValidationErrors);
-        return;
-      }
+    if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;
+    }
 
-      setValidationErrors({});
-      values = { ...values };
+    setValidationErrors({});
+    values = { ...values };
 
-      delete values.createdAt;
-      delete values.updatedAt;
+    delete values.createdAt;
+    delete values.updatedAt;
 
-      await updateCustomer(values);
-      table.setEditingRow(null);
-    };
+    await updateCustomer(values);
+    table.setEditingRow(null);
+  };
 
   // Handle deleting a customer
   const handleDelete = async (row: Customer) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this customer?"
-    );
+    const confirmed = window.confirm('Are you sure you want to delete this customer?');
     if (confirmed) {
       await deleteCustomer({ customerId: row.customerId });
     }
@@ -246,22 +302,23 @@ const CustomersManagement = () => {
   const table = useMaterialReactTable({
     columns,
     data: customersData || [],
-    createDisplayMode: "row",
-    editDisplayMode: "row",
+    createDisplayMode: 'row',
+    editDisplayMode: 'row',
     enableEditing: true,
     onCreatingRowCancel: () => setValidationErrors({}),
     onCreatingRowSave: handleCreateCustomer,
     onEditingRowCancel: () => setValidationErrors({}),
-    muiToolbarAlertBannerProps: cusomerError || getCustomersError
-      ? {
-          color: 'error',
-          children: cusomerError ? 'error creating customer': 'error',
-        }
-      : undefined,
+    muiToolbarAlertBannerProps:
+      customerError || getCustomersError
+        ? {
+            color: 'error',
+            children: customerError ? 'error creating customer' : 'error'
+          }
+        : undefined,
     onEditingRowSave: handleSaveCustomer,
     getRowId: (row) => row.customerId,
     renderRowActions: ({ row, table }) => (
-      <Box sx={{ display: "flex", gap: "1rem" }}>
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
           <IconButton onClick={() => table.setEditingRow(row)}>
             <EditIcon />
@@ -285,20 +342,42 @@ const CustomersManagement = () => {
       </Button>
     ),
     state: {
-      isLoading, 
-      showAlertBanner: cusomerError || getCustomersError,     
-    },
+      isLoading,
+      showAlertBanner: customerError || getCustomersError
+    }
   });
 
-     // Validation function
-  const validateCustomer = (values: Record<LiteralUnion<"status" | "email" | "customerId" | "address" | "notes" | "firstName" | "lastName" | "phoneNumber" | "country" | "createdAt" | "updatedAt" | "loyaltyPoints" | "totalSpent" | "preferredPaymentMethod", string>, any>) => {
+  // Validation function
+  const validateCustomer = (
+    values: Record<
+      LiteralUnion<
+        | 'status'
+        | 'email'
+        | 'customerId'
+        | 'address'
+        | 'notes'
+        | 'firstName'
+        | 'lastName'
+        | 'phoneNumber'
+        | 'country'
+        | 'createdAt'
+        | 'updatedAt'
+        | 'loyaltyPoints'
+        | 'totalSpent'
+        | 'preferredPaymentMethod',
+        string
+      >,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      any
+    >
+  ) => {
     const errors: Record<string, string | undefined> = {};
 
-    if (!values.firstName) errors.firstName = "First name is required";
-    if (!values.lastName) errors.lastName = "Last name is required";
-    if (!values.email) errors.email = "Email is required";
-    if (!values.phoneNumber) errors.phoneNumber = "Phone number is required";
-    if (!values.status) errors.status = "Status is required";
+    if (!values.firstName) errors.firstName = 'First name is required';
+    if (!values.lastName) errors.lastName = 'Last name is required';
+    if (!values.email) errors.email = 'Email is required';
+    if (!values.phoneNumber) errors.phoneNumber = 'Phone number is required';
+    if (!values.status) errors.status = 'Status is required';
 
     return errors;
   };
@@ -307,7 +386,7 @@ const CustomersManagement = () => {
     <Box sx={{ padding: 2 }}>
       {isLoading && <div>Loading customers...</div>}
       {/* {cusomerError? JSON.stringify(customerErrorCreating?.data.message): null} */}
-      
+
       <MaterialReactTable table={table} />
     </Box>
   );

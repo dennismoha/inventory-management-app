@@ -1,38 +1,36 @@
-"use client";
-import React, { useMemo, useState } from "react";
+'use client';
+import { useMemo, useState } from 'react';
 
 import {
-  LiteralUnion,
+  // LiteralUnion,
   MaterialReactTable,
-  MRT_Row,
+  // MRT_Row,
   MRT_TableOptions,
   useMaterialReactTable,
-  type MRT_ColumnDef,
-} from "material-react-table";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Box, Button, IconButton, MenuItem, Tooltip } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { ViewList } from "@mui/icons-material";
+  type MRT_ColumnDef
+} from 'material-react-table';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
+// import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+// import { ViewList } from '@mui/icons-material';
 
-import { Order } from "@/app/(admin)/admin/orders/interfaces/orders-interface";
+import { Order } from '@/app/(admin)/admin/orders/interfaces/orders-interface';
 import {
   useGetOrdersQuery,
   useGetSuppliersQuery,
   useCreateOrderMutation,
   useUpdateOrderMutation,
-  useDeleteOrderMutation,
-} from "@/app/redux/api/inventory-api"; // Adjust the path to match your project structure
-import Link from "next/link";
-import dayjs, { Dayjs } from "dayjs";
+  useDeleteOrderMutation
+} from '@/app/redux/api/inventory-api'; // Adjust the path to match your project structure
+// import Link from 'next/link';
+import dayjs, { Dayjs } from 'dayjs';
 
 const OrdersTable = () => {
   const { data: ordersData, isLoading, isError } = useGetOrdersQuery();
   const { data: suppliersData } = useGetSuppliersQuery(); // Fetch suppliers
-  const [validationErrors, setValidationErrors] = useState<
-    Record<string, string | undefined>
-  >({});
-  const [value, setValue] = useState<Dayjs | null>(dayjs("2022-04-17"));
+  const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
+  const [value, setValue] = useState<Dayjs | null>(dayjs('2022-04-17'));
 
   const orders = ordersData?.data || [];
   const suppliers = suppliersData?.data || [];
@@ -46,30 +44,28 @@ const OrdersTable = () => {
   const columns = useMemo<MRT_ColumnDef<Order>[]>(
     () => [
       {
-        accessorKey: "orderId",
-        header: "Order ID",
+        accessorKey: 'orderId',
+        header: 'Order ID',
         size: 150,
-        enableEditing: false,
+        enableEditing: false
       },
       {
-        accessorKey: "orderName",
-        header: "Order Name",
+        accessorKey: 'orderName',
+        header: 'Order Name',
         size: 200,
         enableEditing: true,
         muiEditTextFieldProps: {
           required: true,
           error: !!validationErrors?.orderName,
           helperText: validationErrors?.orderName,
-          onFocus: () =>
-            setValidationErrors({ ...validationErrors, orderName: undefined }),
-        },
+          onFocus: () => setValidationErrors({ ...validationErrors, orderName: undefined })
+        }
       },
       {
-        accessorKey: "totalAmount",
-        header: "Total Amount",
+        accessorKey: 'totalAmount',
+        header: 'Total Amount',
         size: 150,
-        Cell: ({ cell }) =>
-          `$${parseFloat(cell.getValue() as string).toFixed(2)}`,
+        Cell: ({ cell }) => `$${parseFloat(cell.getValue() as string).toFixed(2)}`,
         enableEditing: true,
         muiEditTextFieldProps: {
           required: true,
@@ -78,18 +74,18 @@ const OrdersTable = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              totalAmount: undefined,
-            }),
-        },
+              totalAmount: undefined
+            })
+        }
       },
       {
-        accessorKey: "paymentStatus",
-        header: "Payment Status",
+        accessorKey: 'paymentStatus',
+        header: 'Payment Status',
         size: 150,
         muiEditTextFieldProps: {
           required: true,
           select: true,
-          children: ["paid", "unpaid", "partially_paid"].map((status) => (
+          children: ['paid', 'unpaid', 'partially_paid'].map((status) => (
             <MenuItem key={status} value={status}>
               {status}
             </MenuItem>
@@ -99,18 +95,18 @@ const OrdersTable = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              paymentStatus: undefined,
-            }),
-        },
+              paymentStatus: undefined
+            })
+        }
       },
       {
-        accessorKey: "paymentMethod",
-        header: "Payment Method",
+        accessorKey: 'paymentMethod',
+        header: 'Payment Method',
         size: 150,
         muiEditTextFieldProps: {
           required: true,
           select: true,
-          children: ["cash", "bank", "credit"].map((method) => (
+          children: ['cash', 'bank', 'credit'].map((method) => (
             <MenuItem key={method} value={method}>
               {method}
             </MenuItem>
@@ -120,9 +116,9 @@ const OrdersTable = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              paymentMethod: undefined,
-            }),
-        },
+              paymentMethod: undefined
+            })
+        }
       },
       // {
       //   accessorKey: "orderDate",
@@ -134,16 +130,13 @@ const OrdersTable = () => {
       // },
       {
         // accessorKey: "orderDate",
-        id: "orderDate",
+        id: 'orderDate',
         accessorFn: (originalRow) => new Date(originalRow.orderDate),
-        header: "order Date",
-        filterVariant: "datetime",
+        header: 'order Date',
+        filterVariant: 'datetime',
         size: 150,
-        type: "date",
-        Cell: ({ cell }) =>
-          `${cell.getValue<Date>().toLocaleDateString()} ${cell
-            .getValue<Date>()
-            .toLocaleTimeString()}`,
+        type: 'date',
+        Cell: ({ cell }) => `${cell.getValue<Date>().toLocaleDateString()} ${cell.getValue<Date>().toLocaleTimeString()}`
       },
       // {
       //   accessorKey: "shippingDate",
@@ -160,44 +153,30 @@ const OrdersTable = () => {
         accessorFn(originalRow) {
           return new Date(originalRow.shippingDate);
         },
-        id: "shippingDate",
-        header: "Shipping Date",
+        id: 'shippingDate',
+        header: 'Shipping Date',
         size: 150,
         // Custom editor for editing the date in the table
         Edit: ({ cell }) => {
-          return (
-            <DatePicker
-              label={JSON.stringify(cell.getValue())}
-              value={value}
-              onChange={(newValue) => setValue(newValue)}
-            />
-          );
+          return <DatePicker label={JSON.stringify(cell.getValue())} value={value} onChange={(newValue) => setValue(newValue)} />;
         },
 
-        Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), // convert back to string for display
+        Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString() // convert back to string for display
       },
       {
-        accessorKey: "orderDeliveryDate",
-        header: "Order Delivery Date",
+        accessorKey: 'orderDeliveryDate',
+        header: 'Order Delivery Date',
         size: 150,
-        Cell: ({ cell }) =>
-          new Date(cell.getValue() as string).toLocaleDateString(),
+        Cell: ({ cell }) => new Date(cell.getValue() as string).toLocaleDateString()
       },
       {
-        accessorKey: "orderStatus",
-        header: "Order Status",
+        accessorKey: 'orderStatus',
+        header: 'Order Status',
         size: 150,
         enableEditing: false,
         muiEditTextFieldProps: {
           select: true,
-          children: [
-            "pending",
-            "empty",
-            "failed",
-            "fulfilled",
-            "extended",
-            "order_default",
-          ].map((status) => (
+          children: ['pending', 'empty', 'failed', 'fulfilled', 'extended', 'order_default'].map((status) => (
             <MenuItem key={status} value={status}>
               {status}
             </MenuItem>
@@ -207,14 +186,14 @@ const OrdersTable = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              orderStatus: undefined,
-            }),
-        },
+              orderStatus: undefined
+            })
+        }
       },
       // Supplier Column - Shows the supplier name
       {
-        accessorKey: "supplier_id", // We're mapping the supplier_id here
-        header: "Supplier",
+        accessorKey: 'supplier_id', // We're mapping the supplier_id here
+        header: 'Supplier',
         size: 200,
         enableEditing: true,
         muiEditTextFieldProps: {
@@ -230,42 +209,37 @@ const OrdersTable = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              supplier_id: undefined,
-            }),
+              supplier_id: undefined
+            })
         },
         // The Cell to display the supplier name in a read-only state
         Cell: ({ cell }) => {
-          const supplier = suppliers.find(
-            (s) => s.supplier_id === cell.getValue()
-          );
-          return <div>{supplier ? supplier.name : "No Supplier"}</div>;
-        },
-      },
+          const supplier = suppliers.find((s) => s.supplier_id === cell.getValue());
+          return <div>{supplier ? supplier.name : 'No Supplier'}</div>;
+        }
+      }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [validationErrors, suppliers]
   );
 
   // Handle creating a new order
-  const handleCreateOrder: MRT_TableOptions<Order>["onCreatingRowSave"] =
-    async ({ values, table }) => {
-      const newValidationErrors = validateOrder(values);
+  const handleCreateOrder: MRT_TableOptions<Order>['onCreatingRowSave'] = async ({ values, table }) => {
+    const newValidationErrors = validateOrder(values);
 
-      if (Object.values(newValidationErrors).some((error) => error)) {
-        setValidationErrors(newValidationErrors);
-        return;
-      }
+    if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;
+    }
 
-      setValidationErrors({});
-      values = { ...values };
-      await createOrder(values);
-      table.setCreatingRow(null); // Close the row creation
-    };
+    setValidationErrors({});
+    values = { ...values };
+    await createOrder(values);
+    table.setCreatingRow(null); // Close the row creation
+  };
 
   // Handle updating an existing order
-  const handleSaveOrder: MRT_TableOptions<Order>["onEditingRowSave"] = async ({
-    values,
-    table,
-  }) => {
+  const handleSaveOrder: MRT_TableOptions<Order>['onEditingRowSave'] = async ({ values, table }) => {
     const newValidationErrors = validateOrder(values);
 
     if (Object.values(newValidationErrors).some((error) => error)) {
@@ -281,11 +255,9 @@ const OrdersTable = () => {
 
   // Handle deleting an order
   const handleDeleteOrder = async (row: Order) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this order?"
-    );
+    const confirmed = window.confirm('Are you sure you want to delete this order?');
     if (confirmed) {
-      await deleteOrder( row.orderId );
+      await deleteOrder(row.orderId);
     }
   };
 
@@ -296,8 +268,8 @@ const OrdersTable = () => {
   const table = useMaterialReactTable({
     columns,
     data: orders || [],
-    createDisplayMode: "row",
-    editDisplayMode: "row",
+    createDisplayMode: 'row',
+    editDisplayMode: 'row',
     enableEditing: true,
     enableColumnPinning: true,
     enableRowActions: true,
@@ -348,9 +320,7 @@ const OrdersTable = () => {
     //     </Tooltip>
     //   </Box>
     // ),
-     renderRowActionMenuItems :({ row, table, closeMenu }) => [
-    
-    
+    renderRowActionMenuItems: ({ row, closeMenu }) => [
       // // Delete Action
       <MenuItem
         key={1}
@@ -368,8 +338,8 @@ const OrdersTable = () => {
           </IconButton>
         </Tooltip>
         Delete
-      </MenuItem>,
-    
+      </MenuItem>
+
       // // View Order Products (Link to another page)
       // <MenuItem
       //   key={2}
@@ -390,7 +360,7 @@ const OrdersTable = () => {
       //  // view miscelnnaeous
       // <MenuItem
       //   key={0}
-      //   onClick={() => {          
+      //   onClick={() => {
       //     closeMenu(); // Close the action menu
       //   }}
       //   sx={{ m: 0 }}
@@ -419,31 +389,29 @@ const OrdersTable = () => {
     ),
     state: {
       isLoading,
-      showAlertBanner: isError,
+      showAlertBanner: isError
     },
     initialState: {
       columnPinning: {
-        left: ["mrt-row-actions", "state"],
-        right: ["orderStatus"],
-      },
-    },
+        left: ['mrt-row-actions', 'state'],
+        right: ['orderStatus']
+      }
+    }
   });
 
   // Validation function
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validateOrder = (values: any) => {
     const errors: Record<string, string | undefined> = {};
 
-    if (!values.orderName) errors.orderName = "Order Name is required";
-    if (!values.totalAmount) errors.totalAmount = "Total Amount is required";
-    if (!values.paymentStatus)
-      errors.paymentStatus = "Payment Status is required";
-    if (!values.paymentMethod)
-      errors.paymentMethod = "Payment Method is required";
-    if (!values.shippingDate) errors.shippingDate = "Shipping Date is required";
-    if (!values.orderDeliveryDate)
-      errors.orderDeliveryDate = "Order Delivery Date is required";
-    if (!values.orderStatus) errors.orderStatus = "Order Status is required";
-    if (!values.supplier_id) errors.supplier_id = "Supplier is required";
+    if (!values.orderName) errors.orderName = 'Order Name is required';
+    if (!values.totalAmount) errors.totalAmount = 'Total Amount is required';
+    if (!values.paymentStatus) errors.paymentStatus = 'Payment Status is required';
+    if (!values.paymentMethod) errors.paymentMethod = 'Payment Method is required';
+    if (!values.shippingDate) errors.shippingDate = 'Shipping Date is required';
+    if (!values.orderDeliveryDate) errors.orderDeliveryDate = 'Order Delivery Date is required';
+    if (!values.orderStatus) errors.orderStatus = 'Order Status is required';
+    if (!values.supplier_id) errors.supplier_id = 'Supplier is required';
     return errors;
   };
 

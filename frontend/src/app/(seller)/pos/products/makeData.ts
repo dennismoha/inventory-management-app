@@ -1,121 +1,120 @@
 export type Person = {
-    name: {
-      firstName: string;
-      lastName: string;
-    };
-    address: string;
-    city: string;
-    state: string;
+  name: {
+    firstName: string;
+    lastName: string;
   };
-  
-  export const data: Person[] = [
-    {
-      name: {
-        firstName: 'Christopher',
-        lastName: 'Lee',
-      },
-      address: '555 Cedar Street',
-      city: 'Seattle',
-      state: 'Washington',
+  address: string;
+  city: string;
+  state: string;
+};
+
+export const data: Person[] = [
+  {
+    name: {
+      firstName: 'Christopher',
+      lastName: 'Lee'
     },
-    {
-      name: {
-        firstName: 'Rachel',
-        lastName: 'Anderson',
-      },
-      address: '987 Walnut Court',
-      city: 'New York',
-      state: 'New York',
+    address: '555 Cedar Street',
+    city: 'Seattle',
+    state: 'Washington'
+  },
+  {
+    name: {
+      firstName: 'Rachel',
+      lastName: 'Anderson'
     },
-    {
-      name: {
-        firstName: 'David',
-        lastName: 'Garcia',
-      },
-      address: '654 Maple Avenue',
-      city: 'Los Angeles',
-      state: 'California',
+    address: '987 Walnut Court',
+    city: 'New York',
+    state: 'New York'
+  },
+  {
+    name: {
+      firstName: 'David',
+      lastName: 'Garcia'
     },
-    {
-      name: {
-        firstName: 'Zachary',
-        lastName: 'Davis',
-      },
-      address: '261 Battle Ford',
-      city: 'Columbus',
-      state: 'Ohio',
+    address: '654 Maple Avenue',
+    city: 'Los Angeles',
+    state: 'California'
+  },
+  {
+    name: {
+      firstName: 'Zachary',
+      lastName: 'Davis'
     },
-    {
-      name: {
-        firstName: 'Robert',
-        lastName: 'Smith',
-      },
-      address: '566 Brakus Inlet',
-      city: 'Westerville',
-      state: 'West Virginia',
+    address: '261 Battle Ford',
+    city: 'Columbus',
+    state: 'Ohio'
+  },
+  {
+    name: {
+      firstName: 'Robert',
+      lastName: 'Smith'
     },
-    {
-      name: {
-        firstName: 'Kevin',
-        lastName: 'Yan',
-      },
-      address: '7777 Kuhic Knoll',
-      city: 'South Linda',
-      state: 'West Virginia',
+    address: '566 Brakus Inlet',
+    city: 'Westerville',
+    state: 'West Virginia'
+  },
+  {
+    name: {
+      firstName: 'Kevin',
+      lastName: 'Yan'
     },
-    {
-      name: {
-        firstName: 'John',
-        lastName: 'Upton',
-      },
-      address: '722 Emie Stream',
-      city: 'Huntington',
-      state: 'Washington',
+    address: '7777 Kuhic Knoll',
+    city: 'South Linda',
+    state: 'West Virginia'
+  },
+  {
+    name: {
+      firstName: 'John',
+      lastName: 'Upton'
     },
-    {
-      name: {
-        firstName: 'Nathan',
-        lastName: 'Harris',
-      },
-      address: '1 Kuhic Knoll',
-      city: 'Ohiowa',
-      state: 'Nebraska',
+    address: '722 Emie Stream',
+    city: 'Huntington',
+    state: 'Washington'
+  },
+  {
+    name: {
+      firstName: 'Nathan',
+      lastName: 'Harris'
     },
-    {
-      name: {
-        firstName: 'Emily',
-        lastName: 'Smith',
-      },
-      address: '123 Main Street',
-      city: 'Springfield',
-      state: 'Illinois',
+    address: '1 Kuhic Knoll',
+    city: 'Ohiowa',
+    state: 'Nebraska'
+  },
+  {
+    name: {
+      firstName: 'Emily',
+      lastName: 'Smith'
     },
-    {
-      name: {
-        firstName: 'Jessica',
-        lastName: 'Johnson',
-      },
-      address: '456 Elm Avenue',
-      city: 'Portland',
-      state: 'Oregon',
+    address: '123 Main Street',
+    city: 'Springfield',
+    state: 'Illinois'
+  },
+  {
+    name: {
+      firstName: 'Jessica',
+      lastName: 'Johnson'
     },
-    {
-      name: {
-        firstName: 'Michael',
-        lastName: 'Davis',
-      },
-      address: '789 Oak Lane',
-      city: 'Austin',
-      state: 'Texas',
+    address: '456 Elm Avenue',
+    city: 'Portland',
+    state: 'Oregon'
+  },
+  {
+    name: {
+      firstName: 'Michael',
+      lastName: 'Davis'
     },
-    {
-      name: {
-        firstName: 'Sarah',
-        lastName: 'Wilson',
-      },
-      address: '321 Pine Road',
-      city: 'Denver',
-      state: 'Colorado',
+    address: '789 Oak Lane',
+    city: 'Austin',
+    state: 'Texas'
+  },
+  {
+    name: {
+      firstName: 'Sarah',
+      lastName: 'Wilson'
     },
-  ];
-  
+    address: '321 Pine Road',
+    city: 'Denver',
+    state: 'Colorado'
+  }
+];

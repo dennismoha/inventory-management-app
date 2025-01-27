@@ -1,5 +1,5 @@
-'use client'
-import React from 'react'
+'use client';
+import React from 'react';
 
 // Define the type for the component props
 interface MiscellaneousProps {
@@ -8,12 +8,8 @@ interface MiscellaneousProps {
   };
 }
 
+const Miscellaneous: React.FC<MiscellaneousProps> = ({ params }) => {
+  return <div>miscellaneous {JSON.stringify(params)}</div>;
+};
 
-const Miscellaneous: React.FC<MiscellaneousProps> = ({params}) => {
-  
-  return (
-    <div>miscellaneous {JSON.stringify(params)}</div>
-  )
-}
-
-export default Miscellaneous
+export default Miscellaneous;

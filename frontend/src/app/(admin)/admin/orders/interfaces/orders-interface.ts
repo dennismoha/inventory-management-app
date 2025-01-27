@@ -1,12 +1,9 @@
 // features/orders/order.interface.ts
 
-import { Supplier, SupplierPricing } from "@/app/(admin)/admin/suppliers/interface/supplier-interface";
-
-
-
+import { Supplier, SupplierPricing } from '@/app/(admin)/admin/suppliers/interface/supplier-interface';
 
 export interface Order {
-  supplier_id: string,
+  supplier_id: string;
   orderId: string;
   orderName: string;
   totalAmount: number;
@@ -19,10 +16,9 @@ export interface Order {
   comments?: string | null;
   created_at: Date;
   last_updated_at: Date;
-  supplier:Supplier,
-  OrderProducts?:OrderProducts
+  supplier: Supplier;
+  OrderProducts?: OrderProducts;
 }
-
 
 export interface OrderProducts {
   orderProductsId: string;
@@ -37,18 +33,15 @@ export interface OrderProducts {
   supplierProductsPricingId: string;
   order?: Order;
   supplierPricing?: SupplierPricing;
-//   inventoryTracking?: Inventory
+  //   inventoryTracking?: Inventory
 }
 
 export interface OrderResponse {
-    status: string,
-    statusCode: string,
-    data: Order[]
+  status: string;
+  statusCode: string;
+  data: Order[];
 }
 
-export type OrderProductResponse = Pick<OrderResponse,'status' | 'statusCode' > & {
-    data: OrderProducts[] | OrderProducts
-}
-
-
-
+export type OrderProductResponse = Pick<OrderResponse, 'status' | 'statusCode'> & {
+  data: OrderProducts[] | OrderProducts;
+};

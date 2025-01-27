@@ -9,7 +9,7 @@ export const selectProductIndexByInventoryId = (inventoryId: string) =>
     return cart.cartProducts.findIndex((item) => item.inventoryId === inventoryId);
   });
 
-  export const selectProductByInventoryId = (inventoryId: string) =>
-    createSelector([selectCart], (cart) => {
-      return cart.cartProducts.find((item) => item.inventoryId === inventoryId);
-    });
+export const selectProductByInventoryId = (inventoryId: string) =>
+  createSelector([selectCart], (cart) => {
+    return cart.cartProducts.find((item) => item.inventoryId === inventoryId);
+  });

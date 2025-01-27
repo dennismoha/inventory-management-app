@@ -22,11 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ logoText, navLinks }) => {
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex space-x-6">
           {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="hover:text-blue-400 transition-all duration-200"
-            >
+            <a key={link.label} href={link.href} className="hover:text-blue-400 transition-all duration-200">
               {link.label}
             </a>
           ))}
@@ -41,15 +37,9 @@ const Navbar: React.FC<NavbarProps> = ({ logoText, navLinks }) => {
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} bg-gray-700 text-white px-4 py-3 space-y-4`}
-      >
+      <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} bg-gray-700 text-white px-4 py-3 space-y-4`}>
         {navLinks.map((link) => (
-          <a
-            key={link.label}
-            href={link.href}
-            className="block text-lg hover:text-blue-400 transition-all duration-200"
-          >
+          <a key={link.label} href={link.href} className="block text-lg hover:text-blue-400 transition-all duration-200">
             {link.label}
           </a>
         ))}

@@ -15,11 +15,8 @@
 //   status: string;
 // }
 
-
 export interface ApiResponse<T> {
   statusCode: number;
-  data: T ;
-  status:string;
+  data: T;
+  status: string;
 }
-
-  
